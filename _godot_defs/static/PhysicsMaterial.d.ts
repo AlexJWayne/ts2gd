@@ -1,13 +1,13 @@
 
 /**
- * Provides a means of modifying the collision properties of a [PhysicsBody].
+ * Holds physics-related properties of a surface, namely its roughness and bounciness. This class is used to apply these properties to a physics body.
  *
 */
 declare class PhysicsMaterial extends Resource  {
 
   
 /**
- * Provides a means of modifying the collision properties of a [PhysicsBody].
+ * Holds physics-related properties of a surface, namely its roughness and bounciness. This class is used to apply these properties to a physics body.
  *
 */
   new(): PhysicsMaterial; 

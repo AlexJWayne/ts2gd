@@ -3,7 +3,7 @@
  * Currently, has no direct usage, use the derived classes instead.
  *
 */
-declare class VisualShaderNodeGroupBase extends VisualShaderNode  {
+declare class VisualShaderNodeGroupBase extends VisualShaderNodeResizableBase  {
 
   
 /**
@@ -14,14 +14,12 @@ declare class VisualShaderNodeGroupBase extends VisualShaderNode  {
   static "new"(): VisualShaderNodeGroupBase 
 
 
-/** The size of the node in the visual shader graph. */
-size: Vector2;
 
-/** Adds an input port with the specified [code]type[/code] (see [enum VisualShaderNode.PortType]) and [code]name[/code]. */
-add_input_port(id: int, type: int, name: string): void;
+/** Adds an input port with the specified [param type] (see [enum VisualShaderNode.PortType]) and [param name]. */
+add_input_port(): void;
 
-/** Adds an output port with the specified [code]type[/code] (see [enum VisualShaderNode.PortType]) and [code]name[/code]. */
-add_output_port(id: int, type: int, name: string): void;
+/** Adds an output port with the specified [param type] (see [enum VisualShaderNode.PortType]) and [param name]. */
+add_output_port(): void;
 
 /** Removes all previously specified input ports. */
 clear_input_ports(): void;
@@ -48,37 +46,37 @@ get_output_port_count(): int;
 get_outputs(): string;
 
 /** Returns [code]true[/code] if the specified input port exists. */
-has_input_port(id: int): boolean;
+has_input_port(): boolean;
 
 /** Returns [code]true[/code] if the specified output port exists. */
-has_output_port(id: int): boolean;
+has_output_port(): boolean;
 
 /** Returns [code]true[/code] if the specified port name does not override an existed port name and is valid within the shader. */
-is_valid_port_name(name: string): boolean;
+is_valid_port_name(): boolean;
 
 /** Removes the specified input port. */
-remove_input_port(id: int): void;
+remove_input_port(): void;
 
 /** Removes the specified output port. */
-remove_output_port(id: int): void;
+remove_output_port(): void;
 
 /** Renames the specified input port. */
-set_input_port_name(id: int, name: string): void;
+set_input_port_name(): void;
 
 /** Sets the specified input port's type (see [enum VisualShaderNode.PortType]). */
-set_input_port_type(id: int, type: int): void;
+set_input_port_type(): void;
 
 /** Defines all input ports using a [String] formatted as a colon-separated list: [code]id,type,name;[/code] (see [method add_input_port]). */
-set_inputs(inputs: string): void;
+set_inputs(): void;
 
 /** Renames the specified output port. */
-set_output_port_name(id: int, name: string): void;
+set_output_port_name(): void;
 
 /** Sets the specified output port's type (see [enum VisualShaderNode.PortType]). */
-set_output_port_type(id: int, type: int): void;
+set_output_port_type(): void;
 
 /** Defines all output ports using a [String] formatted as a colon-separated list: [code]id,type,name;[/code] (see [method add_output_port]). */
-set_outputs(outputs: string): void;
+set_outputs(): void;
 
   connect<T extends SignalsOf<VisualShaderNodeGroupBase>>(signal: T, method: SignalFunction<VisualShaderNodeGroupBase[T]>): number;
 

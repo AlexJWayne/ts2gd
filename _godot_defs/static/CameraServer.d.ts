@@ -4,6 +4,8 @@
  *
  * It is notably used to provide AR modules with a video feed from the camera.
  *
+ * **Note:** This class is currently only implemented on macOS and iOS. On other platforms, no [CameraFeed]s will be available.
+ *
 */
 declare class CameraServerClass extends Object  {
 
@@ -13,26 +15,28 @@ declare class CameraServerClass extends Object  {
  *
  * It is notably used to provide AR modules with a video feed from the camera.
  *
+ * **Note:** This class is currently only implemented on macOS and iOS. On other platforms, no [CameraFeed]s will be available.
+ *
 */
   new(): CameraServerClass; 
   static "new"(): CameraServerClass 
 
 
 
-/** Adds a camera feed to the camera server. */
-add_feed(feed: CameraFeed): void;
+/** Adds the camera [param feed] to the camera server. */
+add_feed(): void;
 
 /** Returns an array of [CameraFeed]s. */
-feeds(): any[];
+feeds(): CameraFeed[];
 
-/** Returns the [CameraFeed] with this id. */
-get_feed(index: int): CameraFeed;
+/** Returns the [CameraFeed] corresponding to the camera with the given [param index]. */
+get_feed(): CameraFeed;
 
 /** Returns the number of [CameraFeed]s registered. */
 get_feed_count(): int;
 
-/** Removes a [CameraFeed]. */
-remove_feed(feed: CameraFeed): void;
+/** Removes the specified camera [param feed]. */
+remove_feed(): void;
 
   connect<T extends SignalsOf<CameraServerClass>>(signal: T, method: SignalFunction<CameraServerClass[T]>): number;
 
@@ -45,7 +49,7 @@ remove_feed(feed: CameraFeed): void;
 static FEED_RGBA_IMAGE: any;
 
 /**
- * The YCbCr camera image.
+ * The [url=https://en.wikipedia.org/wiki/YCbCr]YCbCr[/url] camera image.
  *
 */
 static FEED_YCBCR_IMAGE: any;
@@ -64,16 +68,16 @@ static FEED_CBCR_IMAGE: any;
 
 
 /**
- * Emitted when a [CameraFeed] is added (e.g. webcam is plugged in).
+ * Emitted when a [CameraFeed] is added (e.g. a webcam is plugged in).
  *
 */
-$camera_feed_added: Signal<(id: int) => void>
+$camera_feed_added: Signal<() => void>
 
 /**
- * Emitted when a [CameraFeed] is removed (e.g. webcam is unplugged).
+ * Emitted when a [CameraFeed] is removed (e.g. a webcam is unplugged).
  *
 */
-$camera_feed_removed: Signal<(id: int) => void>
+$camera_feed_removed: Signal<() => void>
 
 }
 

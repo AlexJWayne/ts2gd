@@ -1,39 +1,39 @@
 
 /**
- * [Texture] resource that crops out one part of the [member atlas] texture, defined by [member region]. The main use case is cropping out textures from a texture atlas, which is a big texture file that packs multiple smaller textures. Consists of a [Texture] for the [member atlas], a [member region] that defines the area of [member atlas] to use, and a [member margin] that defines the border width.
+ * [Texture2D] resource that draws only part of its [member atlas] texture, as defined by the [member region]. An additional [member margin] can also be set, which is useful for small adjustments.
  *
- * [AtlasTexture] cannot be used in an [AnimatedTexture], cannot be tiled in nodes such as [TextureRect], and does not work properly if used inside of other [AtlasTexture] resources. Multiple [AtlasTexture] resources can be used to crop multiple textures from the atlas. Using a texture atlas helps to optimize video memory costs and render calls compared to using multiple small files.
+ * Multiple [AtlasTexture] resources can be cropped from the same [member atlas]. Packing many smaller textures into a singular large texture helps to optimize video memory costs and render calls.
  *
- * **Note:** AtlasTextures don't support repetition. The [constant Texture.FLAG_REPEAT] and [constant Texture.FLAG_MIRRORED_REPEAT] flags are ignored when using an AtlasTexture.
+ * **Note:** [AtlasTexture] cannot be used in an [AnimatedTexture], and may not tile properly in nodes such as [TextureRect], when inside other [AtlasTexture] resources.
  *
 */
-declare class AtlasTexture extends Texture  {
+declare class AtlasTexture extends Texture2D  {
 
   
 /**
- * [Texture] resource that crops out one part of the [member atlas] texture, defined by [member region]. The main use case is cropping out textures from a texture atlas, which is a big texture file that packs multiple smaller textures. Consists of a [Texture] for the [member atlas], a [member region] that defines the area of [member atlas] to use, and a [member margin] that defines the border width.
+ * [Texture2D] resource that draws only part of its [member atlas] texture, as defined by the [member region]. An additional [member margin] can also be set, which is useful for small adjustments.
  *
- * [AtlasTexture] cannot be used in an [AnimatedTexture], cannot be tiled in nodes such as [TextureRect], and does not work properly if used inside of other [AtlasTexture] resources. Multiple [AtlasTexture] resources can be used to crop multiple textures from the atlas. Using a texture atlas helps to optimize video memory costs and render calls compared to using multiple small files.
+ * Multiple [AtlasTexture] resources can be cropped from the same [member atlas]. Packing many smaller textures into a singular large texture helps to optimize video memory costs and render calls.
  *
- * **Note:** AtlasTextures don't support repetition. The [constant Texture.FLAG_REPEAT] and [constant Texture.FLAG_MIRRORED_REPEAT] flags are ignored when using an AtlasTexture.
+ * **Note:** [AtlasTexture] cannot be used in an [AnimatedTexture], and may not tile properly in nodes such as [TextureRect], when inside other [AtlasTexture] resources.
  *
 */
   new(): AtlasTexture; 
   static "new"(): AtlasTexture 
 
 
-/** The texture that contains the atlas. Can be any [Texture] subtype. */
-atlas: Texture;
+/** The texture that contains the atlas. Can be any type inheriting from [Texture2D], including another [AtlasTexture]. */
+atlas: Texture2D;
 
-/** If [code]true[/code], clips the area outside of the region to avoid bleeding of the surrounding texture pixels. */
+/** If [code]true[/code], the area outside of the [member region] is clipped to avoid bleeding of the surrounding texture pixels. */
 filter_clip: boolean;
 
-
-/** The margin around the region. The [Rect2]'s [member Rect2.size] parameter ("w" and "h" in the editor) resizes the texture so it fits within the margin. */
+/** The margin around the [member region]. Useful for small adjustments. If the [member Rect2.size] of this property ("w" and "h" in the editor) is set, the drawn texture is resized to fit within the margin. */
 margin: Rect2;
 
-/** The AtlasTexture's used region. */
+/** The region used to draw the [member atlas]. */
 region: Rect2;
+
 
 
 

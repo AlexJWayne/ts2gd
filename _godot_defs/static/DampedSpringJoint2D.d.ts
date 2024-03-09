@@ -1,20 +1,20 @@
 
 /**
- * Damped spring constraint for 2D physics. This resembles a spring joint that always wants to go back to a given length.
+ * A physics joint that connects two 2D physics bodies with a spring-like force. This resembles a spring that always wants to stretch to a given length.
  *
 */
 declare class DampedSpringJoint2D extends Joint2D  {
 
   
 /**
- * Damped spring constraint for 2D physics. This resembles a spring joint that always wants to go back to a given length.
+ * A physics joint that connects two 2D physics bodies with a spring-like force. This resembles a spring that always wants to stretch to a given length.
  *
 */
   new(): DampedSpringJoint2D; 
   static "new"(): DampedSpringJoint2D 
 
 
-/** The spring joint's damping ratio. A value between [code]0[/code] and [code]1[/code]. When the two bodies move into different directions the system tries to align them to the spring axis again. A high [code]damping[/code] value forces the attached bodies to align faster. */
+/** The spring joint's damping ratio. A value between [code]0[/code] and [code]1[/code]. When the two bodies move into different directions the system tries to align them to the spring axis again. A high [member damping] value forces the attached bodies to align faster. */
 damping: float;
 
 /** The spring joint's maximum length. The two attached bodies cannot stretch it past this value. */

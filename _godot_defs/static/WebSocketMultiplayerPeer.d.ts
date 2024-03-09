@@ -1,35 +1,60 @@
 
 /**
- * Base class for WebSocket server and client, allowing them to be used as network peer for the [MultiplayerAPI].
+ * Base class for WebSocket server and client, allowing them to be used as multiplayer peer for the [MultiplayerAPI].
+ *
+ * **Note:** When exporting to Android, make sure to enable the `INTERNET` permission in the Android export preset before exporting the project or using one-click deploy. Otherwise, network communication of any kind will be blocked by Android.
  *
 */
-declare class WebSocketMultiplayerPeer extends NetworkedMultiplayerPeer  {
+declare class WebSocketMultiplayerPeer extends MultiplayerPeer  {
 
   
 /**
- * Base class for WebSocket server and client, allowing them to be used as network peer for the [MultiplayerAPI].
+ * Base class for WebSocket server and client, allowing them to be used as multiplayer peer for the [MultiplayerAPI].
+ *
+ * **Note:** When exporting to Android, make sure to enable the `INTERNET` permission in the Android export preset before exporting the project or using one-click deploy. Otherwise, network communication of any kind will be blocked by Android.
  *
 */
   new(): WebSocketMultiplayerPeer; 
   static "new"(): WebSocketMultiplayerPeer 
 
 
+/** The extra headers to use during handshake. See [member WebSocketPeer.handshake_headers] for more details. */
+handshake_headers: PackedStringArray;
 
+/** The maximum time each peer can stay in a connecting state before being dropped. */
+handshake_timeout: float;
 
-/** Returns the [WebSocketPeer] associated to the given [code]peer_id[/code]. */
-get_peer(peer_id: int): WebSocketPeer;
+/** The inbound buffer size for connected peers. See [member WebSocketPeer.inbound_buffer_size] for more details. */
+inbound_buffer_size: int;
+
+/** The maximum number of queued packets for connected peers. See [member WebSocketPeer.max_queued_packets] for more details. */
+max_queued_packets: int;
+
+/** The outbound buffer size for connected peers. See [member WebSocketPeer.outbound_buffer_size] for more details. */
+outbound_buffer_size: int;
+
+/** The supported WebSocket sub-protocols. See [member WebSocketPeer.supported_protocols] for more details. */
+supported_protocols: PackedStringArray;
 
 /**
- * Configures the buffer sizes for this WebSocket peer. Default values can be specified in the Project Settings under `network/limits`. For server, values are meant per connected peer.
+ * Starts a new multiplayer client connecting to the given [param url]. TLS certificates will be verified against the hostname when connecting using the `wss://` protocol. You can pass the optional [param tls_client_options] parameter to customize the trusted certification authorities, or disable the common name verification. See [method TLSOptions.client] and [method TLSOptions.client_unsafe].
  *
- * The first two parameters define the size and queued packets limits of the input buffer, the last two of the output buffer.
- *
- * Buffer sizes are expressed in KiB, so `4 = 2^12 = 4096 bytes`. All parameters will be rounded up to the nearest power of two.
- *
- * **Note:** HTML5 exports only use the input buffer since the output one is managed by browsers.
+ * **Note:** It is recommended to specify the scheme part of the URL, i.e. the [param url] should start with either `ws://` or `wss://`.
  *
 */
-set_buffers(input_buffer_size_kb: int, input_max_packets: int, output_buffer_size_kb: int, output_max_packets: int): int;
+create_client(): int;
+
+/** Starts a new multiplayer server listening on the given [param port]. You can optionally specify a [param bind_address], and provide valid [param tls_server_options] to use TLS. See [method TLSOptions.server]. */
+create_server(): int;
+
+/** Returns the [WebSocketPeer] associated to the given [param peer_id]. */
+get_peer(): WebSocketPeer;
+
+/** Returns the IP address of the given peer. */
+get_peer_address(): string;
+
+/** Returns the remote port of the given peer. */
+get_peer_port(): int;
 
   connect<T extends SignalsOf<WebSocketMultiplayerPeer>>(signal: T, method: SignalFunction<WebSocketMultiplayerPeer[T]>): number;
 
@@ -37,13 +62,6 @@ set_buffers(input_buffer_size_kb: int, input_max_packets: int, output_buffer_siz
 
 
 
-/**
- * Emitted when a packet is received from a peer.
- *
- * **Note:** This signal is only emitted when the client or server is configured to use Godot multiplayer API.
- *
-*/
-$peer_packet: Signal<(peer_source: int) => void>
 
 }
 

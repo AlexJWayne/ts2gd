@@ -1,13 +1,13 @@
 
 /**
- * Vertical version of [Separator]. Even though it looks vertical, it is used to separate objects horizontally.
+ * A vertical separator used for separating other controls that are arranged **horizontally**. [VSeparator] is purely visual and normally drawn as a [StyleBoxLine].
  *
 */
 declare class VSeparator extends Separator  {
 
   
 /**
- * Vertical version of [Separator]. Even though it looks vertical, it is used to separate objects horizontally.
+ * A vertical separator used for separating other controls that are arranged **horizontally**. [VSeparator] is purely visual and normally drawn as a [StyleBoxLine].
  *
 */
   new(): VSeparator; 

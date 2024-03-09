@@ -1,13 +1,13 @@
 
 /**
- * Used by the editor to display VCS extracted information in the editor. The implementation of this API is included in VCS addons, which are essentially GDNative plugins that need to be put into the project folder. These VCS addons are scripts which are attached (on demand) to the object instance of `EditorVCSInterface`. All the functions listed below, instead of performing the task themselves, they call the internally defined functions in the VCS addons to provide a plug-n-play experience.
+ * Defines the API that the editor uses to extract information from the underlying VCS. The implementation of this API is included in VCS plugins, which are GDExtension plugins that inherit [EditorVCSInterface] and are attached (on demand) to the singleton instance of [EditorVCSInterface]. Instead of performing the task themselves, all the virtual functions listed below are calling the internally overridden functions in the VCS plugins to provide a plug-n-play experience. A custom VCS plugin is supposed to inherit from [EditorVCSInterface] and override each of these virtual functions.
  *
 */
 declare class EditorVCSInterface extends Object  {
 
   
 /**
- * Used by the editor to display VCS extracted information in the editor. The implementation of this API is included in VCS addons, which are essentially GDNative plugins that need to be put into the project folder. These VCS addons are scripts which are attached (on demand) to the object instance of `EditorVCSInterface`. All the functions listed below, instead of performing the task themselves, they call the internally defined functions in the VCS addons to provide a plug-n-play experience.
+ * Defines the API that the editor uses to extract information from the underlying VCS. The implementation of this API is included in VCS plugins, which are GDExtension plugins that inherit [EditorVCSInterface] and are attached (on demand) to the singleton instance of [EditorVCSInterface]. Instead of performing the task themselves, all the virtual functions listed below are calling the internally overridden functions in the VCS plugins to provide a plug-n-play experience. A custom VCS plugin is supposed to inherit from [EditorVCSInterface] and override each of these virtual functions.
  *
 */
   new(): EditorVCSInterface; 
@@ -15,75 +15,156 @@ declare class EditorVCSInterface extends Object  {
 
 
 
-/** Creates a version commit if the addon is initialized, else returns without doing anything. Uses the files which have been staged previously, with the commit message set to a value as provided as in the argument. */
-commit(msg: string): void;
+/** Checks out a [param branch_name] in the VCS. */
+protected _checkout_branch(): boolean;
 
-/**
- * Returns an [Array] of [Dictionary] objects containing the diff output from the VCS in use, if a VCS addon is initialized, else returns an empty [Array] object. The diff contents also consist of some contextual lines which provide context to the observed line change in the file.
- *
- * Each [Dictionary] object has the line diff contents under the keys:
- *
- * - `"content"` to store a [String] containing the line contents
- *
- * - `"status"` to store a [String] which contains `"+"` in case the content is a line addition but it stores a `"-"` in case of deletion and an empty string in the case the line content is neither an addition nor a deletion.
- *
- * - `"new_line_number"` to store an integer containing the new line number of the line content.
- *
- * - `"line_count"` to store an integer containing the number of lines in the line content.
- *
- * - `"old_line_number"` to store an integer containing the old line number of the line content.
- *
- * - `"offset"` to store the offset of the line change since the first contextual line content.
- *
-*/
-get_file_diff(file_path: string): any[];
+/** Commits the currently staged changes and applies the commit [param msg] to the resulting commit. */
+protected _commit(): void;
 
-/**
- * Returns a [Dictionary] containing the path of the detected file change mapped to an integer signifying what kind of change the corresponding file has experienced.
- *
- * The following integer values are being used to signify that the detected file is:
- *
- * - `0`: New to the VCS working directory
- *
- * - `1`: Modified
- *
- * - `2`: Renamed
- *
- * - `3`: Deleted
- *
- * - `4`: Typechanged
- *
-*/
-get_modified_files_data(): Dictionary<any, any>;
+/** Creates a new branch named [param branch_name] in the VCS. */
+protected _create_branch(): void;
 
-/** Returns the project name of the VCS working directory. */
-get_project_name(): string;
+/** Creates a new remote destination with name [param remote_name] and points it to [param remote_url]. This can be an HTTPS remote or an SSH remote. */
+protected _create_remote(): void;
 
-/** Returns the name of the VCS if the VCS has been initialized, else return an empty string. */
-get_vcs_name(): string;
+/** Discards the changes made in a file present at [param file_path]. */
+protected _discard_file(): void;
 
-/** Initializes the VCS addon if not already. Uses the argument value as the path to the working directory of the project. Creates the initial commit if required. Returns [code]true[/code] if no failure occurs, else returns [code]false[/code]. */
-initialize(project_root_path: string): boolean;
+/** Fetches new changes from the [param remote], but doesn't write changes to the current working directory. Equivalent to [code]git fetch[/code]. */
+protected _fetch(): void;
 
-/** Returns [code]true[/code] if the addon is ready to respond to function calls, else returns [code]false[/code]. */
-is_addon_ready(): boolean;
+/** Gets an instance of an [Array] of [String]s containing available branch names in the VCS. */
+protected _get_branch_list(): String[];
 
-/** Returns [code]true[/code] if the VCS addon has been initialized, else returns [code]false[/code]. */
-is_vcs_initialized(): boolean;
+/** Gets the current branch name defined in the VCS. */
+protected _get_current_branch_name(): string;
 
-/** Shuts down the VCS addon to allow cleanup code to run on call. Returns [code]true[/code] is no failure occurs, else returns [code]false[/code]. */
-shut_down(): boolean;
+/** Returns an array of [Dictionary] items (see [method create_diff_file], [method create_diff_hunk], [method create_diff_line], [method add_line_diffs_into_diff_hunk] and [method add_diff_hunks_into_diff_file]), each containing information about a diff. If [param identifier] is a file path, returns a file diff, and if it is a commit identifier, then returns a commit diff. */
+protected _get_diff(): Dictionary[];
 
-/** Stages the file which should be committed when [method EditorVCSInterface.commit] is called. Argument should contain the absolute path. */
-stage_file(file_path: string): void;
+/** Returns an [Array] of [Dictionary] items (see [method create_diff_hunk]), each containing a line diff between a file at [param file_path] and the [param text] which is passed in. */
+protected _get_line_diff(): Dictionary[];
 
-/** Unstages the file which was staged previously to be committed, so that it is no longer committed when [method EditorVCSInterface.commit] is called. Argument should contain the absolute path. */
-unstage_file(file_path: string): void;
+/** Returns an [Array] of [Dictionary] items (see [method create_status_file]), each containing the status data of every modified file in the project folder. */
+protected _get_modified_files_data(): Dictionary[];
+
+/** Returns an [Array] of [Dictionary] items (see [method create_commit]), each containing the data for a past commit. */
+protected _get_previous_commits(): Dictionary[];
+
+/** Returns an [Array] of [String]s, each containing the name of a remote configured in the VCS. */
+protected _get_remotes(): String[];
+
+/** Returns the name of the underlying VCS provider. */
+protected _get_vcs_name(): string;
+
+/** Initializes the VCS plugin when called from the editor. Returns whether or not the plugin was successfully initialized. A VCS project is initialized at [param project_path]. */
+protected _initialize(): boolean;
+
+/** Pulls changes from the remote. This can give rise to merge conflicts. */
+protected _pull(): void;
+
+/** Pushes changes to the [param remote]. If [param force] is [code]true[/code], a force push will override the change history already present on the remote. */
+protected _push(): void;
+
+/** Remove a branch from the local VCS. */
+protected _remove_branch(): void;
+
+/** Remove a remote from the local VCS. */
+protected _remove_remote(): void;
+
+/** Set user credentials in the underlying VCS. [param username] and [param password] are used only during HTTPS authentication unless not already mentioned in the remote URL. [param ssh_public_key_path], [param ssh_private_key_path], and [param ssh_passphrase] are only used during SSH authentication. */
+protected _set_credentials(): void;
+
+/** Shuts down VCS plugin instance. Called when the user either closes the editor or shuts down the VCS plugin through the editor UI. */
+protected _shut_down(): boolean;
+
+/** Stages the file present at [param file_path] to the staged area. */
+protected _stage_file(): void;
+
+/** Unstages the file present at [param file_path] from the staged area to the unstaged area. */
+protected _unstage_file(): void;
+
+/** Helper function to add an array of [param diff_hunks] into a [param diff_file]. */
+add_diff_hunks_into_diff_file(): Dictionary<any, any>;
+
+/** Helper function to add an array of [param line_diffs] into a [param diff_hunk]. */
+add_line_diffs_into_diff_hunk(): Dictionary<any, any>;
+
+/** Helper function to create a commit [Dictionary] item. [param msg] is the commit message of the commit. [param author] is a single human-readable string containing all the author's details, e.g. the email and name configured in the VCS. [param id] is the identifier of the commit, in whichever format your VCS may provide an identifier to commits. [param unix_timestamp] is the UTC Unix timestamp of when the commit was created. [param offset_minutes] is the timezone offset in minutes, recorded from the system timezone where the commit was created. */
+create_commit(): Dictionary<any, any>;
+
+/** Helper function to create a [Dictionary] for storing old and new diff file paths. */
+create_diff_file(): Dictionary<any, any>;
+
+/** Helper function to create a [Dictionary] for storing diff hunk data. [param old_start] is the starting line number in old file. [param new_start] is the starting line number in new file. [param old_lines] is the number of lines in the old file. [param new_lines] is the number of lines in the new file. */
+create_diff_hunk(): Dictionary<any, any>;
+
+/** Helper function to create a [Dictionary] for storing a line diff. [param new_line_no] is the line number in the new file (can be [code]-1[/code] if the line is deleted). [param old_line_no] is the line number in the old file (can be [code]-1[/code] if the line is added). [param content] is the diff text. [param status] is a single character string which stores the line origin. */
+create_diff_line(): Dictionary<any, any>;
+
+/** Helper function to create a [Dictionary] used by editor to read the status of a file. */
+create_status_file(): Dictionary<any, any>;
+
+/** Pops up an error message in the editor which is shown as coming from the underlying VCS. Use this to show VCS specific error messages. */
+popup_error(): void;
 
   connect<T extends SignalsOf<EditorVCSInterface>>(signal: T, method: SignalFunction<EditorVCSInterface[T]>): number;
 
 
 
+/**
+ * A new file has been added.
+ *
+*/
+static CHANGE_TYPE_NEW: any;
+
+/**
+ * An earlier added file has been modified.
+ *
+*/
+static CHANGE_TYPE_MODIFIED: any;
+
+/**
+ * An earlier added file has been renamed.
+ *
+*/
+static CHANGE_TYPE_RENAMED: any;
+
+/**
+ * An earlier added file has been deleted.
+ *
+*/
+static CHANGE_TYPE_DELETED: any;
+
+/**
+ * An earlier added file has been typechanged.
+ *
+*/
+static CHANGE_TYPE_TYPECHANGE: any;
+
+/**
+ * A file is left unmerged.
+ *
+*/
+static CHANGE_TYPE_UNMERGED: any;
+
+/**
+ * A commit is encountered from the commit area.
+ *
+*/
+static TREE_AREA_COMMIT: any;
+
+/**
+ * A file is encountered from the staged area.
+ *
+*/
+static TREE_AREA_STAGED: any;
+
+/**
+ * A file is encountered from the unstaged area.
+ *
+*/
+static TREE_AREA_UNSTAGED: any;
 
 
 

@@ -2,7 +2,9 @@
 /**
  * AudioEffectCapture is an AudioEffect which copies all audio frames from the attached audio effect bus into its internal ring buffer.
  *
- * Application code should consume these audio frames from this ring buffer using [method get_buffer] and process it as needed, for example to capture data from a microphone, implement application defined effects, or to transmit audio over the network.
+ * Application code should consume these audio frames from this ring buffer using [method get_buffer] and process it as needed, for example to capture data from an [AudioStreamMicrophone], implement application-defined effects, or to transmit audio over the network. When capturing audio data from a microphone, the format of the samples will be stereo 32-bit floating point PCM.
+ *
+ * **Note:** [member ProjectSettings.audio/driver/enable_input] must be `true` for audio input to work. See also that setting's description for caveats related to permissions and operating system privacy settings.
  *
 */
 declare class AudioEffectCapture extends AudioEffect  {
@@ -11,7 +13,9 @@ declare class AudioEffectCapture extends AudioEffect  {
 /**
  * AudioEffectCapture is an AudioEffect which copies all audio frames from the attached audio effect bus into its internal ring buffer.
  *
- * Application code should consume these audio frames from this ring buffer using [method get_buffer] and process it as needed, for example to capture data from a microphone, implement application defined effects, or to transmit audio over the network.
+ * Application code should consume these audio frames from this ring buffer using [method get_buffer] and process it as needed, for example to capture data from an [AudioStreamMicrophone], implement application-defined effects, or to transmit audio over the network. When capturing audio data from a microphone, the format of the samples will be stereo 32-bit floating point PCM.
+ *
+ * **Note:** [member ProjectSettings.audio/driver/enable_input] must be `true` for audio input to work. See also that setting's description for caveats related to permissions and operating system privacy settings.
  *
 */
   new(): AudioEffectCapture; 
@@ -21,19 +25,19 @@ declare class AudioEffectCapture extends AudioEffect  {
 /** Length of the internal ring buffer, in seconds. Setting the buffer length will have no effect if already initialized. */
 buffer_length: float;
 
-/** Returns [code]true[/code] if at least [code]frames[/code] audio frames are available to read in the internal ring buffer. */
-can_get_buffer(frames: int): boolean;
+/** Returns [code]true[/code] if at least [param frames] audio frames are available to read in the internal ring buffer. */
+can_get_buffer(): boolean;
 
 /** Clears the internal ring buffer. */
 clear_buffer(): void;
 
 /**
- * Gets the next `frames` audio samples from the internal ring buffer.
+ * Gets the next [param frames] audio samples from the internal ring buffer.
  *
- * Returns a [PoolVector2Array] containing exactly `frames` audio samples if available, or an empty [PoolVector2Array] if insufficient data was available.
+ * Returns a [PackedVector2Array] containing exactly [param frames] audio samples if available, or an empty [PackedVector2Array] if insufficient data was available.
  *
 */
-get_buffer(frames: int): PoolVector2Array;
+get_buffer(): PackedVector2Array;
 
 /** Returns the total size of the internal ring buffer in frames. */
 get_buffer_length_frames(): int;

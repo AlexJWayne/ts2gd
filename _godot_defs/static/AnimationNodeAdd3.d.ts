@@ -1,37 +1,39 @@
 
 /**
- * A resource to add to an [AnimationNodeBlendTree]. Blends two animations together additively out of three based on a value in the `[-1.0, 1.0]` range.
+ * A resource to add to an [AnimationNodeBlendTree]. Blends two animations out of three additively out of three based on the amount value.
  *
- * This node has three inputs:
+ * This animation node has three inputs:
  *
  * - The base animation to add to
  *
- * - A -add animation to blend with when the blend amount is in the `[-1.0, 0.0]` range.
+ * - A "-add" animation to blend with when the blend amount is negative
  *
- * - A +add animation to blend with when the blend amount is in the `[0.0, 1.0]` range
+ * - A "+add" animation to blend with when the blend amount is positive
+ *
+ * If the absolute value of the amount is greater than `1.0`, the animation connected to "in" port is blended with the amplified animation connected to "-add"/"+add" port.
  *
 */
-declare class AnimationNodeAdd3 extends AnimationNode  {
+declare class AnimationNodeAdd3 extends AnimationNodeSync  {
 
   
 /**
- * A resource to add to an [AnimationNodeBlendTree]. Blends two animations together additively out of three based on a value in the `[-1.0, 1.0]` range.
+ * A resource to add to an [AnimationNodeBlendTree]. Blends two animations out of three additively out of three based on the amount value.
  *
- * This node has three inputs:
+ * This animation node has three inputs:
  *
  * - The base animation to add to
  *
- * - A -add animation to blend with when the blend amount is in the `[-1.0, 0.0]` range.
+ * - A "-add" animation to blend with when the blend amount is negative
  *
- * - A +add animation to blend with when the blend amount is in the `[0.0, 1.0]` range
+ * - A "+add" animation to blend with when the blend amount is positive
+ *
+ * If the absolute value of the amount is greater than `1.0`, the animation connected to "in" port is blended with the amplified animation connected to "-add"/"+add" port.
  *
 */
   new(): AnimationNodeAdd3; 
   static "new"(): AnimationNodeAdd3 
 
 
-/** If [code]true[/code], sets the [code]optimization[/code] to [code]false[/code] when calling [method AnimationNode.blend_input], forcing the blended animations to update every frame. */
-sync: boolean;
 
 
 

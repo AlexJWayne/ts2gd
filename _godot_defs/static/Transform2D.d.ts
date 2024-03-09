@@ -1,6 +1,6 @@
 
 /**
- * 2×3 matrix (2 rows, 3 columns) used for 2D linear transformations. It can represent transformations such as translation, rotation, or scaling. It consists of three [Vector2] values: [member x], [member y], and the [member origin].
+ * A 2×3 matrix (2 rows, 3 columns) used for 2D linear transformations. It can represent transformations such as translation, rotation, and scaling. It consists of three [Vector2] values: [member x], [member y], and the [member origin].
  *
  * For more information, read the "Matrices and transforms" documentation article.
  *
@@ -9,15 +9,12 @@ declare class Transform2D {
 
   
 /**
- * 2×3 matrix (2 rows, 3 columns) used for 2D linear transformations. It can represent transformations such as translation, rotation, or scaling. It consists of three [Vector2] values: [member x], [member y], and the [member origin].
+ * A 2×3 matrix (2 rows, 3 columns) used for 2D linear transformations. It can represent transformations such as translation, rotation, and scaling. It consists of three [Vector2] values: [member x], [member y], and the [member origin].
  *
  * For more information, read the "Matrices and transforms" documentation article.
  *
 */
-
-  new(from: Transform): Transform2D;
-  new(x_axis: Vector2, y_axis: Vector2, origin: Vector2): Transform2D;
-  new(rotation: float, position: Vector2): Transform2D;
+  new(): Transform2D; 
   static "new"(): Transform2D 
 
 
@@ -30,30 +27,36 @@ x: Vector2;
 /** The basis matrix's Y vector (column 1). Equivalent to array index [code]1[/code]. */
 y: Vector2;
 
-
-
-
-
-
-
-/** Returns the inverse of the transform, under the assumption that the transformation is composed of rotation, scaling and translation. */
+/** Returns the inverse of the transform, under the assumption that the basis is invertible (must have non-zero determinant). */
 affine_inverse(): Transform2D;
 
 /**
  * Returns a vector transformed (multiplied) by the basis matrix.
  *
- * This method does not account for translation (the origin vector).
+ * This method does not account for translation (the [member origin] vector).
  *
 */
-basis_xform(v: Vector2): Vector2;
+basis_xform(): Vector2;
 
 /**
- * Returns a vector transformed (multiplied) by the inverse basis matrix.
+ * Returns a vector transformed (multiplied) by the inverse basis matrix, under the assumption that the basis is orthonormal (i.e. rotation/reflection is fine, scaling/skew is not).
  *
- * This method does not account for translation (the origin vector).
+ * This method does not account for translation (the [member origin] vector).
+ *
+ * `transform.basis_xform_inv(vector)` is equivalent to `transform.inverse().basis_xform(vector)`. See [method inverse].
+ *
+ * For non-orthonormal transforms (e.g. with scaling) `transform.affine_inverse().basis_xform(vector)` can be used instead. See [method affine_inverse].
  *
 */
-basis_xform_inv(v: Vector2): Vector2;
+basis_xform_inv(): Vector2;
+
+/**
+ * Returns the determinant of the basis matrix. If the basis is uniformly scaled, then its determinant equals the square of the scale factor.
+ *
+ * A negative determinant means the basis was flipped, so one part of the scale is negative. A zero determinant means the basis isn't invertible, and is usually considered invalid.
+ *
+*/
+determinant(): float;
 
 /** Returns the transform's origin (translation). */
 get_origin(): Vector2;
@@ -64,37 +67,94 @@ get_rotation(): float;
 /** Returns the scale. */
 get_scale(): Vector2;
 
-/** Returns a transform interpolated between this transform and another by a given [code]weight[/code] (on the range of 0.0 to 1.0). */
-interpolate_with(transform: Transform2D, weight: float): Transform2D;
+/** Returns the transform's skew (in radians). */
+get_skew(): float;
 
-/** Returns the inverse of the transform, under the assumption that the transformation is composed of rotation and translation (no scaling, use [method affine_inverse] for transforms with scaling). */
+/** Returns a transform interpolated between this transform and another by a given [param weight] (on the range of 0.0 to 1.0). */
+interpolate_with(): Transform2D;
+
+/** Returns the inverse of the transform, under the assumption that the transformation basis is orthonormal (i.e. rotation/reflection is fine, scaling/skew is not). Use [method affine_inverse] for non-orthonormal transforms (e.g. with scaling). */
 inverse(): Transform2D;
 
-/** Returns [code]true[/code] if this transform and [code]transform[/code] are approximately equal, by calling [code]is_equal_approx[/code] on each component. */
-is_equal_approx(transform: Transform2D): boolean;
+/** Returns [code]true[/code] if the transform's basis is conformal, meaning it preserves angles and distance ratios, and may only be composed of rotation and uniform scale. Returns [code]false[/code] if the transform's basis has non-uniform scale or shear/skew. This can be used to validate if the transform is non-distorted, which is important for physics and other use cases. */
+is_conformal(): boolean;
+
+/** Returns [code]true[/code] if this transform and [param xform] are approximately equal, by running [method @GlobalScope.is_equal_approx] on each component. */
+is_equal_approx(): boolean;
+
+/** Returns [code]true[/code] if this transform is finite, by calling [method @GlobalScope.is_finite] on each component. */
+is_finite(): boolean;
+
+/**
+ * Returns a copy of the transform rotated such that the rotated X-axis points towards the [param target] position.
+ *
+ * Operations take place in global space.
+ *
+*/
+looking_at(): Transform2D;
 
 /** Returns the transform with the basis orthogonal (90 degrees), and normalized axis vectors (scale of 1 or -1). */
 orthonormalized(): Transform2D;
 
-/** Rotates the transform by the given angle (in radians), using matrix multiplication. */
-rotated(phi: float): Transform2D;
-
-/** Scales the transform by the given scale factor, using matrix multiplication. */
-scaled(scale: Vector2): Transform2D;
-
 /**
- * Translates the transform by the given offset, relative to the transform's basis vectors.
+ * Returns a copy of the transform rotated by the given [param angle] (in radians).
  *
- * Unlike [method rotated] and [method scaled], this does not use matrix multiplication.
+ * This method is an optimized version of multiplying the given transform `X` with a corresponding rotation transform `R` from the left, i.e., `R * X`.
+ *
+ * This can be seen as transforming with respect to the global/parent frame.
  *
 */
-translated(offset: Vector2): Transform2D;
+rotated(): Transform2D;
 
-/** Transforms the given [Vector2], [Rect2], or [PoolVector2Array] by this transform. */
-xform(v: any): any;
+/**
+ * Returns a copy of the transform rotated by the given [param angle] (in radians).
+ *
+ * This method is an optimized version of multiplying the given transform `X` with a corresponding rotation transform `R` from the right, i.e., `X * R`.
+ *
+ * This can be seen as transforming with respect to the local frame.
+ *
+*/
+rotated_local(): Transform2D;
 
-/** Inverse-transforms the given [Vector2], [Rect2], or [PoolVector2Array] by this transform. */
-xform_inv(v: any): any;
+/**
+ * Returns a copy of the transform scaled by the given [param scale] factor.
+ *
+ * This method is an optimized version of multiplying the given transform `X` with a corresponding scaling transform `S` from the left, i.e., `S * X`.
+ *
+ * This can be seen as transforming with respect to the global/parent frame.
+ *
+*/
+scaled(): Transform2D;
+
+/**
+ * Returns a copy of the transform scaled by the given [param scale] factor.
+ *
+ * This method is an optimized version of multiplying the given transform `X` with a corresponding scaling transform `S` from the right, i.e., `X * S`.
+ *
+ * This can be seen as transforming with respect to the local frame.
+ *
+*/
+scaled_local(): Transform2D;
+
+/**
+ * Returns a copy of the transform translated by the given [param offset].
+ *
+ * This method is an optimized version of multiplying the given transform `X` with a corresponding translation transform `T` from the left, i.e., `T * X`.
+ *
+ * This can be seen as transforming with respect to the global/parent frame.
+ *
+*/
+translated(): Transform2D;
+
+/**
+ * Returns a copy of the transform translated by the given [param offset].
+ *
+ * This method is an optimized version of multiplying the given transform `X` with a corresponding translation transform `T` from the right, i.e., `X * T`.
+ *
+ * This can be seen as transforming with respect to the local frame.
+ *
+*/
+translated_local(): Transform2D;
 
   connect<T extends SignalsOf<Transform2D>>(signal: T, method: SignalFunction<Transform2D[T]>): number;
 

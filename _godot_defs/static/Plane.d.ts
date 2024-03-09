@@ -1,34 +1,31 @@
 
 /**
- * Plane represents a normalized plane equation. Basically, "normal" is the normal of the plane (a,b,c normalized), and "d" is the distance from the origin to the plane (in the direction of "normal"). "Over" or "Above" the plane is considered the side of the plane towards where the normal is pointing.
+ * Represents a normalized plane equation. [member normal] is the normal of the plane (a, b, c normalized), and [member d] is the distance from the origin to the plane (in the direction of "normal"). "Over" or "Above" the plane is considered the side of the plane towards where the normal is pointing.
  *
 */
 declare class Plane {
 
   
 /**
- * Plane represents a normalized plane equation. Basically, "normal" is the normal of the plane (a,b,c normalized), and "d" is the distance from the origin to the plane (in the direction of "normal"). "Over" or "Above" the plane is considered the side of the plane towards where the normal is pointing.
+ * Represents a normalized plane equation. [member normal] is the normal of the plane (a, b, c normalized), and [member d] is the distance from the origin to the plane (in the direction of "normal"). "Over" or "Above" the plane is considered the side of the plane towards where the normal is pointing.
  *
 */
-
-  new(a: float, b: float, c: float, d: float): Plane;
-  new(v1: Vector3, v2: Vector3, v3: Vector3): Plane;
-  new(normal: Vector3, d: float): Plane;
+  new(): Plane; 
   static "new"(): Plane 
 
 
 /**
- * The distance from the origin to the plane, in the direction of [member normal]. This value is typically non-negative.
+ * The distance from the origin to the plane, expressed in terms of [member normal] (according to its direction and magnitude). Actual absolute distance from the origin to the plane can be calculated as `abs(d) / normal.length()` (if [member normal] has zero length then this [Plane] does not represent a valid plane).
  *
- * In the scalar equation of the plane `ax + by + cz = d`, this is `d`, while the `(a, b, c)` coordinates are represented by the [member normal] property.
+ * In the scalar equation of the plane `ax + by + cz = d`, this is [code skip-lint]d`, while the `(a, b, c)` coordinates are represented by the [member normal] property.
  *
 */
 d: float;
 
 /**
- * The normal of the plane, which must be normalized.
+ * The normal of the plane, typically a unit vector. Shouldn't be a zero vector as [Plane] with such [member normal] does not represent a valid plane.
  *
- * In the scalar equation of the plane `ax + by + cz = d`, this is the vector `(a, b, c)`, where `d` is the [member d] property.
+ * In the scalar equation of the plane `ax + by + cz = d`, this is the vector `(a, b, c)`, where [code skip-lint]d` is the [member d] property.
  *
 */
 normal: Vector3;
@@ -42,49 +39,38 @@ y: float;
 /** The Z component of the plane's [member normal] vector. */
 z: float;
 
-
-
-
-
-
+/** Returns the shortest distance from the plane to the position [param point]. If the point is above the plane, the distance will be positive. If below, the distance will be negative. */
+distance_to(): float;
 
 /** Returns the center of the plane. */
-center(): Vector3;
+get_center(): Vector3;
 
-/** Returns the shortest distance from the plane to the position [code]point[/code]. */
-distance_to(point: Vector3): float;
+/** Returns [code]true[/code] if [param point] is inside the plane. Comparison uses a custom minimum [param tolerance] threshold. */
+has_point(): boolean;
 
-/**
- * Returns the center of the plane.
- *
- * This method is deprecated, please use [method center] instead.
- *
-*/
-get_any_point(): Vector3;
+/** Returns the intersection point of the three planes [param b], [param c] and this plane. If no intersection is found, [code]null[/code] is returned. */
+intersect_3(): any;
 
-/** Returns [code]true[/code] if [code]point[/code] is inside the plane. Comparison uses a custom minimum [code]epsilon[/code] threshold. */
-has_point(point: Vector3, epsilon?: float): boolean;
+/** Returns the intersection point of a ray consisting of the position [param from] and the direction normal [param dir] with this plane. If no intersection is found, [code]null[/code] is returned. */
+intersects_ray(): any;
 
-/** Returns the intersection point of the three planes [code]b[/code], [code]c[/code] and this plane. If no intersection is found, [code]null[/code] is returned. */
-intersect_3(b: Plane, c: Plane): Vector3;
+/** Returns the intersection point of a segment from position [param from] to position [param to] with this plane. If no intersection is found, [code]null[/code] is returned. */
+intersects_segment(): any;
 
-/** Returns the intersection point of a ray consisting of the position [code]from[/code] and the direction normal [code]dir[/code] with this plane. If no intersection is found, [code]null[/code] is returned. */
-intersects_ray(from: Vector3, dir: Vector3): Vector3;
+/** Returns [code]true[/code] if this plane and [param to_plane] are approximately equal, by running [method @GlobalScope.is_equal_approx] on each component. */
+is_equal_approx(): boolean;
 
-/** Returns the intersection point of a segment from position [code]begin[/code] to position [code]end[/code] with this plane. If no intersection is found, [code]null[/code] is returned. */
-intersects_segment(begin: Vector3, end: Vector3): Vector3;
+/** Returns [code]true[/code] if this plane is finite, by calling [method @GlobalScope.is_finite] on each component. */
+is_finite(): boolean;
 
-/** Returns [code]true[/code] if this plane and [code]plane[/code] are approximately equal, by running [method @GDScript.is_equal_approx] on each component. */
-is_equal_approx(plane: Plane): boolean;
+/** Returns [code]true[/code] if [param point] is located above the plane. */
+is_point_over(): boolean;
 
-/** Returns [code]true[/code] if [code]point[/code] is located above the plane. */
-is_point_over(point: Vector3): boolean;
-
-/** Returns a copy of the plane, normalized. */
+/** Returns a copy of the plane, with normalized [member normal] (so it's a unit vector). Returns [code]Plane(0, 0, 0, 0)[/code] if [member normal] can't be normalized (it has zero length). */
 normalized(): Plane;
 
-/** Returns the orthogonal projection of [code]point[/code] into a point in the plane. */
-project(point: Vector3): Vector3;
+/** Returns the orthogonal projection of [param point] into a point in the plane. */
+project(): Vector3;
 
   connect<T extends SignalsOf<Plane>>(signal: T, method: SignalFunction<Plane[T]>): number;
 

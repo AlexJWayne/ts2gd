@@ -1,13 +1,13 @@
 
 /**
- * Panel container type. This container fits controls inside of the delimited area of a stylebox. It's useful for giving controls an outline.
+ * A container that keeps its child controls within the area of a [StyleBox]. Useful for giving controls an outline.
  *
 */
 declare class PanelContainer extends Container  {
 
   
 /**
- * Panel container type. This container fits controls inside of the delimited area of a stylebox. It's useful for giving controls an outline.
+ * A container that keeps its child controls within the area of a [StyleBox]. Useful for giving controls an outline.
  *
 */
   new(): PanelContainer; 

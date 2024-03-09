@@ -1,13 +1,17 @@
 
 /**
- * This class allows you to define a custom shader program that can be used by a [ShaderMaterial]. Shaders allow you to write your own custom behavior for rendering objects or updating particle information. For a detailed explanation and usage, please see the tutorials linked below.
+ * A custom shader program implemented in the Godot shading language, saved with the `.gdshader` extension.
+ *
+ * This class is used by a [ShaderMaterial] and allows you to write your own custom behavior for rendering visual items or updating particle information. For a detailed explanation and usage, please see the tutorials linked below.
  *
 */
 declare class Shader extends Resource  {
 
   
 /**
- * This class allows you to define a custom shader program that can be used by a [ShaderMaterial]. Shaders allow you to write your own custom behavior for rendering objects or updating particle information. For a detailed explanation and usage, please see the tutorials linked below.
+ * A custom shader program implemented in the Godot shading language, saved with the `.gdshader` extension.
+ *
+ * This class is used by a [ShaderMaterial] and allows you to write your own custom behavior for rendering visual items or updating particle information. For a detailed explanation and usage, please see the tutorials linked below.
  *
 */
   new(): Shader; 
@@ -18,39 +22,35 @@ declare class Shader extends Resource  {
 code: string;
 
 /**
- * Returns the shader's custom defines. Custom defines can be used in Godot to add GLSL preprocessor directives (e.g: extensions) required for the shader logic.
- *
- * **Note:** Custom defines are not validated by the Godot shader parser, so care should be taken when using them.
- *
-*/
-custom_defines: string;
-
-/**
  * Returns the texture that is set as default for the specified parameter.
  *
- * **Note:** `param` must match the name of the uniform in the code exactly.
+ * **Note:** [param name] must match the name of the uniform in the code exactly.
+ *
+ * **Note:** If the sampler array is used use [param index] to access the specified texture.
  *
 */
-get_default_texture_param(param: string): Texture;
+get_default_texture_parameter(): Texture2D;
 
-/** Returns the shader mode for the shader, either [constant MODE_CANVAS_ITEM], [constant MODE_SPATIAL] or [constant MODE_PARTICLES]. */
+/** Returns the shader mode for the shader. */
 get_mode(): int;
 
 /**
- * Returns `true` if the shader has this param defined as a uniform in its code.
+ * Get the list of shader uniforms that can be assigned to a [ShaderMaterial], for use with [method ShaderMaterial.set_shader_parameter] and [method ShaderMaterial.get_shader_parameter]. The parameters returned are contained in dictionaries in a similar format to the ones returned by [method Object.get_property_list].
  *
- * **Note:** `param` must match the name of the uniform in the code exactly.
+ * If argument [param get_groups] is true, parameter grouping hints will be provided.
  *
 */
-has_param(name: string): boolean;
+get_shader_uniform_list(): any[];
 
 /**
  * Sets the default texture to be used with a texture uniform. The default is used if a texture is not set in the [ShaderMaterial].
  *
- * **Note:** `param` must match the name of the uniform in the code exactly.
+ * **Note:** [param name] must match the name of the uniform in the code exactly.
+ *
+ * **Note:** If the sampler array is used use [param index] to access the specified texture.
  *
 */
-set_default_texture_param(param: string, texture: Texture): void;
+set_default_texture_parameter(): void;
 
   connect<T extends SignalsOf<Shader>>(signal: T, method: SignalFunction<Shader[T]>): number;
 
@@ -73,6 +73,18 @@ static MODE_CANVAS_ITEM: any;
  *
 */
 static MODE_PARTICLES: any;
+
+/**
+ * Mode used for drawing skies. Only works with shaders attached to [Sky] objects.
+ *
+*/
+static MODE_SKY: any;
+
+/**
+ * Mode used for setting the color and density of volumetric fog effect.
+ *
+*/
+static MODE_FOG: any;
 
 
 

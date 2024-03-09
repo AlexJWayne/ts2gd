@@ -1,13 +1,13 @@
 
 /**
- * Computes an inverse or transpose function on the provided [Transform].
+ * Computes an inverse or transpose function on the provided [Transform3D].
  *
 */
 declare class VisualShaderNodeTransformFunc extends VisualShaderNode  {
 
   
 /**
- * Computes an inverse or transpose function on the provided [Transform].
+ * Computes an inverse or transpose function on the provided [Transform3D].
  *
 */
   new(): VisualShaderNodeTransformFunc; 
@@ -24,16 +24,22 @@ function: int;
 
 
 /**
- * Perform the inverse operation on the [Transform] matrix.
+ * Perform the inverse operation on the [Transform3D] matrix.
  *
 */
 static FUNC_INVERSE: any;
 
 /**
- * Perform the transpose operation on the [Transform] matrix.
+ * Perform the transpose operation on the [Transform3D] matrix.
  *
 */
 static FUNC_TRANSPOSE: any;
+
+/**
+ * Represents the size of the [enum Function] enum.
+ *
+*/
+static FUNC_MAX: any;
 
 
 

@@ -155,6 +155,12 @@ static OP_SOFT_LIGHT: any;
 */
 static OP_HARD_LIGHT: any;
 
+/**
+ * Represents the size of the [enum Operator] enum.
+ *
+*/
+static OP_MAX: any;
+
 
 
 }

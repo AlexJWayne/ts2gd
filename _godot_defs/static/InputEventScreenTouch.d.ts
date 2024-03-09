@@ -1,23 +1,29 @@
 
 /**
- * Stores multi-touch press/release information. Supports touch press, touch release and [member index] for multi-touch count and order.
+ * Stores information about multi-touch press/release input events. Supports touch press, touch release and [member index] for multi-touch count and order.
  *
 */
-declare class InputEventScreenTouch extends InputEvent  {
+declare class InputEventScreenTouch extends InputEventFromWindow  {
 
   
 /**
- * Stores multi-touch press/release information. Supports touch press, touch release and [member index] for multi-touch count and order.
+ * Stores information about multi-touch press/release input events. Supports touch press, touch release and [member index] for multi-touch count and order.
  *
 */
   new(): InputEventScreenTouch; 
   static "new"(): InputEventScreenTouch 
 
 
+/** If [code]true[/code], the touch event has been canceled. */
+canceled: boolean;
+
+/** If [code]true[/code], the touch's state is a double tap. */
+double_tap: boolean;
+
 /** The touch index in the case of a multi-touch event. One index = one finger. */
 index: int;
 
-/** The touch position. */
+/** The touch position, in screen (global) coordinates. */
 position: Vector2;
 
 /** If [code]true[/code], the touch's state is pressed. If [code]false[/code], the touch's state is released. */

@@ -15,28 +15,35 @@ declare class MarshallsClass extends Object  {
 
 
 
-/** Returns a decoded [PoolByteArray] corresponding to the Base64-encoded string [code]base64_str[/code]. */
-base64_to_raw(base64_str: string): PoolByteArray;
+/** Returns a decoded [PackedByteArray] corresponding to the Base64-encoded string [param base64_str]. */
+base64_to_raw(): PackedByteArray;
 
-/** Returns a decoded string corresponding to the Base64-encoded string [code]base64_str[/code]. */
-base64_to_utf8(base64_str: string): string;
+/** Returns a decoded string corresponding to the Base64-encoded string [param base64_str]. */
+base64_to_utf8(): string;
 
 /**
- * Returns a decoded [Variant] corresponding to the Base64-encoded string `base64_str`. If `allow_objects` is `true`, decoding objects is allowed.
+ * Returns a decoded [Variant] corresponding to the Base64-encoded string [param base64_str]. If [param allow_objects] is `true`, decoding objects is allowed.
+ *
+ * Internally, this uses the same decoding mechanism as the [method @GlobalScope.bytes_to_var] method.
  *
  * **Warning:** Deserialized objects can contain code which gets executed. Do not use this option if the serialized object comes from untrusted sources to avoid potential security threats such as remote code execution.
  *
 */
-base64_to_variant(base64_str: string, allow_objects?: boolean): any;
+base64_to_variant(): any;
 
-/** Returns a Base64-encoded string of a given [PoolByteArray]. */
-raw_to_base64(array: PoolByteArray): string;
+/** Returns a Base64-encoded string of a given [PackedByteArray]. */
+raw_to_base64(): string;
 
-/** Returns a Base64-encoded string of the UTF-8 string [code]utf8_str[/code]. */
-utf8_to_base64(utf8_str: string): string;
+/** Returns a Base64-encoded string of the UTF-8 string [param utf8_str]. */
+utf8_to_base64(): string;
 
-/** Returns a Base64-encoded string of the [Variant] [code]variant[/code]. If [code]full_objects[/code] is [code]true[/code], encoding objects is allowed (and can potentially include code). */
-variant_to_base64(variant: any, full_objects?: boolean): string;
+/**
+ * Returns a Base64-encoded string of the [Variant] [param variant]. If [param full_objects] is `true`, encoding objects is allowed (and can potentially include code).
+ *
+ * Internally, this uses the same encoding mechanism as the [method @GlobalScope.var_to_bytes] method.
+ *
+*/
+variant_to_base64(): string;
 
   connect<T extends SignalsOf<MarshallsClass>>(signal: T, method: SignalFunction<MarshallsClass[T]>): number;
 

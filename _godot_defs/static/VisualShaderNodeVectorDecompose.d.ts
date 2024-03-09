@@ -1,13 +1,13 @@
 
 /**
- * Takes a `vec3` and decomposes it into three scalar values that can be used as separate inputs.
+ * Takes a `vec2`, `vec3` or `vec4` and decomposes it into scalar values that can be used as separate outputs.
  *
 */
-declare class VisualShaderNodeVectorDecompose extends VisualShaderNode  {
+declare class VisualShaderNodeVectorDecompose extends VisualShaderNodeVectorBase  {
 
   
 /**
- * Takes a `vec3` and decomposes it into three scalar values that can be used as separate inputs.
+ * Takes a `vec2`, `vec3` or `vec4` and decomposes it into scalar values that can be used as separate outputs.
  *
 */
   new(): VisualShaderNodeVectorDecompose; 

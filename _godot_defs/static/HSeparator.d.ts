@@ -1,13 +1,13 @@
 
 /**
- * Horizontal separator. See [Separator]. Even though it looks horizontal, it is used to separate objects vertically.
+ * A horizontal separator used for separating other controls that are arranged **vertically**. [HSeparator] is purely visual and normally drawn as a [StyleBoxLine].
  *
 */
 declare class HSeparator extends Separator  {
 
   
 /**
- * Horizontal separator. See [Separator]. Even though it looks horizontal, it is used to separate objects vertically.
+ * A horizontal separator used for separating other controls that are arranged **vertically**. [HSeparator] is purely visual and normally drawn as a [StyleBoxLine].
  *
 */
   new(): HSeparator; 

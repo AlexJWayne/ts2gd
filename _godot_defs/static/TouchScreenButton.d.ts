@@ -28,9 +28,6 @@ action: string;
 /** The button's bitmask. */
 bitmask: BitMap;
 
-/** The button's texture for the normal state. */
-normal: Texture;
-
 /**
  * If `true`, the [signal pressed] and [signal released] signals are emitted whenever a pressed finger goes in and out of the button, even if the pressure started outside the active area of the button.
  *
@@ -39,17 +36,20 @@ normal: Texture;
 */
 passby_press: boolean;
 
-/** The button's texture for the pressed state. */
-pressed: Texture;
-
 /** The button's shape. */
 shape: Shape2D;
 
 /** If [code]true[/code], the button's shape is centered in the provided texture. If no texture is used, this property has no effect. */
 shape_centered: boolean;
 
-/** If [code]true[/code], the button's shape is visible. */
+/** If [code]true[/code], the button's shape is visible in the editor. */
 shape_visible: boolean;
+
+/** The button's texture for the normal state. */
+texture_normal: Texture2D;
+
+/** The button's texture for the pressed state. */
+texture_pressed: Texture2D;
 
 /** The button's visibility mode. See [enum VisibilityMode] for possible values. */
 visibility_mode: int;

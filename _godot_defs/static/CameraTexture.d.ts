@@ -5,7 +5,7 @@
  * **Note:** Many cameras supply YCbCr images which need to be converted in a shader.
  *
 */
-declare class CameraTexture extends Texture  {
+declare class CameraTexture extends Texture2D  {
 
   
 /**

@@ -35,6 +35,12 @@ static FUNC_IS_INF: any;
 */
 static FUNC_IS_NAN: any;
 
+/**
+ * Represents the size of the [enum Function] enum.
+ *
+*/
+static FUNC_MAX: any;
+
 
 
 }

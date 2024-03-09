@@ -3,7 +3,7 @@
  * A visual shader node able to perform different functions using vectors.
  *
 */
-declare class VisualShaderNodeVectorFunc extends VisualShaderNode  {
+declare class VisualShaderNodeVectorFunc extends VisualShaderNodeVectorBase  {
 
   
 /**
@@ -46,18 +46,6 @@ static FUNC_NEGATE: any;
  *
 */
 static FUNC_RECIPROCAL: any;
-
-/**
- * Converts RGB vector to HSV equivalent.
- *
-*/
-static FUNC_RGB2HSV: any;
-
-/**
- * Converts HSV vector to RGB equivalent.
- *
-*/
-static FUNC_HSV2RGB: any;
 
 /**
  * Returns the absolute value of the parameter.
@@ -147,7 +135,7 @@ static FUNC_FLOOR: any;
  * Computes the fractional part of the argument.
  *
 */
-static FUNC_FRAC: any;
+static FUNC_FRACT: any;
 
 /**
  * Returns the inverse of the square root of the parameter.
@@ -232,6 +220,12 @@ static FUNC_TRUNC: any;
  *
 */
 static FUNC_ONEMINUS: any;
+
+/**
+ * Represents the size of the [enum Function] enum.
+ *
+*/
+static FUNC_MAX: any;
 
 
 

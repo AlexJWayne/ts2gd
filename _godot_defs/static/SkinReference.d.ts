@@ -1,7 +1,7 @@
 
 /**
 */
-declare class SkinReference extends Reference  {
+declare class SkinReference extends RefCounted  {
 
   
 /**

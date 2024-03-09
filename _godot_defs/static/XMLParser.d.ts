@@ -1,13 +1,87 @@
 
 /**
- * This class can serve as base to make custom XML parsers. Since XML is a very flexible standard, this interface is low-level so it can be applied to any possible schema.
+ * Provides a low-level interface for creating parsers for [url=https://en.wikipedia.org/wiki/XML]XML[/url] files. This class can serve as base to make custom XML parsers.
+ *
+ * To parse XML, you must open a file with the [method open] method or a buffer with the [method open_buffer] method. Then, the [method read] method must be called to parse the next nodes. Most of the methods take into consideration the currently parsed node.
+ *
+ * Here is an example of using [XMLParser] to parse a SVG file (which is based on XML), printing each element and its attributes as a dictionary:
+ *
+ * @example 
+ * 
+ * 
+ * var parser = XMLParser.new()
+ * parser.open("path/to/file.svg")
+ * while parser.read() != ERR_FILE_EOF:
+ *     if parser.get_node_type() == XMLParser.NODE_ELEMENT:
+ *         var node_name = parser.get_node_name()
+ *         var attributes_dict = {}
+ *         for idx in range(parser.get_attribute_count()):
+ *             attributes_dict[parser.get_attribute_name(idx)] = parser.get_attribute_value(idx)
+ *         print("The ", node_name, " element has the following attributes: ", attributes_dict)
+ * 
+ * 
+ * var parser = new XmlParser();
+ * parser.Open("path/to/file.svg");
+ * while (parser.Read() != Error.FileEof)
+ * {
+ *     if (parser.GetNodeType() == XmlParser.NodeType.Element)
+ *     {
+ *         var nodeName = parser.GetNodeName();
+ *         var attributesDict = new Godot.Collections.Dictionary();
+ *         for (int idx = 0; idx < parser.GetAttributeCount(); idx++)
+ *         {
+ *             attributesDict[parser.GetAttributeName(idx)] = parser.GetAttributeValue(idx);
+ *         }
+ *         GD.Print($"The {nodeName} element has the following attributes: {attributesDict}");
+ *     }
+ * }
+ * 
+ * @summary 
+ * 
  *
 */
-declare class XMLParser extends Reference  {
+declare class XMLParser extends RefCounted  {
 
   
 /**
- * This class can serve as base to make custom XML parsers. Since XML is a very flexible standard, this interface is low-level so it can be applied to any possible schema.
+ * Provides a low-level interface for creating parsers for [url=https://en.wikipedia.org/wiki/XML]XML[/url] files. This class can serve as base to make custom XML parsers.
+ *
+ * To parse XML, you must open a file with the [method open] method or a buffer with the [method open_buffer] method. Then, the [method read] method must be called to parse the next nodes. Most of the methods take into consideration the currently parsed node.
+ *
+ * Here is an example of using [XMLParser] to parse a SVG file (which is based on XML), printing each element and its attributes as a dictionary:
+ *
+ * @example 
+ * 
+ * 
+ * var parser = XMLParser.new()
+ * parser.open("path/to/file.svg")
+ * while parser.read() != ERR_FILE_EOF:
+ *     if parser.get_node_type() == XMLParser.NODE_ELEMENT:
+ *         var node_name = parser.get_node_name()
+ *         var attributes_dict = {}
+ *         for idx in range(parser.get_attribute_count()):
+ *             attributes_dict[parser.get_attribute_name(idx)] = parser.get_attribute_value(idx)
+ *         print("The ", node_name, " element has the following attributes: ", attributes_dict)
+ * 
+ * 
+ * var parser = new XmlParser();
+ * parser.Open("path/to/file.svg");
+ * while (parser.Read() != Error.FileEof)
+ * {
+ *     if (parser.GetNodeType() == XmlParser.NodeType.Element)
+ *     {
+ *         var nodeName = parser.GetNodeName();
+ *         var attributesDict = new Godot.Collections.Dictionary();
+ *         for (int idx = 0; idx < parser.GetAttributeCount(); idx++)
+ *         {
+ *             attributesDict[parser.GetAttributeName(idx)] = parser.GetAttributeValue(idx);
+ *         }
+ *         GD.Print($"The {nodeName} element has the following attributes: {attributesDict}");
+ *     }
+ * }
+ * 
+ * @summary 
+ * 
  *
 */
   new(): XMLParser; 
@@ -15,55 +89,60 @@ declare class XMLParser extends Reference  {
 
 
 
-/** Gets the amount of attributes in the current element. */
+/**
+ * Returns the number of attributes in the currently parsed element.
+ *
+ * **Note:** If this method is used while the currently parsed node is not [constant NODE_ELEMENT] or [constant NODE_ELEMENT_END], this count will not be updated and will still reflect the last element.
+ *
+*/
 get_attribute_count(): int;
 
-/** Gets the name of the attribute specified by the index in [code]idx[/code] argument. */
-get_attribute_name(idx: int): string;
+/** Returns the name of an attribute of the currently parsed element, specified by the [param idx] index. */
+get_attribute_name(): string;
 
-/** Gets the value of the attribute specified by the index in [code]idx[/code] argument. */
-get_attribute_value(idx: int): string;
+/** Returns the value of an attribute of the currently parsed element, specified by the [param idx] index. */
+get_attribute_value(): string;
 
-/** Gets the current line in the parsed file (currently not implemented). */
+/** Returns the current line in the parsed file, counting from 0. */
 get_current_line(): int;
 
-/** Gets the value of a certain attribute of the current element by name. This will raise an error if the element has no such attribute. */
-get_named_attribute_value(name: string): string;
+/** Returns the value of an attribute of the currently parsed element, specified by its [param name]. This method will raise an error if the element has no such attribute. */
+get_named_attribute_value(): string;
 
-/** Gets the value of a certain attribute of the current element by name. This will return an empty [String] if the attribute is not found. */
-get_named_attribute_value_safe(name: string): string;
+/** Returns the value of an attribute of the currently parsed element, specified by its [param name]. This method will return an empty string if the element has no such attribute. */
+get_named_attribute_value_safe(): string;
 
-/** Gets the contents of a text node. This will raise an error in any other type of node. */
+/** Returns the contents of a text node. This method will raise an error if the current parsed node is of any other type. */
 get_node_data(): string;
 
-/** Gets the name of the current element node. This will raise an error if the current node type is neither [constant NODE_ELEMENT] nor [constant NODE_ELEMENT_END]. */
+/** Returns the name of an element node. This method will raise an error if the currently parsed node is not of [constant NODE_ELEMENT] or [constant NODE_ELEMENT_END] type. */
 get_node_name(): string;
 
-/** Gets the byte offset of the current node since the beginning of the file or buffer. */
+/** Returns the byte offset of the currently parsed node since the beginning of the file or buffer. This is usually equivalent to the number of characters before the read position. */
 get_node_offset(): int;
 
-/** Gets the type of the current node. Compare with [enum NodeType] constants. */
+/** Returns the type of the current node. Compare with [enum NodeType] constants. */
 get_node_type(): int;
 
-/** Check whether the current element has a certain attribute. */
-has_attribute(name: string): boolean;
+/** Returns [code]true[/code] if the currently parsed element has an attribute with the [param name]. */
+has_attribute(): boolean;
 
-/** Check whether the current element is empty (this only works for completely empty tags, e.g. [code]<element \>[/code]). */
+/** Returns [code]true[/code] if the currently parsed element is empty, e.g. [code]<element />[/code]. */
 is_empty(): boolean;
 
-/** Opens an XML file for parsing. This returns an error code. */
-open(file: string): int;
+/** Opens an XML [param file] for parsing. This method returns an error code. */
+open(): int;
 
-/** Opens an XML raw buffer for parsing. This returns an error code. */
-open_buffer(buffer: PoolByteArray): int;
+/** Opens an XML raw [param buffer] for parsing. This method returns an error code. */
+open_buffer(): int;
 
-/** Reads the next node of the file. This returns an error code. */
+/** Parses the next node in the file. This method returns an error code. */
 read(): int;
 
-/** Moves the buffer cursor to a certain offset (since the beginning) and read the next node there. This returns an error code. */
-seek(position: int): int;
+/** Moves the buffer cursor to a certain offset (since the beginning) and reads the next node there. This method returns an error code. */
+seek(): int;
 
-/** Skips the current section. If the node contains other elements, they will be ignored and the cursor will go to the closing of the current element. */
+/** Skips the current section. If the currently parsed node contains more inner nodes, they will be ignored and the cursor will go to the closing of the current element. */
 skip_section(): void;
 
   connect<T extends SignalsOf<XMLParser>>(signal: T, method: SignalFunction<XMLParser[T]>): number;
@@ -77,37 +156,37 @@ skip_section(): void;
 static NODE_NONE: any;
 
 /**
- * Element (tag).
+ * An element node type, also known as a tag, e.g. `<title>`.
  *
 */
 static NODE_ELEMENT: any;
 
 /**
- * End of element.
+ * An end of element node type, e.g. `</title>`.
  *
 */
 static NODE_ELEMENT_END: any;
 
 /**
- * Text node.
+ * A text node type, i.e. text that is not inside an element. This includes whitespace.
  *
 */
 static NODE_TEXT: any;
 
 /**
- * Comment node.
+ * A comment node type, e.g. `<!--A comment-->`.
  *
 */
 static NODE_COMMENT: any;
 
 /**
- * CDATA content.
+ * A node type for CDATA (Character Data) sections, e.g. `<![CDATA[CDATA section]]>`.
  *
 */
 static NODE_CDATA: any;
 
 /**
- * Unknown node.
+ * An unknown node type.
  *
 */
 static NODE_UNKNOWN: any;

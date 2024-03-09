@@ -5,7 +5,7 @@
  * Translated to `distance(p0, p1)` in the shader language.
  *
 */
-declare class VisualShaderNodeVectorDistance extends VisualShaderNode  {
+declare class VisualShaderNodeVectorDistance extends VisualShaderNodeVectorBase  {
 
   
 /**

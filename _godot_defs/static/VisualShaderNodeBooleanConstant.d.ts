@@ -2,16 +2,16 @@
 /**
  * Has only one output port and no inputs.
  *
- * Translated to `bool` in the shader language.
+ * Translated to [code skip-lint]bool` in the shader language.
  *
 */
-declare class VisualShaderNodeBooleanConstant extends VisualShaderNode  {
+declare class VisualShaderNodeBooleanConstant extends VisualShaderNodeConstant  {
 
   
 /**
  * Has only one output port and no inputs.
  *
- * Translated to `bool` in the shader language.
+ * Translated to [code skip-lint]bool` in the shader language.
  *
 */
   new(): VisualShaderNodeBooleanConstant; 

@@ -2,37 +2,50 @@
 /**
  * [MainLoop] is the abstract base class for a Godot project's game loop. It is inherited by [SceneTree], which is the default game loop implementation used in Godot projects, though it is also possible to write and use one's own [MainLoop] subclass instead of the scene tree.
  *
- * Upon the application start, a [MainLoop] implementation must be provided to the OS; otherwise, the application will exit. This happens automatically (and a [SceneTree] is created) unless a main [Script] is provided from the command line (with e.g. `godot -s my_loop.gd`, which should then be a [MainLoop] implementation.
+ * Upon the application start, a [MainLoop] implementation must be provided to the OS; otherwise, the application will exit. This happens automatically (and a [SceneTree] is created) unless a [MainLoop] [Script] is provided from the command line (with e.g. `godot -s my_loop.gd` or the "Main Loop Type" project setting is overwritten.
  *
  * Here is an example script implementing a simple [MainLoop]:
  *
  * @example 
  * 
+ * 
+ * class_name CustomMainLoop
  * extends MainLoop
  * var time_elapsed = 0
- * var keys_typed = []
- * var quit = false
  * func _initialize():
  *     print("Initialized:")
  *     print("  Starting time: %s" % str(time_elapsed))
- * func _idle(delta):
+ * func _process(delta):
  *     time_elapsed += delta
  *     # Return true to end the main loop.
- *     return quit
- * func _input_event(event):
- *     # Record keys.
- *     if event is InputEventKey and event.pressed and !event.echo:
- *         keys_typed.append(OS.get_scancode_string(event.scancode))
- *         # Quit on Escape press.
- *         if event.scancode == KEY_ESCAPE:
- *             quit = true
- *     # Quit on any mouse click.
- *     if event is InputEventMouseButton:
- *         quit = true
+ *     return Input.get_mouse_button_mask() != 0 || Input.is_key_pressed(KEY_ESCAPE)
  * func _finalize():
  *     print("Finalized:")
  *     print("  End time: %s" % str(time_elapsed))
- *     print("  Keys typed: %s" % var2str(keys_typed))
+ * 
+ * 
+ * using Godot;
+ * public partial class CustomMainLoop : MainLoop
+ * {
+ *     private double _timeElapsed = 0;
+ *     public override void _Initialize()
+ *     {
+ *         GD.Print("Initialized:");
+ *         GD.Print($"  Starting Time: {_timeElapsed}");
+ *     }
+ *     public override bool _Process(double delta)
+ *     {
+ *         _timeElapsed += delta;
+ *         // Return true to end the main loop.
+ *         return Input.GetMouseButtonMask() != 0 || Input.IsKeyPressed(Key.Escape);
+ *     }
+ *     private void _Finalize()
+ *     {
+ *         GD.Print("Finalized:");
+ *         GD.Print($"  End Time: {_timeElapsed}");
+ *     }
+ * }
+ * 
  * @summary 
  * 
  *
@@ -43,37 +56,50 @@ declare class MainLoop extends Object  {
 /**
  * [MainLoop] is the abstract base class for a Godot project's game loop. It is inherited by [SceneTree], which is the default game loop implementation used in Godot projects, though it is also possible to write and use one's own [MainLoop] subclass instead of the scene tree.
  *
- * Upon the application start, a [MainLoop] implementation must be provided to the OS; otherwise, the application will exit. This happens automatically (and a [SceneTree] is created) unless a main [Script] is provided from the command line (with e.g. `godot -s my_loop.gd`, which should then be a [MainLoop] implementation.
+ * Upon the application start, a [MainLoop] implementation must be provided to the OS; otherwise, the application will exit. This happens automatically (and a [SceneTree] is created) unless a [MainLoop] [Script] is provided from the command line (with e.g. `godot -s my_loop.gd` or the "Main Loop Type" project setting is overwritten.
  *
  * Here is an example script implementing a simple [MainLoop]:
  *
  * @example 
  * 
+ * 
+ * class_name CustomMainLoop
  * extends MainLoop
  * var time_elapsed = 0
- * var keys_typed = []
- * var quit = false
  * func _initialize():
  *     print("Initialized:")
  *     print("  Starting time: %s" % str(time_elapsed))
- * func _idle(delta):
+ * func _process(delta):
  *     time_elapsed += delta
  *     # Return true to end the main loop.
- *     return quit
- * func _input_event(event):
- *     # Record keys.
- *     if event is InputEventKey and event.pressed and !event.echo:
- *         keys_typed.append(OS.get_scancode_string(event.scancode))
- *         # Quit on Escape press.
- *         if event.scancode == KEY_ESCAPE:
- *             quit = true
- *     # Quit on any mouse click.
- *     if event is InputEventMouseButton:
- *         quit = true
+ *     return Input.get_mouse_button_mask() != 0 || Input.is_key_pressed(KEY_ESCAPE)
  * func _finalize():
  *     print("Finalized:")
  *     print("  End time: %s" % str(time_elapsed))
- *     print("  Keys typed: %s" % var2str(keys_typed))
+ * 
+ * 
+ * using Godot;
+ * public partial class CustomMainLoop : MainLoop
+ * {
+ *     private double _timeElapsed = 0;
+ *     public override void _Initialize()
+ *     {
+ *         GD.Print("Initialized:");
+ *         GD.Print($"  Starting Time: {_timeElapsed}");
+ *     }
+ *     public override bool _Process(double delta)
+ *     {
+ *         _timeElapsed += delta;
+ *         // Return true to end the main loop.
+ *         return Input.GetMouseButtonMask() != 0 || Input.IsKeyPressed(Key.Escape);
+ *     }
+ *     private void _Finalize()
+ *     {
+ *         GD.Print("Finalized:");
+ *         GD.Print($"  End Time: {_timeElapsed}");
+ *     }
+ * }
+ * 
  * @summary 
  * 
  *
@@ -83,117 +109,31 @@ declare class MainLoop extends Object  {
 
 
 
-/** Called when files are dragged from the OS file manager and dropped in the game window. The arguments are a list of file paths and the identifier of the screen where the drag originated. */
-protected _drop_files(files: PoolStringArray, from_screen: int): void;
-
 /** Called before the program exits. */
 protected _finalize(): void;
-
-/** Called when the user performs an action in the system global menu (e.g. the Mac OS menu bar). */
-protected _global_menu_action(id: any, meta: any): void;
-
-/**
- * Called each idle frame with the time since the last idle frame as argument (in seconds). Equivalent to [method Node._process].
- *
- * If implemented, the method must return a boolean value. `true` ends the main loop, while `false` lets it proceed to the next frame.
- *
-*/
-protected _idle(delta: float): boolean;
 
 /** Called once during initialization. */
 protected _initialize(): void;
 
-/** Called whenever an [InputEvent] is received by the main loop. */
-protected _input_event(event: InputEvent): void;
-
-/** Deprecated callback, does not do anything. Use [method _input_event] to parse text input. Will be removed in Godot 4.0. */
-protected _input_text(text: string): void;
-
 /**
- * Called each physics frame with the time since the last physics frame as argument (`delta`, in seconds). Equivalent to [method Node._physics_process].
+ * Called each physics frame with the time since the last physics frame as argument ([param delta], in seconds). Equivalent to [method Node._physics_process].
  *
  * If implemented, the method must return a boolean value. `true` ends the main loop, while `false` lets it proceed to the next frame.
  *
 */
-protected _iteration(delta: float): boolean;
+protected _physics_process(): boolean;
 
-/** Should not be called manually, override [method _finalize] instead. Will be removed in Godot 4.0. */
-finish(): void;
-
-/** Should not be called manually, override [method _idle] instead. Will be removed in Godot 4.0. */
-idle(delta: float): boolean;
-
-/** Should not be called manually, override [method _initialize] instead. Will be removed in Godot 4.0. */
-init(): void;
-
-/** Should not be called manually, override [method _input_event] instead. Will be removed in Godot 4.0. */
-input_event(event: InputEvent): void;
-
-/** Should not be called manually, override [method _input_text] instead. Will be removed in Godot 4.0. */
-input_text(text: string): void;
-
-/** Should not be called manually, override [method _iteration] instead. Will be removed in Godot 4.0. */
-iteration(delta: float): boolean;
+/**
+ * Called each process (idle) frame with the time since the last process frame as argument (in seconds). Equivalent to [method Node._process].
+ *
+ * If implemented, the method must return a boolean value. `true` ends the main loop, while `false` lets it proceed to the next frame.
+ *
+*/
+protected _process(): boolean;
 
   connect<T extends SignalsOf<MainLoop>>(signal: T, method: SignalFunction<MainLoop[T]>): number;
 
 
-
-/**
- * Notification received from the OS when the mouse enters the game window.
- *
- * Implemented on desktop and web platforms.
- *
-*/
-static NOTIFICATION_WM_MOUSE_ENTER: any;
-
-/**
- * Notification received from the OS when the mouse leaves the game window.
- *
- * Implemented on desktop and web platforms.
- *
-*/
-static NOTIFICATION_WM_MOUSE_EXIT: any;
-
-/**
- * Notification received from the OS when the game window is focused.
- *
- * Implemented on all platforms.
- *
-*/
-static NOTIFICATION_WM_FOCUS_IN: any;
-
-/**
- * Notification received from the OS when the game window is unfocused.
- *
- * Implemented on all platforms.
- *
-*/
-static NOTIFICATION_WM_FOCUS_OUT: any;
-
-/**
- * Notification received from the OS when a quit request is sent (e.g. closing the window with a "Close" button or Alt+F4).
- *
- * Implemented on desktop platforms.
- *
-*/
-static NOTIFICATION_WM_QUIT_REQUEST: any;
-
-/**
- * Notification received from the OS when a go back request is sent (e.g. pressing the "Back" button on Android).
- *
- * Specific to the Android platform.
- *
-*/
-static NOTIFICATION_WM_GO_BACK_REQUEST: any;
-
-/**
- * Notification received from the OS when an unfocus request is sent (e.g. another OS window wants to take the focus).
- *
- * No supported platforms currently send this notification.
- *
-*/
-static NOTIFICATION_WM_UNFOCUS_REQUEST: any;
 
 /**
  * Notification received from the OS when the application is exceeding its allocated memory.
@@ -234,27 +174,49 @@ static NOTIFICATION_CRASH: any;
 static NOTIFICATION_OS_IME_UPDATE: any;
 
 /**
- * Notification received from the OS when the app is resumed.
+ * Notification received from the OS when the application is resumed.
  *
  * Specific to the Android platform.
  *
 */
-static NOTIFICATION_APP_RESUMED: any;
+static NOTIFICATION_APPLICATION_RESUMED: any;
 
 /**
- * Notification received from the OS when the app is paused.
+ * Notification received from the OS when the application is paused.
  *
  * Specific to the Android platform.
  *
 */
-static NOTIFICATION_APP_PAUSED: any;
+static NOTIFICATION_APPLICATION_PAUSED: any;
+
+/**
+ * Notification received from the OS when the application is focused, i.e. when changing the focus from the OS desktop or a thirdparty application to any open window of the Godot instance.
+ *
+ * Implemented on desktop platforms.
+ *
+*/
+static NOTIFICATION_APPLICATION_FOCUS_IN: any;
+
+/**
+ * Notification received from the OS when the application is defocused, i.e. when changing the focus from any open window of the Godot instance to the OS desktop or a thirdparty application.
+ *
+ * Implemented on desktop platforms.
+ *
+*/
+static NOTIFICATION_APPLICATION_FOCUS_OUT: any;
+
+/**
+ * Notification received when text server is changed.
+ *
+*/
+static NOTIFICATION_TEXT_SERVER_CHANGED: any;
 
 
 /**
  * Emitted when a user responds to a permission request.
  *
 */
-$on_request_permissions_result: Signal<(permission: string, granted: boolean) => void>
+$on_request_permissions_result: Signal<() => void>
 
 }
 

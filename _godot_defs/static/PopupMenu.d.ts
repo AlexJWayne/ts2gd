@@ -1,13 +1,29 @@
 
 /**
- * [PopupMenu] is a [Control] that displays a list of options. They are popular in toolbars or context menus.
+ * [PopupMenu] is a modal window used to display a list of options. Useful for toolbars and context menus.
+ *
+ * The size of a [PopupMenu] can be limited by using [member Window.max_size]. If the height of the list of items is larger than the maximum height of the [PopupMenu], a [ScrollContainer] within the popup will allow the user to scroll the contents. If no maximum size is set, or if it is set to `0`, the [PopupMenu] height will be limited by its parent rect.
+ *
+ * All `set_*` methods allow negative item indices, i.e. `-1` to access the last item, `-2` to select the second-to-last item, and so on.
+ *
+ * **Incremental search:** Like [ItemList] and [Tree], [PopupMenu] supports searching within the list while the control is focused. Press a key that matches the first letter of an item's name to select the first item starting with the given letter. After that point, there are two ways to perform incremental search: 1) Press the same key again before the timeout duration to select the next item starting with the same letter. 2) Press letter keys that match the rest of the word before the timeout duration to match to select the item in question directly. Both of these actions will be reset to the beginning of the list if the timeout duration has passed since the last keystroke was registered. You can adjust the timeout duration by changing [member ProjectSettings.gui/timers/incremental_search_max_interval_msec].
+ *
+ * **Note:** The ID values used for items are limited to 32 bits, not full 64 bits of [int]. This has a range of `-2^32` to `2^32 - 1`, i.e. `-2147483648` to `2147483647`.
  *
 */
 declare class PopupMenu extends Popup  {
 
   
 /**
- * [PopupMenu] is a [Control] that displays a list of options. They are popular in toolbars or context menus.
+ * [PopupMenu] is a modal window used to display a list of options. Useful for toolbars and context menus.
+ *
+ * The size of a [PopupMenu] can be limited by using [member Window.max_size]. If the height of the list of items is larger than the maximum height of the [PopupMenu], a [ScrollContainer] within the popup will allow the user to scroll the contents. If no maximum size is set, or if it is set to `0`, the [PopupMenu] height will be limited by its parent rect.
+ *
+ * All `set_*` methods allow negative item indices, i.e. `-1` to access the last item, `-2` to select the second-to-last item, and so on.
+ *
+ * **Incremental search:** Like [ItemList] and [Tree], [PopupMenu] supports searching within the list while the control is focused. Press a key that matches the first letter of an item's name to select the first item starting with the given letter. After that point, there are two ways to perform incremental search: 1) Press the same key again before the timeout duration to select the next item starting with the same letter. 2) Press letter keys that match the rest of the word before the timeout duration to match to select the item in question directly. Both of these actions will be reset to the beginning of the list if the timeout duration has passed since the last keystroke was registered. You can adjust the timeout duration by changing [member ProjectSettings.gui/timers/incremental_search_max_interval_msec].
+ *
+ * **Note:** The ID values used for items are limited to 32 bits, not full 64 bits of [int]. This has a range of `-2^32` to `2^32 - 1`, i.e. `-2147483648` to `2147483647`.
  *
 */
   new(): PopupMenu; 
@@ -16,7 +32,6 @@ declare class PopupMenu extends Popup  {
 
 /** If [code]true[/code], allows navigating [PopupMenu] with letter keys. */
 allow_search: boolean;
-
 
 /** If [code]true[/code], hides the [PopupMenu] when a checkbox or radio button is selected. */
 hide_on_checkable_item_selection: boolean;
@@ -27,271 +42,327 @@ hide_on_item_selection: boolean;
 /** If [code]true[/code], hides the [PopupMenu] when a state item is selected. */
 hide_on_state_item_selection: boolean;
 
+/** The number of items currently in the list. */
+item_count: int;
+
 /** Sets the delay time in seconds for the submenu item to popup on mouse hovering. If the popup menu is added as a child of another (acting as a submenu), it will inherit the delay time of the parent menu item. */
 submenu_popup_delay: float;
 
 /**
- * Adds a new checkable item with text `label`.
+ * Checks the provided [param event] against the [PopupMenu]'s shortcuts and accelerators, and activates the first item with matching events. If [param for_global_only] is `true`, only shortcuts and accelerators with `global` set to `true` will be called.
  *
- * An `id` can optionally be provided, as well as an accelerator (`accel`). If no `id` is provided, one will be created from the index. If no `accel` is provided then the default `0` will be assigned to it. See [method get_item_accelerator] for more info on accelerators.
+ * Returns `true` if an item was successfully activated.
+ *
+ * **Note:** Certain [Control]s, such as [MenuButton], will call this method automatically.
+ *
+*/
+activate_item_by_event(): boolean;
+
+/**
+ * Adds a new checkable item with text [param label].
+ *
+ * An [param id] can optionally be provided, as well as an accelerator ([param accel]). If no [param id] is provided, one will be created from the index. If no [param accel] is provided, then the default value of 0 (corresponding to [constant @GlobalScope.KEY_NONE]) will be assigned to the item (which means it won't have any accelerator). See [method get_item_accelerator] for more info on accelerators.
  *
  * **Note:** Checkable items just display a checkmark, but don't have any built-in checking behavior and must be checked/unchecked manually. See [method set_item_checked] for more info on how to control it.
  *
 */
-add_check_item(label: string, id?: int, accel?: int): void;
+add_check_item(): void;
 
 /**
- * Adds a new checkable item and assigns the specified [ShortCut] to it. Sets the label of the checkbox to the [ShortCut]'s name.
+ * Adds a new checkable item and assigns the specified [Shortcut] to it. Sets the label of the checkbox to the [Shortcut]'s name.
  *
- * An `id` can optionally be provided. If no `id` is provided, one will be created from the index.
+ * An [param id] can optionally be provided. If no [param id] is provided, one will be created from the index.
  *
  * **Note:** Checkable items just display a checkmark, but don't have any built-in checking behavior and must be checked/unchecked manually. See [method set_item_checked] for more info on how to control it.
  *
 */
-add_check_shortcut(shortcut: ShortCut, id?: int, global?: boolean): void;
+add_check_shortcut(): void;
 
 /**
- * Adds a new checkable item with text `label` and icon `texture`.
+ * Adds a new checkable item with text [param label] and icon [param texture].
  *
- * An `id` can optionally be provided, as well as an accelerator (`accel`). If no `id` is provided, one will be created from the index. If no `accel` is provided then the default `0` will be assigned to it. See [method get_item_accelerator] for more info on accelerators.
+ * An [param id] can optionally be provided, as well as an accelerator ([param accel]). If no [param id] is provided, one will be created from the index. If no [param accel] is provided, then the default value of 0 (corresponding to [constant @GlobalScope.KEY_NONE]) will be assigned to the item (which means it won't have any accelerator). See [method get_item_accelerator] for more info on accelerators.
  *
  * **Note:** Checkable items just display a checkmark, but don't have any built-in checking behavior and must be checked/unchecked manually. See [method set_item_checked] for more info on how to control it.
  *
 */
-add_icon_check_item(texture: Texture, label: string, id?: int, accel?: int): void;
+add_icon_check_item(): void;
 
 /**
- * Adds a new checkable item and assigns the specified [ShortCut] and icon `texture` to it. Sets the label of the checkbox to the [ShortCut]'s name.
+ * Adds a new checkable item and assigns the specified [Shortcut] and icon [param texture] to it. Sets the label of the checkbox to the [Shortcut]'s name.
  *
- * An `id` can optionally be provided. If no `id` is provided, one will be created from the index.
+ * An [param id] can optionally be provided. If no [param id] is provided, one will be created from the index.
  *
  * **Note:** Checkable items just display a checkmark, but don't have any built-in checking behavior and must be checked/unchecked manually. See [method set_item_checked] for more info on how to control it.
  *
 */
-add_icon_check_shortcut(texture: Texture, shortcut: ShortCut, id?: int, global?: boolean): void;
+add_icon_check_shortcut(): void;
 
 /**
- * Adds a new item with text `label` and icon `texture`.
+ * Adds a new item with text [param label] and icon [param texture].
  *
- * An `id` can optionally be provided, as well as an accelerator (`accel`). If no `id` is provided, one will be created from the index. If no `accel` is provided then the default `0` will be assigned to it. See [method get_item_accelerator] for more info on accelerators.
+ * An [param id] can optionally be provided, as well as an accelerator ([param accel]). If no [param id] is provided, one will be created from the index. If no [param accel] is provided, then the default value of 0 (corresponding to [constant @GlobalScope.KEY_NONE]) will be assigned to the item (which means it won't have any accelerator). See [method get_item_accelerator] for more info on accelerators.
  *
 */
-add_icon_item(texture: Texture, label: string, id?: int, accel?: int): void;
+add_icon_item(): void;
 
 /** Same as [method add_icon_check_item], but uses a radio check button. */
-add_icon_radio_check_item(texture: Texture, label: string, id?: int, accel?: int): void;
+add_icon_radio_check_item(): void;
 
 /** Same as [method add_icon_check_shortcut], but uses a radio check button. */
-add_icon_radio_check_shortcut(texture: Texture, shortcut: ShortCut, id?: int, global?: boolean): void;
+add_icon_radio_check_shortcut(): void;
 
 /**
- * Adds a new item and assigns the specified [ShortCut] and icon `texture` to it. Sets the label of the checkbox to the [ShortCut]'s name.
+ * Adds a new item and assigns the specified [Shortcut] and icon [param texture] to it. Sets the label of the checkbox to the [Shortcut]'s name.
  *
- * An `id` can optionally be provided. If no `id` is provided, one will be created from the index.
+ * An [param id] can optionally be provided. If no [param id] is provided, one will be created from the index.
+ *
+ * If [param allow_echo] is `true`, the shortcut can be activated with echo events.
  *
 */
-add_icon_shortcut(texture: Texture, shortcut: ShortCut, id?: int, global?: boolean): void;
+add_icon_shortcut(): void;
 
 /**
- * Adds a new item with text `label`.
+ * Adds a new item with text [param label].
  *
- * An `id` can optionally be provided, as well as an accelerator (`accel`). If no `id` is provided, one will be created from the index. If no `accel` is provided then the default `0` will be assigned to it. See [method get_item_accelerator] for more info on accelerators.
+ * An [param id] can optionally be provided, as well as an accelerator ([param accel]). If no [param id] is provided, one will be created from the index. If no [param accel] is provided, then the default value of 0 (corresponding to [constant @GlobalScope.KEY_NONE]) will be assigned to the item (which means it won't have any accelerator). See [method get_item_accelerator] for more info on accelerators.
+ *
+ * **Note:** The provided [param id] is used only in [signal id_pressed] and [signal id_focused] signals. It's not related to the `index` arguments in e.g. [method set_item_checked].
  *
 */
-add_item(label: string, id?: int, accel?: int): void;
+add_item(): void;
 
 /**
- * Adds a new multistate item with text `label`.
+ * Adds a new multistate item with text [param label].
  *
- * Contrarily to normal binary items, multistate items can have more than two states, as defined by `max_states`. Each press or activate of the item will increase the state by one. The default value is defined by `default_state`.
+ * Contrarily to normal binary items, multistate items can have more than two states, as defined by [param max_states]. Each press or activate of the item will increase the state by one. The default value is defined by [param default_state].
  *
- * An `id` can optionally be provided, as well as an accelerator (`accel`). If no `id` is provided, one will be created from the index. If no `accel` is provided then the default `0` will be assigned to it. See [method get_item_accelerator] for more info on accelerators.
+ * An [param id] can optionally be provided, as well as an accelerator ([param accel]). If no [param id] is provided, one will be created from the index. If no [param accel] is provided, then the default value of 0 (corresponding to [constant @GlobalScope.KEY_NONE]) will be assigned to the item (which means it won't have any accelerator). See [method get_item_accelerator] for more info on accelerators.
  *
 */
-add_multistate_item(label: string, max_states: int, default_state?: int, id?: int, accel?: int): void;
+add_multistate_item(): void;
 
 /**
- * Adds a new radio check button with text `label`.
+ * Adds a new radio check button with text [param label].
  *
- * An `id` can optionally be provided, as well as an accelerator (`accel`). If no `id` is provided, one will be created from the index. If no `accel` is provided then the default `0` will be assigned to it. See [method get_item_accelerator] for more info on accelerators.
+ * An [param id] can optionally be provided, as well as an accelerator ([param accel]). If no [param id] is provided, one will be created from the index. If no [param accel] is provided, then the default value of 0 (corresponding to [constant @GlobalScope.KEY_NONE]) will be assigned to the item (which means it won't have any accelerator). See [method get_item_accelerator] for more info on accelerators.
  *
  * **Note:** Checkable items just display a checkmark, but don't have any built-in checking behavior and must be checked/unchecked manually. See [method set_item_checked] for more info on how to control it.
  *
 */
-add_radio_check_item(label: string, id?: int, accel?: int): void;
+add_radio_check_item(): void;
 
 /**
- * Adds a new radio check button and assigns a [ShortCut] to it. Sets the label of the checkbox to the [ShortCut]'s name.
+ * Adds a new radio check button and assigns a [Shortcut] to it. Sets the label of the checkbox to the [Shortcut]'s name.
  *
- * An `id` can optionally be provided. If no `id` is provided, one will be created from the index.
+ * An [param id] can optionally be provided. If no [param id] is provided, one will be created from the index.
  *
  * **Note:** Checkable items just display a checkmark, but don't have any built-in checking behavior and must be checked/unchecked manually. See [method set_item_checked] for more info on how to control it.
  *
 */
-add_radio_check_shortcut(shortcut: ShortCut, id?: int, global?: boolean): void;
+add_radio_check_shortcut(): void;
 
 /**
- * Adds a separator between items. Separators also occupy an index, which you can set by using the `id` parameter.
+ * Adds a separator between items. Separators also occupy an index, which you can set by using the [param id] parameter.
  *
- * A `label` can optionally be provided, which will appear at the center of the separator.
+ * A [param label] can optionally be provided, which will appear at the center of the separator.
  *
 */
-add_separator(label?: string, id?: int): void;
+add_separator(): void;
 
 /**
- * Adds a [ShortCut].
+ * Adds a [Shortcut].
  *
- * An `id` can optionally be provided. If no `id` is provided, one will be created from the index.
+ * An [param id] can optionally be provided. If no [param id] is provided, one will be created from the index.
+ *
+ * If [param allow_echo] is `true`, the shortcut can be activated with echo events.
  *
 */
-add_shortcut(shortcut: ShortCut, id?: int, global?: boolean): void;
+add_shortcut(): void;
 
 /**
- * Adds an item that will act as a submenu of the parent [PopupMenu] node when clicked. The `submenu` argument is the name of the child [PopupMenu] node that will be shown when the item is clicked.
+ * Adds an item that will act as a submenu of the parent [PopupMenu] node when clicked. The [param submenu] argument must be the name of an existing [PopupMenu] that has been added as a child to this node. This submenu will be shown when the item is clicked, hovered for long enough, or activated using the `ui_select` or `ui_right` input actions.
  *
- * An `id` can optionally be provided. If no `id` is provided, one will be created from the index.
+ * An [param id] can optionally be provided. If no [param id] is provided, one will be created from the index.
  *
 */
-add_submenu_item(label: string, submenu: string, id?: int): void;
+add_submenu_item(): void;
 
-/** Removes all items from the [PopupMenu]. */
+/** Removes all items from the [PopupMenu]. If [param free_submenus] is [code]true[/code], the submenu nodes are automatically freed. */
 clear(): void;
 
 /** Returns the index of the currently focused item. Returns [code]-1[/code] if no item is focused. */
-get_current_index(): int;
+get_focused_item(): int;
 
-/** Returns the accelerator of the item at index [code]idx[/code]. Accelerators are special combinations of keys that activate the item, no matter which control is focused. */
-get_item_accelerator(idx: int): int;
+/** Returns the accelerator of the item at the given [param index]. An accelerator is a keyboard shortcut that can be pressed to trigger the menu button even if it's not currently open. The return value is an integer which is generally a combination of [enum KeyModifierMask]s and [enum Key]s using bitwise OR such as [code]KEY_MASK_CTRL | KEY_A[/code] ([kbd]Ctrl + A[/kbd]). If no accelerator is defined for the specified [param index], [method get_item_accelerator] returns [code]0[/code] (corresponding to [constant @GlobalScope.KEY_NONE]). */
+get_item_accelerator(): int;
 
-/** Returns the number of items in the [PopupMenu]. */
-get_item_count(): int;
+/** Returns the icon of the item at the given [param index]. */
+get_item_icon(): Texture2D;
 
-/** Returns the icon of the item at index [code]idx[/code]. */
-get_item_icon(idx: int): Texture;
+/** Returns the maximum allowed width of the icon for the item at the given [param index]. */
+get_item_icon_max_width(): int;
 
-/** Returns the id of the item at index [code]idx[/code]. [code]id[/code] can be manually assigned, while index can not. */
-get_item_id(idx: int): int;
+/** Returns a [Color] modulating the item's icon at the given [param index]. */
+get_item_icon_modulate(): Color;
 
-/** Returns the index of the item containing the specified [code]id[/code]. Index is automatically assigned to each item by the engine. Index can not be set manually. */
-get_item_index(id: int): int;
+/** Returns the ID of the item at the given [param index]. [code]id[/code] can be manually assigned, while index can not. */
+get_item_id(): int;
+
+/** Returns the horizontal offset of the item at the given [param index]. */
+get_item_indent(): int;
+
+/** Returns the index of the item containing the specified [param id]. Index is automatically assigned to each item by the engine and can not be set manually. */
+get_item_index(): int;
+
+/** Returns item's text language code. */
+get_item_language(): string;
 
 /** Returns the metadata of the specified item, which might be of any type. You can set it with [method set_item_metadata], which provides a simple way of assigning context data to items. */
-get_item_metadata(idx: int): any;
+get_item_metadata(): any;
 
-/** Returns the [ShortCut] associated with the specified [code]idx[/code] item. */
-get_item_shortcut(idx: int): ShortCut;
+/** Returns the [Shortcut] associated with the item at the given [param index]. */
+get_item_shortcut(): Shortcut;
 
-/** Returns the submenu name of the item at index [code]idx[/code]. See [method add_submenu_item] for more info on how to add a submenu. */
-get_item_submenu(idx: int): string;
+/** Returns the submenu name of the item at the given [param index]. See [method add_submenu_item] for more info on how to add a submenu. */
+get_item_submenu(): string;
 
-/** Returns the text of the item at index [code]idx[/code]. */
-get_item_text(idx: int): string;
+/** Returns the text of the item at the given [param index]. */
+get_item_text(): string;
 
-/** Returns the tooltip associated with the specified index index [code]idx[/code]. */
-get_item_tooltip(idx: int): string;
+/** Returns item's text base writing direction. */
+get_item_text_direction(): int;
 
-/** Returns [code]true[/code] if the popup will be hidden when the window loses focus or not. */
-is_hide_on_window_lose_focus(): boolean;
+/** Returns the tooltip associated with the item at the given [param index]. */
+get_item_tooltip(): string;
 
 /**
- * Returns `true` if the item at index `idx` is checkable in some way, i.e. if it has a checkbox or radio button.
+ * Returns `true` if the item at the given [param index] is checkable in some way, i.e. if it has a checkbox or radio button.
  *
  * **Note:** Checkable items just display a checkmark or radio button, but don't have any built-in checking behavior and must be checked/unchecked manually.
  *
 */
-is_item_checkable(idx: int): boolean;
+is_item_checkable(): boolean;
 
-/** Returns [code]true[/code] if the item at index [code]idx[/code] is checked. */
-is_item_checked(idx: int): boolean;
+/** Returns [code]true[/code] if the item at the given [param index] is checked. */
+is_item_checked(): boolean;
 
 /**
- * Returns `true` if the item at index `idx` is disabled. When it is disabled it can't be selected, or its action invoked.
+ * Returns `true` if the item at the given [param index] is disabled. When it is disabled it can't be selected, or its action invoked.
  *
  * See [method set_item_disabled] for more info on how to disable an item.
  *
 */
-is_item_disabled(idx: int): boolean;
+is_item_disabled(): boolean;
 
 /**
- * Returns `true` if the item at index `idx` has radio button-style checkability.
+ * Returns `true` if the item at the given [param index] has radio button-style checkability.
  *
  * **Note:** This is purely cosmetic; you must add the logic for checking/unchecking items in radio groups.
  *
 */
-is_item_radio_checkable(idx: int): boolean;
+is_item_radio_checkable(): boolean;
 
 /** Returns [code]true[/code] if the item is a separator. If it is, it will be displayed as a line. See [method add_separator] for more info on how to add a separator. */
-is_item_separator(idx: int): boolean;
+is_item_separator(): boolean;
 
 /** Returns [code]true[/code] if the specified item's shortcut is disabled. */
-is_item_shortcut_disabled(idx: int): boolean;
+is_item_shortcut_disabled(): boolean;
 
 /**
- * Removes the item at index `idx` from the menu.
+ * Removes the item at the given [param index] from the menu.
  *
  * **Note:** The indices of items after the removed item will be shifted by one.
  *
 */
-remove_item(idx: int): void;
+remove_item(): void;
 
-/** Hides the [PopupMenu] when the window loses focus. */
-set_hide_on_window_lose_focus(enable: boolean): void;
-
-/** Sets the accelerator of the item at index [code]idx[/code]. Accelerators are special combinations of keys that activate the item, no matter which control is focused. */
-set_item_accelerator(idx: int, accel: int): void;
+/** Moves the scroll view to make the item at the given [param index] visible. */
+scroll_to_item(): void;
 
 /**
- * Sets whether the item at index `idx` has a checkbox. If `false`, sets the type of the item to plain text.
+ * Sets the currently focused item as the given [param index].
+ *
+ * Passing `-1` as the index makes so that no item is focused.
+ *
+*/
+set_focused_item(): void;
+
+/** Sets the accelerator of the item at the given [param index]. An accelerator is a keyboard shortcut that can be pressed to trigger the menu button even if it's not currently open. [param accel] is generally a combination of [enum KeyModifierMask]s and [enum Key]s using bitwise OR such as [code]KEY_MASK_CTRL | KEY_A[/code] ([kbd]Ctrl + A[/kbd]). */
+set_item_accelerator(): void;
+
+/**
+ * Sets whether the item at the given [param index] has a checkbox. If `false`, sets the type of the item to plain text.
  *
  * **Note:** Checkable items just display a checkmark, but don't have any built-in checking behavior and must be checked/unchecked manually.
  *
 */
-set_item_as_checkable(idx: int, enable: boolean): void;
+set_item_as_checkable(): void;
 
-/** Sets the type of the item at the specified index [code]idx[/code] to radio button. If [code]false[/code], sets the type of the item to plain text. */
-set_item_as_radio_checkable(idx: int, enable: boolean): void;
+/** Sets the type of the item at the given [param index] to radio button. If [code]false[/code], sets the type of the item to plain text. */
+set_item_as_radio_checkable(): void;
 
-/** Mark the item at index [code]idx[/code] as a separator, which means that it would be displayed as a line. If [code]false[/code], sets the type of the item to plain text. */
-set_item_as_separator(idx: int, enable: boolean): void;
+/** Mark the item at the given [param index] as a separator, which means that it would be displayed as a line. If [code]false[/code], sets the type of the item to plain text. */
+set_item_as_separator(): void;
 
-/** Sets the checkstate status of the item at index [code]idx[/code]. */
-set_item_checked(idx: int, checked: boolean): void;
+/** Sets the checkstate status of the item at the given [param index]. */
+set_item_checked(): void;
 
-/** Enables/disables the item at index [code]idx[/code]. When it is disabled, it can't be selected and its action can't be invoked. */
-set_item_disabled(idx: int, disabled: boolean): void;
+/** Enables/disables the item at the given [param index]. When it is disabled, it can't be selected and its action can't be invoked. */
+set_item_disabled(): void;
 
-/** Replaces the [Texture] icon of the specified [code]idx[/code]. */
-set_item_icon(idx: int, icon: Texture): void;
+/** Replaces the [Texture2D] icon of the item at the given [param index]. */
+set_item_icon(): void;
 
-/** Sets the [code]id[/code] of the item at index [code]idx[/code]. */
-set_item_id(idx: int, id: int): void;
+/** Sets the maximum allowed width of the icon for the item at the given [param index]. This limit is applied on top of the default size of the icon and on top of [theme_item icon_max_width]. The height is adjusted according to the icon's ratio. */
+set_item_icon_max_width(): void;
+
+/** Sets a modulating [Color] of the item's icon at the given [param index]. */
+set_item_icon_modulate(): void;
+
+/**
+ * Sets the [param id] of the item at the given [param index].
+ *
+ * The [param id] is used in [signal id_pressed] and [signal id_focused] signals.
+ *
+*/
+set_item_id(): void;
+
+/** Sets the horizontal offset of the item at the given [param index]. */
+set_item_indent(): void;
+
+/** Sets language code of item's text used for line-breaking and text shaping algorithms, if left empty current locale is used instead. */
+set_item_language(): void;
 
 /** Sets the metadata of an item, which may be of any type. You can later get it with [method get_item_metadata], which provides a simple way of assigning context data to items. */
-set_item_metadata(idx: int, metadata: any): void;
+set_item_metadata(): void;
 
 /** Sets the state of a multistate item. See [method add_multistate_item] for details. */
-set_item_multistate(idx: int, state: int): void;
+set_item_multistate(): void;
 
-/** Sets a [ShortCut] for the specified item [code]idx[/code]. */
-set_item_shortcut(idx: int, shortcut: ShortCut, global?: boolean): void;
+/** Sets a [Shortcut] for the item at the given [param index]. */
+set_item_shortcut(): void;
 
-/** Disables the [ShortCut] of the specified index [code]idx[/code]. */
-set_item_shortcut_disabled(idx: int, disabled: boolean): void;
+/** Disables the [Shortcut] of the item at the given [param index]. */
+set_item_shortcut_disabled(): void;
 
-/** Sets the submenu of the item at index [code]idx[/code]. The submenu is the name of a child [PopupMenu] node that would be shown when the item is clicked. */
-set_item_submenu(idx: int, submenu: string): void;
+/** Sets the submenu of the item at the given [param index]. The submenu is the name of a child [PopupMenu] node that would be shown when the item is clicked. */
+set_item_submenu(): void;
 
-/** Sets the text of the item at index [code]idx[/code]. */
-set_item_text(idx: int, text: string): void;
+/** Sets the text of the item at the given [param index]. */
+set_item_text(): void;
 
-/** Sets the [String] tooltip of the item at the specified index [code]idx[/code]. */
-set_item_tooltip(idx: int, tooltip: string): void;
+/** Sets item's text base writing direction. */
+set_item_text_direction(): void;
 
-/** Toggles the check state of the item of the specified index [code]idx[/code]. */
-toggle_item_checked(idx: int): void;
+/** Sets the [String] tooltip of the item at the given [param index]. */
+set_item_tooltip(): void;
+
+/** Toggles the check state of the item at the given [param index]. */
+toggle_item_checked(): void;
 
 /** Cycle to the next state of a multistate item. See [method add_multistate_item] for details. */
-toggle_item_multistate(idx: int): void;
+toggle_item_multistate(): void;
 
   connect<T extends SignalsOf<PopupMenu>>(signal: T, method: SignalFunction<PopupMenu[T]>): number;
 
@@ -300,22 +371,30 @@ toggle_item_multistate(idx: int): void;
 
 
 /**
- * Emitted when user navigated to an item of some `id` using `ui_up` or `ui_down` action.
+ * Emitted when the user navigated to an item of some [param id] using the [member ProjectSettings.input/ui_up] or [member ProjectSettings.input/ui_down] input action.
  *
 */
-$id_focused: Signal<(id: int) => void>
+$id_focused: Signal<() => void>
 
 /**
- * Emitted when an item of some `id` is pressed or its accelerator is activated.
+ * Emitted when an item of some [param id] is pressed or its accelerator is activated.
+ *
+ * **Note:** If [param id] is negative (either explicitly or due to overflow), this will return the corresponding index instead.
  *
 */
-$id_pressed: Signal<(id: int) => void>
+$id_pressed: Signal<() => void>
 
 /**
- * Emitted when an item of some `index` is pressed or its accelerator is activated.
+ * Emitted when an item of some [param index] is pressed or its accelerator is activated.
  *
 */
-$index_pressed: Signal<(index: int) => void>
+$index_pressed: Signal<() => void>
+
+/**
+ * Emitted when any item is added, modified or removed.
+ *
+*/
+$menu_changed: Signal<() => void>
 
 }
 

@@ -1,13 +1,13 @@
 
 /**
- * Scrollbars are a [Range]-based [Control], that display a draggable area (the size of the page). Horizontal ([HScrollBar]) and Vertical ([VScrollBar]) versions are available.
+ * Abstract base class for scrollbars, typically used to navigate through content that extends beyond the visible area of a control. Scrollbars are [Range]-based controls.
  *
 */
 declare class ScrollBar extends Range  {
 
   
 /**
- * Scrollbars are a [Range]-based [Control], that display a draggable area (the size of the page). Horizontal ([HScrollBar]) and Vertical ([VScrollBar]) versions are available.
+ * Abstract base class for scrollbars, typically used to navigate through content that extends beyond the visible area of a control. Scrollbars are [Range]-based controls.
  *
 */
   new(): ScrollBar; 
@@ -16,7 +16,6 @@ declare class ScrollBar extends Range  {
 
 /** Overrides the step used when clicking increment and decrement buttons or when using arrow keys when the [ScrollBar] is focused. */
 custom_step: float;
-
 
 
 

@@ -1,13 +1,13 @@
 
 /**
- * Panel is a [Control] that displays an opaque background. It's commonly used as a parent and container for other types of [Control] nodes.
+ * [Panel] is a GUI control that displays a [StyleBox]. See also [PanelContainer].
  *
 */
 declare class Panel extends Control  {
 
   
 /**
- * Panel is a [Control] that displays an opaque background. It's commonly used as a parent and container for other types of [Control] nodes.
+ * [Panel] is a GUI control that displays a [StyleBox]. See also [PanelContainer].
  *
 */
   new(): Panel; 

@@ -14,10 +14,10 @@ declare class VisualShaderNodeInput extends VisualShaderNode  {
   static "new"(): VisualShaderNodeInput 
 
 
-/** One of the several input constants in lower-case style like: "vertex"([code]VERTEX[/code]) or "point_size"([code]POINT_SIZE[/code]). */
+/** One of the several input constants in lower-case style like: "vertex" ([code]VERTEX[/code]) or "point_size" ([code]POINT_SIZE[/code]). */
 input_name: string;
 
-/** No documentation provided. */
+/** Returns a translated name of the current constant in the Godot Shader Language. E.g. [code]"ALBEDO"[/code] if the [member input_name] equal to [code]"albedo"[/code]. */
 get_input_real_name(): string;
 
   connect<T extends SignalsOf<VisualShaderNodeInput>>(signal: T, method: SignalFunction<VisualShaderNodeInput[T]>): number;
@@ -27,6 +27,8 @@ get_input_real_name(): string;
 
 
 /**
+ * Emitted when input is changed via [member input_name].
+ *
 */
 $input_type_changed: Signal<() => void>
 

@@ -1,13 +1,13 @@
 
 /**
- * [StyleBox] that displays a single line of a given color and thickness. It can be used to draw things like separators.
+ * A [StyleBox] that displays a single line of a given color and thickness. The line can be either horizontal or vertical. Useful for separators.
  *
 */
 declare class StyleBoxLine extends StyleBox  {
 
   
 /**
- * [StyleBox] that displays a single line of a given color and thickness. It can be used to draw things like separators.
+ * A [StyleBox] that displays a single line of a given color and thickness. The line can be either horizontal or vertical. Useful for separators.
  *
 */
   new(): StyleBoxLine; 

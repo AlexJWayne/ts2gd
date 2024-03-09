@@ -17,67 +17,79 @@ declare class AudioServerClass extends Object  {
 /** Number of available audio buses. */
 bus_count: int;
 
-/** Name of the current device for audio output (see [method get_device_list]). */
-device: string;
+/**
+ * Name of the current device for audio input (see [method get_input_device_list]). On systems with multiple audio inputs (such as analog, USB and HDMI audio), this can be used to select the audio input device. The value `"Default"` will record audio on the system-wide default audio input. If an invalid device name is set, the value will be reverted back to `"Default"`.
+ *
+ * **Note:** [member ProjectSettings.audio/driver/enable_input] must be `true` for audio input to work. See also that setting's description for caveats related to permissions and operating system privacy settings.
+ *
+*/
+input_device: string;
 
-/** Scales the rate at which audio is played (i.e. setting it to [code]0.5[/code] will make the audio be played twice as fast). */
-global_rate_scale: float;
+/** Name of the current device for audio output (see [method get_output_device_list]). On systems with multiple audio outputs (such as analog, USB and HDMI audio), this can be used to select the audio output device. The value [code]"Default"[/code] will play audio on the system-wide default audio output. If an invalid device name is set, the value will be reverted back to [code]"Default"[/code]. */
+output_device: string;
 
-/** Adds a bus at [code]at_position[/code]. */
-add_bus(at_position?: int): void;
+/** Scales the rate at which audio is played (i.e. setting it to [code]0.5[/code] will make the audio be played at half its speed). */
+playback_speed_scale: float;
 
-/** Adds an [AudioEffect] effect to the bus [code]bus_idx[/code] at [code]at_position[/code]. */
-add_bus_effect(bus_idx: int, effect: AudioEffect, at_position?: int): void;
+/** Adds a bus at [param at_position]. */
+add_bus(): void;
 
-/** Name of the current device for audio input (see [method capture_get_device_list]). */
-capture_get_device(): string;
-
-/** Returns the names of all audio input devices detected on the system. */
-capture_get_device_list(): any[];
-
-/** Sets which audio input device is used for audio capture. */
-capture_set_device(name: string): void;
+/** Adds an [AudioEffect] effect to the bus [param bus_idx] at [param at_position]. */
+add_bus_effect(): void;
 
 /** Generates an [AudioBusLayout] using the available buses and effects. */
 generate_bus_layout(): AudioBusLayout;
 
-/** Returns the amount of channels of the bus at index [code]bus_idx[/code]. */
-get_bus_channels(bus_idx: int): int;
+/** Returns the number of channels of the bus at index [param bus_idx]. */
+get_bus_channels(): int;
 
-/** Returns the [AudioEffect] at position [code]effect_idx[/code] in bus [code]bus_idx[/code]. */
-get_bus_effect(bus_idx: int, effect_idx: int): AudioEffect;
+/** Returns the [AudioEffect] at position [param effect_idx] in bus [param bus_idx]. */
+get_bus_effect(): AudioEffect;
 
-/** Returns the number of effects on the bus at [code]bus_idx[/code]. */
-get_bus_effect_count(bus_idx: int): int;
+/** Returns the number of effects on the bus at [param bus_idx]. */
+get_bus_effect_count(): int;
 
 /** Returns the [AudioEffectInstance] assigned to the given bus and effect indices (and optionally channel). */
-get_bus_effect_instance(bus_idx: int, effect_idx: int, channel?: int): AudioEffectInstance;
+get_bus_effect_instance(): AudioEffectInstance;
 
-/** Returns the index of the bus with the name [code]bus_name[/code]. */
-get_bus_index(bus_name: string): int;
+/** Returns the index of the bus with the name [param bus_name]. Returns [code]-1[/code] if no bus with the specified name exist. */
+get_bus_index(): int;
 
-/** Returns the name of the bus with the index [code]bus_idx[/code]. */
-get_bus_name(bus_idx: int): string;
+/** Returns the name of the bus with the index [param bus_idx]. */
+get_bus_name(): string;
 
-/** Returns the peak volume of the left speaker at bus index [code]bus_idx[/code] and channel index [code]channel[/code]. */
-get_bus_peak_volume_left_db(bus_idx: int, channel: int): float;
+/** Returns the peak volume of the left speaker at bus index [param bus_idx] and channel index [param channel]. */
+get_bus_peak_volume_left_db(): float;
 
-/** Returns the peak volume of the right speaker at bus index [code]bus_idx[/code] and channel index [code]channel[/code]. */
-get_bus_peak_volume_right_db(bus_idx: int, channel: int): float;
+/** Returns the peak volume of the right speaker at bus index [param bus_idx] and channel index [param channel]. */
+get_bus_peak_volume_right_db(): float;
 
-/** Returns the name of the bus that the bus at index [code]bus_idx[/code] sends to. */
-get_bus_send(bus_idx: int): string;
+/** Returns the name of the bus that the bus at index [param bus_idx] sends to. */
+get_bus_send(): StringName;
 
-/** Returns the volume of the bus at index [code]bus_idx[/code] in dB. */
-get_bus_volume_db(bus_idx: int): float;
+/** Returns the volume of the bus at index [param bus_idx] in dB. */
+get_bus_volume_db(): float;
 
-/** Returns the names of all audio devices detected on the system. */
-get_device_list(): any[];
+/**
+ * Returns the names of all audio input devices detected on the system.
+ *
+ * **Note:** [member ProjectSettings.audio/driver/enable_input] must be `true` for audio input to work. See also that setting's description for caveats related to permissions and operating system privacy settings.
+ *
+*/
+get_input_device_list(): PackedStringArray;
 
 /** Returns the sample rate at the output of the [AudioServer]. */
 get_mix_rate(): float;
 
-/** Returns the audio driver's output latency. */
+/** Returns the names of all audio output devices detected on the system. */
+get_output_device_list(): PackedStringArray;
+
+/**
+ * Returns the audio driver's effective output latency. This is based on [member ProjectSettings.audio/driver/output_latency], but the exact returned value will differ depending on the operating system and audio driver.
+ *
+ * **Note:** This can be expensive; it is not recommended to call [method get_output_latency] every frame.
+ *
+*/
 get_output_latency(): float;
 
 /** Returns the speaker configuration. */
@@ -89,17 +101,17 @@ get_time_since_last_mix(): float;
 /** Returns the relative time until the next mix occurs. */
 get_time_to_next_mix(): float;
 
-/** If [code]true[/code], the bus at index [code]bus_idx[/code] is bypassing effects. */
-is_bus_bypassing_effects(bus_idx: int): boolean;
+/** If [code]true[/code], the bus at index [param bus_idx] is bypassing effects. */
+is_bus_bypassing_effects(): boolean;
 
-/** If [code]true[/code], the effect at index [code]effect_idx[/code] on the bus at index [code]bus_idx[/code] is enabled. */
-is_bus_effect_enabled(bus_idx: int, effect_idx: int): boolean;
+/** If [code]true[/code], the effect at index [param effect_idx] on the bus at index [param bus_idx] is enabled. */
+is_bus_effect_enabled(): boolean;
 
-/** If [code]true[/code], the bus at index [code]bus_idx[/code] is muted. */
-is_bus_mute(bus_idx: int): boolean;
+/** If [code]true[/code], the bus at index [param bus_idx] is muted. */
+is_bus_mute(): boolean;
 
-/** If [code]true[/code], the bus at index [code]bus_idx[/code] is in solo mode. */
-is_bus_solo(bus_idx: int): boolean;
+/** If [code]true[/code], the bus at index [param bus_idx] is in solo mode. */
+is_bus_solo(): boolean;
 
 /**
  * Locks the audio driver's main loop.
@@ -109,41 +121,44 @@ is_bus_solo(bus_idx: int): boolean;
 */
 lock(): void;
 
-/** Moves the bus from index [code]index[/code] to index [code]to_index[/code]. */
-move_bus(index: int, to_index: int): void;
+/** Moves the bus from index [param index] to index [param to_index]. */
+move_bus(): void;
 
-/** Removes the bus at index [code]index[/code]. */
-remove_bus(index: int): void;
+/** Removes the bus at index [param index]. */
+remove_bus(): void;
 
-/** Removes the effect at index [code]effect_idx[/code] from the bus at index [code]bus_idx[/code]. */
-remove_bus_effect(bus_idx: int, effect_idx: int): void;
+/** Removes the effect at index [param effect_idx] from the bus at index [param bus_idx]. */
+remove_bus_effect(): void;
 
-/** If [code]true[/code], the bus at index [code]bus_idx[/code] is bypassing effects. */
-set_bus_bypass_effects(bus_idx: int, enable: boolean): void;
+/** If [code]true[/code], the bus at index [param bus_idx] is bypassing effects. */
+set_bus_bypass_effects(): void;
 
-/** If [code]true[/code], the effect at index [code]effect_idx[/code] on the bus at index [code]bus_idx[/code] is enabled. */
-set_bus_effect_enabled(bus_idx: int, effect_idx: int, enabled: boolean): void;
+/** If [code]true[/code], the effect at index [param effect_idx] on the bus at index [param bus_idx] is enabled. */
+set_bus_effect_enabled(): void;
 
 /** Overwrites the currently used [AudioBusLayout]. */
-set_bus_layout(bus_layout: AudioBusLayout): void;
+set_bus_layout(): void;
 
-/** If [code]true[/code], the bus at index [code]bus_idx[/code] is muted. */
-set_bus_mute(bus_idx: int, enable: boolean): void;
+/** If [code]true[/code], the bus at index [param bus_idx] is muted. */
+set_bus_mute(): void;
 
-/** Sets the name of the bus at index [code]bus_idx[/code] to [code]name[/code]. */
-set_bus_name(bus_idx: int, name: string): void;
+/** Sets the name of the bus at index [param bus_idx] to [param name]. */
+set_bus_name(): void;
 
-/** Connects the output of the bus at [code]bus_idx[/code] to the bus named [code]send[/code]. */
-set_bus_send(bus_idx: int, send: string): void;
+/** Connects the output of the bus at [param bus_idx] to the bus named [param send]. */
+set_bus_send(): void;
 
-/** If [code]true[/code], the bus at index [code]bus_idx[/code] is in solo mode. */
-set_bus_solo(bus_idx: int, enable: boolean): void;
+/** If [code]true[/code], the bus at index [param bus_idx] is in solo mode. */
+set_bus_solo(): void;
 
-/** Sets the volume of the bus at index [code]bus_idx[/code] to [code]volume_db[/code]. */
-set_bus_volume_db(bus_idx: int, volume_db: float): void;
+/** Sets the volume of the bus at index [param bus_idx] to [param volume_db]. */
+set_bus_volume_db(): void;
 
-/** Swaps the position of two effects in bus [code]bus_idx[/code]. */
-swap_bus_effects(bus_idx: int, effect_idx: int, by_effect_idx: int): void;
+/** No documentation provided. */
+set_enable_tagging_used_audio_streams(): void;
+
+/** Swaps the position of two effects in bus [param bus_idx]. */
+swap_bus_effects(): void;
 
 /** Unlocks the audio driver's main loop. (After locking it, you should always unlock it.) */
 unlock(): void;
@@ -178,10 +193,16 @@ static SPEAKER_SURROUND_71: any;
 
 
 /**
- * Emitted when the [AudioBusLayout] changes.
+ * Emitted when an audio bus is added, deleted, or moved.
  *
 */
 $bus_layout_changed: Signal<() => void>
+
+/**
+ * Emitted when the audio bus at [param bus_index] is renamed from [param old_name] to [param new_name].
+ *
+*/
+$bus_renamed: Signal<() => void>
 
 }
 

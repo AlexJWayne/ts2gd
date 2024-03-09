@@ -1,13 +1,13 @@
 
 /**
- * Simulates rooms of different sizes. Its parameters can be adjusted to simulate the sound of a specific room.
+ * Simulates the sound of acoustic environments such as rooms, concert halls, caverns, or an open spaces.
  *
 */
 declare class AudioEffectReverb extends AudioEffect  {
 
   
 /**
- * Simulates rooms of different sizes. Its parameters can be adjusted to simulate the sound of a specific room.
+ * Simulates the sound of acoustic environments such as rooms, concert halls, caverns, or an open spaces.
  *
 */
   new(): AudioEffectReverb; 

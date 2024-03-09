@@ -1,13 +1,13 @@
 
 /**
- * Segment shape for 2D collisions. Consists of two points, `a` and `b`.
+ * A 2D line segment shape, intended for use in physics. Usually used to provide a shape for a [CollisionShape2D].
  *
 */
 declare class SegmentShape2D extends Shape2D  {
 
   
 /**
- * Segment shape for 2D collisions. Consists of two points, `a` and `b`.
+ * A 2D line segment shape, intended for use in physics. Usually used to provide a shape for a [CollisionShape2D].
  *
 */
   new(): SegmentShape2D; 

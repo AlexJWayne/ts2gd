@@ -3,7 +3,7 @@
  * Translated to `length(p0)` in the shader language.
  *
 */
-declare class VisualShaderNodeVectorLen extends VisualShaderNode  {
+declare class VisualShaderNodeVectorLen extends VisualShaderNodeVectorBase  {
 
   
 /**

@@ -62,7 +62,7 @@ static FFT_SIZE_2048: any;
 static FFT_SIZE_4096: any;
 
 /**
- * Represents the size of the [enum FFT_Size] enum.
+ * Represents the size of the [enum FFTSize] enum.
  *
 */
 static FFT_SIZE_MAX: any;

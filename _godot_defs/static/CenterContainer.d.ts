@@ -1,13 +1,13 @@
 
 /**
- * CenterContainer keeps children controls centered. This container keeps all children to their minimum size, in the center.
+ * [CenterContainer] is a container that keeps all of its child controls in its center at their minimum size.
  *
 */
 declare class CenterContainer extends Container  {
 
   
 /**
- * CenterContainer keeps children controls centered. This container keeps all children to their minimum size, in the center.
+ * [CenterContainer] is a container that keeps all of its child controls in its center at their minimum size.
  *
 */
   new(): CenterContainer; 

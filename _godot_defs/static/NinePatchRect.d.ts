@@ -1,13 +1,13 @@
 
 /**
- * Also known as 9-slice panels, NinePatchRect produces clean panels of any size, based on a small texture. To do so, it splits the texture in a 3×3 grid. When you scale the node, it tiles the texture's sides horizontally or vertically, the center on both axes but it doesn't scale or tile the corners.
+ * Also known as 9-slice panels, [NinePatchRect] produces clean panels of any size based on a small texture. To do so, it splits the texture in a 3×3 grid. When you scale the node, it tiles the texture's edges horizontally or vertically, tiles the center on both axes, and leaves the corners unchanged.
  *
 */
 declare class NinePatchRect extends Control  {
 
   
 /**
- * Also known as 9-slice panels, NinePatchRect produces clean panels of any size, based on a small texture. To do so, it splits the texture in a 3×3 grid. When you scale the node, it tiles the texture's sides horizontally or vertically, the center on both axes but it doesn't scale or tile the corners.
+ * Also known as 9-slice panels, [NinePatchRect] produces clean panels of any size based on a small texture. To do so, it splits the texture in a 3×3 grid. When you scale the node, it tiles the texture's edges horizontally or vertically, tiles the center on both axes, and leaves the corners unchanged.
  *
 */
   new(): NinePatchRect; 
@@ -40,13 +40,13 @@ patch_margin_top: int;
 region_rect: Rect2;
 
 /** The node's texture resource. */
-texture: Texture;
+texture: Texture2D;
 
-/** Returns the size of the margin identified by the given [enum Margin] constant. */
-get_patch_margin(margin: int): int;
+/** Returns the size of the margin on the specified [enum Side]. */
+get_patch_margin(): int;
 
-/** Sets the size of the margin identified by the given [enum Margin] constant to [code]value[/code] in pixels. */
-set_patch_margin(margin: int, value: int): void;
+/** Sets the size of the margin on the specified [enum Side] to [param value] pixels. */
+set_patch_margin(): void;
 
   connect<T extends SignalsOf<NinePatchRect>>(signal: T, method: SignalFunction<NinePatchRect[T]>): number;
 
@@ -61,15 +61,11 @@ static AXIS_STRETCH_MODE_STRETCH: any;
 /**
  * Repeats the center texture across the NinePatchRect. This won't cause any visible distortion. The texture must be seamless for this to work without displaying artifacts between edges.
  *
- * **Note:** Only supported when using the GLES3 renderer. When using the GLES2 renderer, this will behave like [constant AXIS_STRETCH_MODE_STRETCH].
- *
 */
 static AXIS_STRETCH_MODE_TILE: any;
 
 /**
  * Repeats the center texture across the NinePatchRect, but will also stretch the texture to make sure each tile is visible in full. This may cause the texture to be distorted, but less than [constant AXIS_STRETCH_MODE_STRETCH]. The texture must be seamless for this to work without displaying artifacts between edges.
- *
- * **Note:** Only supported when using the GLES3 renderer. When using the GLES2 renderer, this will behave like [constant AXIS_STRETCH_MODE_STRETCH].
  *
 */
 static AXIS_STRETCH_MODE_TILE_FIT: any;

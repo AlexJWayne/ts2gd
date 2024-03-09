@@ -6,7 +6,8 @@
  *
  * @example 
  * 
- * # server.gd
+ * 
+ * # server_node.gd
  * extends Node
  * var dtls := DTLSServer.new()
  * var server := UDPServer.new()
@@ -18,8 +19,8 @@
  *     dtls.setup(key, cert)
  * func _process(delta):
  *     while server.is_connection_available():
- *         var peer : PacketPeerUDP = server.take_connection()
- *         var dtls_peer : PacketPeerDTLS = dtls.take_connection(peer)
+ *         var peer: PacketPeerUDP = server.take_connection()
+ *         var dtls_peer: PacketPeerDTLS = dtls.take_connection(peer)
  *         if dtls_peer.get_status() != PacketPeerDTLS.STATUS_HANDSHAKING:
  *             continue # It is normal that 50% of the connections fails due to cookie exchange.
  *         print("Peer connected!")
@@ -29,13 +30,58 @@
  *         if p.get_status() == PacketPeerDTLS.STATUS_CONNECTED:
  *             while p.get_available_packet_count() > 0:
  *                 print("Received message from client: %s" % p.get_packet().get_string_from_utf8())
- *                 p.put_packet("Hello DTLS client".to_utf8())
+ *                 p.put_packet("Hello DTLS client".to_utf8_buffer())
+ * 
+ * 
+ * // ServerNode.cs
+ * using Godot;
+ * public partial class ServerNode : Node
+ * {
+ *     private DtlsServer _dtls = new DtlsServer();
+ *     private UdpServer _server = new UdpServer();
+ *     private Godot.Collections.Array<PacketPeerDTLS> _peers = new Godot.Collections.Array<PacketPeerDTLS>();
+ *     public override void _Ready()
+ *     {
+ *         _server.Listen(4242);
+ *         var key = GD.Load<CryptoKey>("key.key"); // Your private key.
+ *         var cert = GD.Load<X509Certificate>("cert.crt"); // Your X509 certificate.
+ *         _dtls.Setup(key, cert);
+ *     }
+ *     public override void _Process(double delta)
+ *     {
+ *         while (Server.IsConnectionAvailable())
+ *         {
+ *             PacketPeerUDP peer = _server.TakeConnection();
+ *             PacketPeerDTLS dtlsPeer = _dtls.TakeConnection(peer);
+ *             if (dtlsPeer.GetStatus() != PacketPeerDtls.Status.Handshaking)
+ *             {
+ *                 continue; // It is normal that 50% of the connections fails due to cookie exchange.
+ *             }
+ *             GD.Print("Peer connected!");
+ *             _peers.Add(dtlsPeer);
+ *         }
+ *         foreach (var p in _peers)
+ *         {
+ *             p.Poll(); // Must poll to update the state.
+ *             if (p.GetStatus() == PacketPeerDtls.Status.Connected)
+ *             {
+ *                 while (p.GetAvailablePacketCount() > 0)
+ *                 {
+ *                     GD.Print($"Received Message From Client: {p.GetPacket().GetStringFromUtf8()}");
+ *                     p.PutPacket("Hello DTLS Client".ToUtf8Buffer());
+ *                 }
+ *             }
+ *         }
+ *     }
+ * }
+ * 
  * @summary 
  * 
  *
  * @example 
  * 
- * # client.gd
+ * 
+ * # client_node.gd
  * extends Node
  * var dtls := PacketPeerDTLS.new()
  * var udp := PacketPeerUDP.new()
@@ -48,15 +94,49 @@
  *     if dtls.get_status() == PacketPeerDTLS.STATUS_CONNECTED:
  *         if !connected:
  *             # Try to contact server
- *             dtls.put_packet("The answer is... 42!".to_utf8())
+ *             dtls.put_packet("The answer is... 42!".to_utf8_buffer())
  *         while dtls.get_available_packet_count() > 0:
  *             print("Connected: %s" % dtls.get_packet().get_string_from_utf8())
  *             connected = true
+ * 
+ * 
+ * // ClientNode.cs
+ * using Godot;
+ * using System.Text;
+ * public partial class ClientNode : Node
+ * {
+ *     private PacketPeerDtls _dtls = new PacketPeerDtls();
+ *     private PacketPeerUdp _udp = new PacketPeerUdp();
+ *     private bool _connected = false;
+ *     public override void _Ready()
+ *     {
+ *         _udp.ConnectToHost("127.0.0.1", 4242);
+ *         _dtls.ConnectToPeer(_udp, validateCerts: false); // Use true in production for certificate validation!
+ *     }
+ *     public override void _Process(double delta)
+ *     {
+ *         _dtls.Poll();
+ *         if (_dtls.GetStatus() == PacketPeerDtls.Status.Connected)
+ *         {
+ *             if (!_connected)
+ *             {
+ *                 // Try to contact server
+ *                 _dtls.PutPacket("The Answer Is..42!".ToUtf8Buffer());
+ *             }
+ *             while (_dtls.GetAvailablePacketCount() > 0)
+ *             {
+ *                 GD.Print($"Connected: {_dtls.GetPacket().GetStringFromUtf8()}");
+ *                 _connected = true;
+ *             }
+ *         }
+ *     }
+ * }
+ * 
  * @summary 
  * 
  *
 */
-declare class DTLSServer extends Reference  {
+declare class DTLSServer extends RefCounted  {
 
   
 /**
@@ -66,7 +146,8 @@ declare class DTLSServer extends Reference  {
  *
  * @example 
  * 
- * # server.gd
+ * 
+ * # server_node.gd
  * extends Node
  * var dtls := DTLSServer.new()
  * var server := UDPServer.new()
@@ -78,8 +159,8 @@ declare class DTLSServer extends Reference  {
  *     dtls.setup(key, cert)
  * func _process(delta):
  *     while server.is_connection_available():
- *         var peer : PacketPeerUDP = server.take_connection()
- *         var dtls_peer : PacketPeerDTLS = dtls.take_connection(peer)
+ *         var peer: PacketPeerUDP = server.take_connection()
+ *         var dtls_peer: PacketPeerDTLS = dtls.take_connection(peer)
  *         if dtls_peer.get_status() != PacketPeerDTLS.STATUS_HANDSHAKING:
  *             continue # It is normal that 50% of the connections fails due to cookie exchange.
  *         print("Peer connected!")
@@ -89,13 +170,58 @@ declare class DTLSServer extends Reference  {
  *         if p.get_status() == PacketPeerDTLS.STATUS_CONNECTED:
  *             while p.get_available_packet_count() > 0:
  *                 print("Received message from client: %s" % p.get_packet().get_string_from_utf8())
- *                 p.put_packet("Hello DTLS client".to_utf8())
+ *                 p.put_packet("Hello DTLS client".to_utf8_buffer())
+ * 
+ * 
+ * // ServerNode.cs
+ * using Godot;
+ * public partial class ServerNode : Node
+ * {
+ *     private DtlsServer _dtls = new DtlsServer();
+ *     private UdpServer _server = new UdpServer();
+ *     private Godot.Collections.Array<PacketPeerDTLS> _peers = new Godot.Collections.Array<PacketPeerDTLS>();
+ *     public override void _Ready()
+ *     {
+ *         _server.Listen(4242);
+ *         var key = GD.Load<CryptoKey>("key.key"); // Your private key.
+ *         var cert = GD.Load<X509Certificate>("cert.crt"); // Your X509 certificate.
+ *         _dtls.Setup(key, cert);
+ *     }
+ *     public override void _Process(double delta)
+ *     {
+ *         while (Server.IsConnectionAvailable())
+ *         {
+ *             PacketPeerUDP peer = _server.TakeConnection();
+ *             PacketPeerDTLS dtlsPeer = _dtls.TakeConnection(peer);
+ *             if (dtlsPeer.GetStatus() != PacketPeerDtls.Status.Handshaking)
+ *             {
+ *                 continue; // It is normal that 50% of the connections fails due to cookie exchange.
+ *             }
+ *             GD.Print("Peer connected!");
+ *             _peers.Add(dtlsPeer);
+ *         }
+ *         foreach (var p in _peers)
+ *         {
+ *             p.Poll(); // Must poll to update the state.
+ *             if (p.GetStatus() == PacketPeerDtls.Status.Connected)
+ *             {
+ *                 while (p.GetAvailablePacketCount() > 0)
+ *                 {
+ *                     GD.Print($"Received Message From Client: {p.GetPacket().GetStringFromUtf8()}");
+ *                     p.PutPacket("Hello DTLS Client".ToUtf8Buffer());
+ *                 }
+ *             }
+ *         }
+ *     }
+ * }
+ * 
  * @summary 
  * 
  *
  * @example 
  * 
- * # client.gd
+ * 
+ * # client_node.gd
  * extends Node
  * var dtls := PacketPeerDTLS.new()
  * var udp := PacketPeerUDP.new()
@@ -108,10 +234,44 @@ declare class DTLSServer extends Reference  {
  *     if dtls.get_status() == PacketPeerDTLS.STATUS_CONNECTED:
  *         if !connected:
  *             # Try to contact server
- *             dtls.put_packet("The answer is... 42!".to_utf8())
+ *             dtls.put_packet("The answer is... 42!".to_utf8_buffer())
  *         while dtls.get_available_packet_count() > 0:
  *             print("Connected: %s" % dtls.get_packet().get_string_from_utf8())
  *             connected = true
+ * 
+ * 
+ * // ClientNode.cs
+ * using Godot;
+ * using System.Text;
+ * public partial class ClientNode : Node
+ * {
+ *     private PacketPeerDtls _dtls = new PacketPeerDtls();
+ *     private PacketPeerUdp _udp = new PacketPeerUdp();
+ *     private bool _connected = false;
+ *     public override void _Ready()
+ *     {
+ *         _udp.ConnectToHost("127.0.0.1", 4242);
+ *         _dtls.ConnectToPeer(_udp, validateCerts: false); // Use true in production for certificate validation!
+ *     }
+ *     public override void _Process(double delta)
+ *     {
+ *         _dtls.Poll();
+ *         if (_dtls.GetStatus() == PacketPeerDtls.Status.Connected)
+ *         {
+ *             if (!_connected)
+ *             {
+ *                 // Try to contact server
+ *                 _dtls.PutPacket("The Answer Is..42!".ToUtf8Buffer());
+ *             }
+ *             while (_dtls.GetAvailablePacketCount() > 0)
+ *             {
+ *                 GD.Print($"Connected: {_dtls.GetPacket().GetStringFromUtf8()}");
+ *                 _connected = true;
+ *             }
+ *         }
+ *     }
+ * }
+ * 
  * @summary 
  * 
  *
@@ -121,16 +281,16 @@ declare class DTLSServer extends Reference  {
 
 
 
-/** Setup the DTLS server to use the given [code]private_key[/code] and provide the given [code]certificate[/code] to clients. You can pass the optional [code]chain[/code] parameter to provide additional CA chain information along with the certificate. */
-setup(key: CryptoKey, certificate: X509Certificate, chain?: X509Certificate): int;
+/** Setup the DTLS server to use the given [param server_options]. See [method TLSOptions.server]. */
+setup(): int;
 
 /**
- * Try to initiate the DTLS handshake with the given `udp_peer` which must be already connected (see [method PacketPeerUDP.connect_to_host]).
+ * Try to initiate the DTLS handshake with the given [param udp_peer] which must be already connected (see [method PacketPeerUDP.connect_to_host]).
  *
  * **Note:** You must check that the state of the return PacketPeerUDP is [constant PacketPeerDTLS.STATUS_HANDSHAKING], as it is normal that 50% of the new connections will be invalid due to cookie exchange.
  *
 */
-take_connection(udp_peer: PacketPeerUDP): PacketPeerDTLS;
+take_connection(): PacketPeerDTLS;
 
   connect<T extends SignalsOf<DTLSServer>>(signal: T, method: SignalFunction<DTLSServer[T]>): number;
 

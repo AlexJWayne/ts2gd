@@ -4,11 +4,24 @@
  *
  * @example 
  * 
+ * 
  * var foo = 2 # foo is dynamically an integer
  * foo = "Now foo is a string!"
- * foo = Reference.new() # foo is an Object
+ * foo = RefCounted.new() # foo is an Object
  * var bar: int = 2 # bar is a statically typed integer.
  * # bar = "Uh oh! I can't make static variables become a different type!"
+ * 
+ * 
+ * // C# is statically typed. Once a variable has a type it cannot be changed. You can use the `var` keyword to let the compiler infer the type automatically.
+ * var foo = 2; // Foo is a 32-bit integer (int). Be cautious, integers in GDScript are 64-bit and the direct C# equivalent is `long`.
+ * // foo = "foo was and will always be an integer. It cannot be turned into a string!";
+ * var boo = "Boo is a string!";
+ * var ref = new RefCounted(); // var is especially useful when used together with a constructor.
+ * // Godot also provides a Variant type that works like a union of all the Variant-compatible types.
+ * Variant fooVar = 2; // fooVar is dynamically an integer (stored as a `long` in the Variant type).
+ * fooVar = "Now fooVar is a string!";
+ * fooVar = new RefCounted(); // fooVar is a GodotObject.
+ * 
  * @summary 
  * 
  *
@@ -16,15 +29,12 @@
  *
  * - GDScript automatically wrap values in them. It keeps all data in plain Variants by default and then optionally enforces custom static typing rules on variable types.
  *
- * - VisualScript tracks properties inside Variants as well, but it also uses static typing. The GUI interface enforces that properties have a particular type that doesn't change over time.
+ * - C# is statically typed, but uses its own implementation of the Variant type in place of Godot's [Variant] class when it needs to represent a dynamic value. C# Variant can be assigned any compatible type implicitly but converting requires an explicit cast.
  *
- * - C# is statically typed, but uses the Mono `object` type in place of Godot's Variant class when it needs to represent a dynamic value. `object` is the Mono runtime's equivalent of the same concept.
- *
- * - The statically-typed language NativeScript C++ does not define a built-in Variant-like class. Godot's GDNative bindings provide their own godot::Variant class for users; Any point at which the C++ code starts interacting with the Godot runtime is a place where you might have to start wrapping data inside Variant objects.
- *
- * The global [method @GDScript.typeof] function returns the enumerated value of the Variant type stored in the current variable (see [enum Variant.Type]).
+ * The global [method @GlobalScope.typeof] function returns the enumerated value of the Variant type stored in the current variable (see [enum Variant.Type]).
  *
  * @example 
+ * 
  * 
  * var foo = 2
  * match typeof(foo):
@@ -37,8 +47,25 @@
  *         # To get the name of the underlying Object type, you need the `get_class()` method.
  *         print("foo is a(n) %s" % foo.get_class()) # inject the class name into a formatted string.
  *         # Note also that there is not yet any way to get a script's `class_name` string easily.
- *         # To fetch that value, you need to dig deeply into a hidden ProjectSettings setting: an Array of Dictionaries called "_global_script_classes".
- *         # Open your project.godot file to see it up close.
+ *         # To fetch that value, you can use ProjectSettings.get_global_class_list().
+ * 
+ * 
+ * Variant foo = 2;
+ * switch (foo.VariantType)
+ * {
+ *     case Variant.Type.Nil:
+ *         GD.Print("foo is null");
+ *         break;
+ *     case Variant.Type.Int:
+ *         GD.Print("foo is an integer");
+ *         break;
+ *     case Variant.Type.Object:
+ *         // Note that Objects are their own special category.
+ *         // You can convert a Variant to a GodotObject and use reflection to get its name.
+ *         GD.Print($"foo is a(n) {foo.AsGodotObject().GetType().Name}");
+ *         break;
+ * }
+ * 
  * @summary 
  * 
  *
@@ -81,11 +108,24 @@ declare class Variant {
  *
  * @example 
  * 
+ * 
  * var foo = 2 # foo is dynamically an integer
  * foo = "Now foo is a string!"
- * foo = Reference.new() # foo is an Object
+ * foo = RefCounted.new() # foo is an Object
  * var bar: int = 2 # bar is a statically typed integer.
  * # bar = "Uh oh! I can't make static variables become a different type!"
+ * 
+ * 
+ * // C# is statically typed. Once a variable has a type it cannot be changed. You can use the `var` keyword to let the compiler infer the type automatically.
+ * var foo = 2; // Foo is a 32-bit integer (int). Be cautious, integers in GDScript are 64-bit and the direct C# equivalent is `long`.
+ * // foo = "foo was and will always be an integer. It cannot be turned into a string!";
+ * var boo = "Boo is a string!";
+ * var ref = new RefCounted(); // var is especially useful when used together with a constructor.
+ * // Godot also provides a Variant type that works like a union of all the Variant-compatible types.
+ * Variant fooVar = 2; // fooVar is dynamically an integer (stored as a `long` in the Variant type).
+ * fooVar = "Now fooVar is a string!";
+ * fooVar = new RefCounted(); // fooVar is a GodotObject.
+ * 
  * @summary 
  * 
  *
@@ -93,15 +133,12 @@ declare class Variant {
  *
  * - GDScript automatically wrap values in them. It keeps all data in plain Variants by default and then optionally enforces custom static typing rules on variable types.
  *
- * - VisualScript tracks properties inside Variants as well, but it also uses static typing. The GUI interface enforces that properties have a particular type that doesn't change over time.
+ * - C# is statically typed, but uses its own implementation of the Variant type in place of Godot's [Variant] class when it needs to represent a dynamic value. C# Variant can be assigned any compatible type implicitly but converting requires an explicit cast.
  *
- * - C# is statically typed, but uses the Mono `object` type in place of Godot's Variant class when it needs to represent a dynamic value. `object` is the Mono runtime's equivalent of the same concept.
- *
- * - The statically-typed language NativeScript C++ does not define a built-in Variant-like class. Godot's GDNative bindings provide their own godot::Variant class for users; Any point at which the C++ code starts interacting with the Godot runtime is a place where you might have to start wrapping data inside Variant objects.
- *
- * The global [method @GDScript.typeof] function returns the enumerated value of the Variant type stored in the current variable (see [enum Variant.Type]).
+ * The global [method @GlobalScope.typeof] function returns the enumerated value of the Variant type stored in the current variable (see [enum Variant.Type]).
  *
  * @example 
+ * 
  * 
  * var foo = 2
  * match typeof(foo):
@@ -114,8 +151,25 @@ declare class Variant {
  *         # To get the name of the underlying Object type, you need the `get_class()` method.
  *         print("foo is a(n) %s" % foo.get_class()) # inject the class name into a formatted string.
  *         # Note also that there is not yet any way to get a script's `class_name` string easily.
- *         # To fetch that value, you need to dig deeply into a hidden ProjectSettings setting: an Array of Dictionaries called "_global_script_classes".
- *         # Open your project.godot file to see it up close.
+ *         # To fetch that value, you can use ProjectSettings.get_global_class_list().
+ * 
+ * 
+ * Variant foo = 2;
+ * switch (foo.VariantType)
+ * {
+ *     case Variant.Type.Nil:
+ *         GD.Print("foo is null");
+ *         break;
+ *     case Variant.Type.Int:
+ *         GD.Print("foo is an integer");
+ *         break;
+ *     case Variant.Type.Object:
+ *         // Note that Objects are their own special category.
+ *         // You can convert a Variant to a GodotObject and use reflection to get its name.
+ *         GD.Print($"foo is a(n) {foo.AsGodotObject().GetType().Name}");
+ *         break;
+ * }
+ * 
  * @summary 
  * 
  *

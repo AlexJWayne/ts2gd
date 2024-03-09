@@ -1,26 +1,36 @@
 
 /**
- * Stores general mouse events information.
+ * Stores general information about mouse events.
  *
 */
 declare class InputEventMouse extends InputEventWithModifiers  {
 
   
 /**
- * Stores general mouse events information.
+ * Stores general information about mouse events.
  *
 */
   new(): InputEventMouse; 
   static "new"(): InputEventMouse 
 
 
-/** The mouse button mask identifier, one of or a bitwise combination of the [enum ButtonList] button masks. */
+/** The mouse button mask identifier, one of or a bitwise combination of the [enum MouseButton] button masks. */
 button_mask: int;
 
-/** The global mouse position relative to the current [Viewport] when used in [method Control._gui_input], otherwise is at 0,0. */
+/**
+ * When received in [method Node._input] or [method Node._unhandled_input], returns the mouse's position in the root [Viewport] using the coordinate system of the root [Viewport].
+ *
+ * When received in [method Control._gui_input], returns the mouse's position in the [CanvasLayer] that the [Control] is in using the coordinate system of the [CanvasLayer].
+ *
+*/
 global_position: Vector2;
 
-/** The local mouse position relative to the [Viewport]. If used in [method Control._gui_input], the position is relative to the current [Control] which is under the mouse. */
+/**
+ * When received in [method Node._input] or [method Node._unhandled_input], returns the mouse's position in the [Viewport] this [Node] is in using the coordinate system of this [Viewport].
+ *
+ * When received in [method Control._gui_input], returns the mouse's position in the [Control] using the local coordinate system of the [Control].
+ *
+*/
 position: Vector2;
 
 

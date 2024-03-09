@@ -22,7 +22,14 @@ declare class ParallaxLayer extends Node2D  {
   static "new"(): ParallaxLayer 
 
 
-/** The ParallaxLayer's [Texture] mirroring. Useful for creating an infinite scrolling background. If an axis is set to [code]0[/code], the [Texture] will not be mirrored. */
+/**
+ * The ParallaxLayer's [Texture2D] repeating. Useful for creating an infinite scrolling background. If an axis is set to `0`, the [Texture2D] will not be repeated.
+ *
+ * If the length of the viewport axis is bigger than twice the repeated axis size, it will not repeat infinitely, as the parallax layer only draws 2 instances of the texture at any given time.
+ *
+ * **Note:** Despite its name, the texture will not be mirrored, it will simply be repeated.
+ *
+*/
 motion_mirroring: Vector2;
 
 /** The ParallaxLayer's offset relative to the parent ParallaxBackground's [member ParallaxBackground.scroll_offset]. */

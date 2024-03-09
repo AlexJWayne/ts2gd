@@ -1,21 +1,21 @@
 
 /**
- * A resource to add to an [AnimationNodeBlendTree].
+ * A resource used by [AnimationNodeBlendTree].
  *
- * This node allows you to blend linearly between three animations using a [Vector2] weight.
+ * [AnimationNodeBlendSpace1D] represents a virtual 2D space on which [AnimationRootNode]s are placed. Outputs the linear blend of the three adjacent animations using a [Vector2] weight. Adjacent in this context means the three [AnimationRootNode]s making up the triangle that contains the current value.
  *
- * You can add vertices to the blend space with [method add_blend_point] and automatically triangulate it by setting [member auto_triangles] to `true`. Otherwise, use [method add_triangle] and [method remove_triangle] to create up the blend space by hand.
+ * You can add vertices to the blend space with [method add_blend_point] and automatically triangulate it by setting [member auto_triangles] to `true`. Otherwise, use [method add_triangle] and [method remove_triangle] to triangulate the blend space by hand.
  *
 */
 declare class AnimationNodeBlendSpace2D extends AnimationRootNode  {
 
   
 /**
- * A resource to add to an [AnimationNodeBlendTree].
+ * A resource used by [AnimationNodeBlendTree].
  *
- * This node allows you to blend linearly between three animations using a [Vector2] weight.
+ * [AnimationNodeBlendSpace1D] represents a virtual 2D space on which [AnimationRootNode]s are placed. Outputs the linear blend of the three adjacent animations using a [Vector2] weight. Adjacent in this context means the three [AnimationRootNode]s making up the triangle that contains the current value.
  *
- * You can add vertices to the blend space with [method add_blend_point] and automatically triangulate it by setting [member auto_triangles] to `true`. Otherwise, use [method add_triangle] and [method remove_triangle] to create up the blend space by hand.
+ * You can add vertices to the blend space with [method add_blend_point] and automatically triangulate it by setting [member auto_triangles] to `true`. Otherwise, use [method add_triangle] and [method remove_triangle] to triangulate the blend space by hand.
  *
 */
   new(): AnimationNodeBlendSpace2D; 
@@ -37,44 +37,52 @@ min_space: Vector2;
 /** Position increment to snap to when moving a point. */
 snap: Vector2;
 
+/**
+ * If `false`, the blended animations' frame are stopped when the blend value is `0`.
+ *
+ * If `true`, forcing the blended animations to advance frame.
+ *
+*/
+sync: boolean;
+
 /** Name of the blend space's X axis. */
 x_label: string;
 
 /** Name of the blend space's Y axis. */
 y_label: string;
 
-/** Adds a new point that represents a [code]node[/code] at the position set by [code]pos[/code]. You can insert it at a specific index using the [code]at_index[/code] argument. If you use the default value for [code]at_index[/code], the point is inserted at the end of the blend points array. */
-add_blend_point(node: AnimationRootNode, pos: Vector2, at_index?: int): void;
+/** Adds a new point that represents a [param node] at the position set by [param pos]. You can insert it at a specific index using the [param at_index] argument. If you use the default value for [param at_index], the point is inserted at the end of the blend points array. */
+add_blend_point(): void;
 
-/** Creates a new triangle using three points [code]x[/code], [code]y[/code], and [code]z[/code]. Triangles can overlap. You can insert the triangle at a specific index using the [code]at_index[/code] argument. If you use the default value for [code]at_index[/code], the point is inserted at the end of the blend points array. */
-add_triangle(x: int, y: int, z: int, at_index?: int): void;
+/** Creates a new triangle using three points [param x], [param y], and [param z]. Triangles can overlap. You can insert the triangle at a specific index using the [param at_index] argument. If you use the default value for [param at_index], the point is inserted at the end of the blend points array. */
+add_triangle(): void;
 
 /** Returns the number of points in the blend space. */
 get_blend_point_count(): int;
 
-/** Returns the [AnimationRootNode] referenced by the point at index [code]point[/code]. */
-get_blend_point_node(point: int): AnimationRootNode;
+/** Returns the [AnimationRootNode] referenced by the point at index [param point]. */
+get_blend_point_node(): AnimationRootNode;
 
-/** Returns the position of the point at index [code]point[/code]. */
-get_blend_point_position(point: int): Vector2;
+/** Returns the position of the point at index [param point]. */
+get_blend_point_position(): Vector2;
 
 /** Returns the number of triangles in the blend space. */
 get_triangle_count(): int;
 
-/** Returns the position of the point at index [code]point[/code] in the triangle of index [code]triangle[/code]. */
-get_triangle_point(triangle: int, point: int): int;
+/** Returns the position of the point at index [param point] in the triangle of index [param triangle]. */
+get_triangle_point(): int;
 
-/** Removes the point at index [code]point[/code] from the blend space. */
-remove_blend_point(point: int): void;
+/** Removes the point at index [param point] from the blend space. */
+remove_blend_point(): void;
 
-/** Removes the triangle at index [code]triangle[/code] from the blend space. */
-remove_triangle(triangle: int): void;
+/** Removes the triangle at index [param triangle] from the blend space. */
+remove_triangle(): void;
 
-/** Changes the [AnimationNode] referenced by the point at index [code]point[/code]. */
-set_blend_point_node(point: int, node: AnimationRootNode): void;
+/** Changes the [AnimationNode] referenced by the point at index [param point]. */
+set_blend_point_node(): void;
 
-/** Updates the position of the point at index [code]point[/code] on the blend axis. */
-set_blend_point_position(point: int, pos: Vector2): void;
+/** Updates the position of the point at index [param point] on the blend axis. */
+set_blend_point_position(): void;
 
   connect<T extends SignalsOf<AnimationNodeBlendSpace2D>>(signal: T, method: SignalFunction<AnimationNodeBlendSpace2D[T]>): number;
 
@@ -87,7 +95,7 @@ set_blend_point_position(point: int, pos: Vector2): void;
 static BLEND_MODE_INTERPOLATED: any;
 
 /**
- * The blend space plays the animation of the node the blending position is closest to. Useful for frame-by-frame 2D animations.
+ * The blend space plays the animation of the animation node which blending position is closest to. Useful for frame-by-frame 2D animations.
  *
 */
 static BLEND_MODE_DISCRETE: any;

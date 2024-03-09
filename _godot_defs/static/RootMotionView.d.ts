@@ -1,24 +1,24 @@
 
 /**
- * **Root motion** refers to an animation technique where a mesh's skeleton is used to give impulse to a character. When working with 3D animations, a popular technique is for animators to use the root skeleton bone to give motion to the rest of the skeleton. This allows animating characters in a way where steps actually match the floor below. It also allows precise interaction with objects during cinematics. See also [AnimationTree].
+ * **Root motion** refers to an animation technique where a mesh's skeleton is used to give impulse to a character. When working with 3D animations, a popular technique is for animators to use the root skeleton bone to give motion to the rest of the skeleton. This allows animating characters in a way where steps actually match the floor below. It also allows precise interaction with objects during cinematics. See also [AnimationMixer].
  *
- * **Note:** [RootMotionView] is only visible in the editor. It will be hidden automatically in the running project, and will also be converted to a plain [Node] in the running project. This means a script attached to a [RootMotionView] node **must** have `extends Node` instead of `extends RootMotionView`. Additionally, it must not be a `@tool` script.
+ * **Note:** [RootMotionView] is only visible in the editor. It will be hidden automatically in the running project.
  *
 */
-declare class RootMotionView extends VisualInstance  {
+declare class RootMotionView extends VisualInstance3D  {
 
   
 /**
- * **Root motion** refers to an animation technique where a mesh's skeleton is used to give impulse to a character. When working with 3D animations, a popular technique is for animators to use the root skeleton bone to give motion to the rest of the skeleton. This allows animating characters in a way where steps actually match the floor below. It also allows precise interaction with objects during cinematics. See also [AnimationTree].
+ * **Root motion** refers to an animation technique where a mesh's skeleton is used to give impulse to a character. When working with 3D animations, a popular technique is for animators to use the root skeleton bone to give motion to the rest of the skeleton. This allows animating characters in a way where steps actually match the floor below. It also allows precise interaction with objects during cinematics. See also [AnimationMixer].
  *
- * **Note:** [RootMotionView] is only visible in the editor. It will be hidden automatically in the running project, and will also be converted to a plain [Node] in the running project. This means a script attached to a [RootMotionView] node **must** have `extends Node` instead of `extends RootMotionView`. Additionally, it must not be a `@tool` script.
+ * **Note:** [RootMotionView] is only visible in the editor. It will be hidden automatically in the running project.
  *
 */
   new(): RootMotionView; 
   static "new"(): RootMotionView 
 
 
-/** Path to an [AnimationTree] node to use as a basis for root motion. */
+/** Path to an [AnimationMixer] node to use as a basis for root motion. */
 animation_path: NodePathType;
 
 /** The grid's cell size in 3D units. */

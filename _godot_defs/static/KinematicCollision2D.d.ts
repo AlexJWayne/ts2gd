@@ -1,61 +1,62 @@
 
 /**
- * Contains collision data for [KinematicBody2D] collisions. When a [KinematicBody2D] is moved using [method KinematicBody2D.move_and_collide], it stops if it detects a collision with another body. If a collision is detected, a KinematicCollision2D object is returned.
+ * Holds collision data from the movement of a [PhysicsBody2D], usually from [method PhysicsBody2D.move_and_collide]. When a [PhysicsBody2D] is moved, it stops if it detects a collision with another body. If a collision is detected, a [KinematicCollision2D] object is returned.
  *
- * This object contains information about the collision, including the colliding object, the remaining motion, and the collision position. This information can be used to calculate a collision response.
+ * The collision data includes the colliding object, the remaining motion, and the collision position. This data can be used to determine a custom response to the collision.
  *
 */
-declare class KinematicCollision2D extends Reference  {
+declare class KinematicCollision2D extends RefCounted  {
 
   
 /**
- * Contains collision data for [KinematicBody2D] collisions. When a [KinematicBody2D] is moved using [method KinematicBody2D.move_and_collide], it stops if it detects a collision with another body. If a collision is detected, a KinematicCollision2D object is returned.
+ * Holds collision data from the movement of a [PhysicsBody2D], usually from [method PhysicsBody2D.move_and_collide]. When a [PhysicsBody2D] is moved, it stops if it detects a collision with another body. If a collision is detected, a [KinematicCollision2D] object is returned.
  *
- * This object contains information about the collision, including the colliding object, the remaining motion, and the collision position. This information can be used to calculate a collision response.
+ * The collision data includes the colliding object, the remaining motion, and the collision position. This data can be used to determine a custom response to the collision.
  *
 */
   new(): KinematicCollision2D; 
   static "new"(): KinematicCollision2D 
 
 
-/** The colliding body. */
-collider: Object;
 
-/** The colliding body's unique instance ID. See [method Object.get_instance_id]. */
-collider_id: int;
+/** Returns the collision angle according to [param up_direction], which is [constant Vector2.UP] by default. This value is always positive. */
+get_angle(): float;
 
-/** The colliding body's metadata. See [Object]. */
-collider_metadata: any;
+/** Returns the colliding body's attached [Object]. */
+get_collider(): Object;
 
-/** The colliding body's [RID] used by the [Physics2DServer]. */
-collider_rid: RID;
+/** Returns the unique instance ID of the colliding body's attached [Object]. See [method Object.get_instance_id]. */
+get_collider_id(): int;
 
-/** The colliding body's shape. */
-collider_shape: Object;
+/** Returns the colliding body's [RID] used by the [PhysicsServer2D]. */
+get_collider_rid(): RID;
 
-/** The colliding shape's index. See [CollisionObject2D]. */
-collider_shape_index: int;
+/** Returns the colliding body's shape. */
+get_collider_shape(): Object;
 
-/** The colliding object's velocity. */
-collider_velocity: Vector2;
+/** Returns the colliding body's shape index. See [CollisionObject2D]. */
+get_collider_shape_index(): int;
 
-/** The moving object's colliding shape. */
-local_shape: Object;
+/** Returns the colliding body's velocity. */
+get_collider_velocity(): Vector2;
 
-/** The colliding body's shape's normal at the point of collision. */
-normal: Vector2;
+/** Returns the colliding body's length of overlap along the collision normal. */
+get_depth(): float;
 
-/** The point of collision, in global coordinates. */
-position: Vector2;
+/** Returns the moving object's colliding shape. */
+get_local_shape(): Object;
 
-/** The moving object's remaining movement vector. */
-remainder: Vector2;
+/** Returns the colliding body's shape's normal at the point of collision. */
+get_normal(): Vector2;
 
-/** The distance the moving object traveled before collision. */
-travel: Vector2;
+/** Returns the point of collision in global coordinates. */
+get_position(): Vector2;
 
-/** The collision angle according to [code]up_direction[/code], which is [code]Vector2.UP[/code] by default. This value is always positive. */
-get_angle(up_direction?: Vector2): float;
+/** Returns the moving object's remaining movement vector. */
+get_remainder(): Vector2;
+
+/** Returns the moving object's travel before collision. */
+get_travel(): Vector2;
 
   connect<T extends SignalsOf<KinematicCollision2D>>(signal: T, method: SignalFunction<KinematicCollision2D[T]>): number;
 

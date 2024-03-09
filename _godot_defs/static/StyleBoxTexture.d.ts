@@ -1,13 +1,13 @@
 
 /**
- * Texture-based nine-patch [StyleBox], in a way similar to [NinePatchRect]. This stylebox performs a 3×3 scaling of a texture, where only the center cell is fully stretched. This makes it possible to design bordered styles regardless of the stylebox's size.
+ * A texture-based nine-patch [StyleBox], in a way similar to [NinePatchRect]. This stylebox performs a 3×3 scaling of a texture, where only the center cell is fully stretched. This makes it possible to design bordered styles regardless of the stylebox's size.
  *
 */
 declare class StyleBoxTexture extends StyleBox  {
 
   
 /**
- * Texture-based nine-patch [StyleBox], in a way similar to [NinePatchRect]. This stylebox performs a 3×3 scaling of a texture, where only the center cell is fully stretched. This makes it possible to design bordered styles regardless of the stylebox's size.
+ * A texture-based nine-patch [StyleBox], in a way similar to [NinePatchRect]. This stylebox performs a 3×3 scaling of a texture, where only the center cell is fully stretched. This makes it possible to design bordered styles regardless of the stylebox's size.
  *
 */
   new(): StyleBoxTexture; 
@@ -35,6 +35,22 @@ expand_margin_right: float;
 /** Expands the top margin of this style box when drawing, causing it to be drawn larger than requested. */
 expand_margin_top: float;
 
+/** Modulates the color of the texture when this style box is drawn. */
+modulate_color: Color;
+
+/**
+ * Species a sub-region of the texture to use.
+ *
+ * This is equivalent to first wrapping the texture in an [AtlasTexture] with the same region.
+ *
+ * If empty (`Rect2(0, 0, 0, 0)`), the whole texture will be used.
+ *
+*/
+region_rect: Rect2;
+
+/** The texture to use when drawing this style box. */
+texture: Texture2D;
+
 /**
  * Increases the bottom margin of the 3×3 texture box.
  *
@@ -43,7 +59,7 @@ expand_margin_top: float;
  * This is also the value used as fallback for [member StyleBox.content_margin_bottom] if it is negative.
  *
 */
-margin_bottom: float;
+texture_margin_bottom: float;
 
 /**
  * Increases the left margin of the 3×3 texture box.
@@ -53,7 +69,7 @@ margin_bottom: float;
  * This is also the value used as fallback for [member StyleBox.content_margin_left] if it is negative.
  *
 */
-margin_left: float;
+texture_margin_left: float;
 
 /**
  * Increases the right margin of the 3×3 texture box.
@@ -63,7 +79,7 @@ margin_left: float;
  * This is also the value used as fallback for [member StyleBox.content_margin_right] if it is negative.
  *
 */
-margin_right: float;
+texture_margin_right: float;
 
 /**
  * Increases the top margin of the 3×3 texture box.
@@ -73,47 +89,25 @@ margin_right: float;
  * This is also the value used as fallback for [member StyleBox.content_margin_top] if it is negative.
  *
 */
-margin_top: float;
+texture_margin_top: float;
 
-/** Modulates the color of the texture when this style box is drawn. */
-modulate_color: Color;
+/** Returns the expand margin size of the specified [enum Side]. */
+get_expand_margin(): float;
 
-/**
- * The normal map to use when drawing this style box.
- *
- * **Note:** Godot expects the normal map to use X+, Y-, and Z+ coordinates. See [url=http://wiki.polycount.com/wiki/Normal_Map_Technical_Details#Common_Swizzle_Coordinates]this page[/url] for a comparison of normal map coordinates expected by popular engines.
- *
-*/
-normal_map: Texture;
+/** Returns the margin size of the specified [enum Side]. */
+get_texture_margin(): float;
 
-/**
- * Species a sub-region of the texture to use.
- *
- * This is equivalent to first wrapping the texture in an [AtlasTexture] with the same region.
- *
-*/
-region_rect: Rect2;
+/** Sets the expand margin to [param size] pixels for the specified [enum Side]. */
+set_expand_margin(): void;
 
-/** The texture to use when drawing this style box. */
-texture: Texture;
+/** Sets the expand margin to [param size] pixels for all sides. */
+set_expand_margin_all(): void;
 
-/** Returns the size of the given [code]margin[/code]'s expand margin. See [enum Margin] for possible values. */
-get_expand_margin_size(margin: int): float;
+/** Sets the margin to [param size] pixels for the specified [enum Side]. */
+set_texture_margin(): void;
 
-/** Returns the size of the given [code]margin[/code]. See [enum Margin] for possible values. */
-get_margin_size(margin: int): float;
-
-/** Sets the expand margin to [code]size[/code] pixels for all margins. */
-set_expand_margin_all(size: float): void;
-
-/** Sets the expand margin for each margin to [code]size_left[/code], [code]size_top[/code], [code]size_right[/code], and [code]size_bottom[/code] pixels. */
-set_expand_margin_individual(size_left: float, size_top: float, size_right: float, size_bottom: float): void;
-
-/** Sets the expand margin to [code]size[/code] pixels for the given [code]margin[/code]. See [enum Margin] for possible values. */
-set_expand_margin_size(margin: int, size: float): void;
-
-/** Sets the margin to [code]size[/code] pixels for the given [code]margin[/code]. See [enum Margin] for possible values. */
-set_margin_size(margin: int, size: float): void;
+/** Sets the margin to [param size] pixels for all sides. */
+set_texture_margin_all(): void;
 
   connect<T extends SignalsOf<StyleBoxTexture>>(signal: T, method: SignalFunction<StyleBoxTexture[T]>): number;
 
@@ -138,11 +132,6 @@ static AXIS_STRETCH_MODE_TILE: any;
 static AXIS_STRETCH_MODE_TILE_FIT: any;
 
 
-/**
- * Emitted when the stylebox's texture is changed.
- *
-*/
-$texture_changed: Signal<() => void>
 
 }
 

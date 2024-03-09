@@ -1,105 +1,164 @@
 
 /**
- * [Rect2] consists of a position, a size, and several utility functions. It is typically used for fast overlap tests.
+ * The [Rect2] built-in [Variant] type represents an axis-aligned rectangle in a 2D space. It is defined by its [member position] and [member size], which are [Vector2]. It is frequently used for fast overlap tests (see [method intersects]). Although [Rect2] itself is axis-aligned, it can be combined with [Transform2D] to represent a rotated or skewed rectangle.
  *
- * It uses floating-point coordinates.
+ * For integer coordinates, use [Rect2i]. The 3D equivalent to [Rect2] is [AABB].
  *
- * The 3D counterpart to [Rect2] is [AABB].
+ * **Note:** Negative values for [member size] are not supported. With negative size, most [Rect2] methods do not work correctly. Use [method abs] to get an equivalent [Rect2] with a non-negative size.
+ *
+ * **Note:** In a boolean context, a [Rect2] evaluates to `false` if both [member position] and [member size] are zero (equal to [constant Vector2.ZERO]). Otherwise, it always evaluates to `true`.
  *
 */
 declare class Rect2Constructor {
 
   
 /**
- * [Rect2] consists of a position, a size, and several utility functions. It is typically used for fast overlap tests.
+ * The [Rect2] built-in [Variant] type represents an axis-aligned rectangle in a 2D space. It is defined by its [member position] and [member size], which are [Vector2]. It is frequently used for fast overlap tests (see [method intersects]). Although [Rect2] itself is axis-aligned, it can be combined with [Transform2D] to represent a rotated or skewed rectangle.
  *
- * It uses floating-point coordinates.
+ * For integer coordinates, use [Rect2i]. The 3D equivalent to [Rect2] is [AABB].
  *
- * The 3D counterpart to [Rect2] is [AABB].
+ * **Note:** Negative values for [member size] are not supported. With negative size, most [Rect2] methods do not work correctly. Use [method abs] to get an equivalent [Rect2] with a non-negative size.
+ *
+ * **Note:** In a boolean context, a [Rect2] evaluates to `false` if both [member position] and [member size] are zero (equal to [constant Vector2.ZERO]). Otherwise, it always evaluates to `true`.
  *
 */
 
 
-/** Ending corner. This is calculated as [code]position + size[/code]. Setting this value will change the size. */
+/** The ending point. This is usually the bottom-right corner of the rectangle, and is equivalent to [code]position + size[/code]. Setting this point affects the [member size]. */
 end: Vector2;
 
-/** Beginning corner. Typically has values lower than [member end]. */
+/** The origin point. This is usually the top-left corner of the rectangle. */
 position: Vector2;
 
 /**
- * Size from [member position] to [member end]. Typically, all components are positive.
+ * The rectangle's width and height, starting from [member position]. Setting this value also affects the [member end] point.
  *
- * If the size is negative, you can use [method abs] to fix it.
+ * **Note:** It's recommended setting the width and height to non-negative values, as most methods in Godot assume that the [member position] is the top-left corner, and the [member end] is the bottom-right corner. To get an equivalent rectangle with non-negative size, use [method abs].
  *
 */
 size: Vector2;
 
-
-
-
-
-/** Returns a [Rect2] with equivalent position and area, modified so that the top-left corner is the origin and [code]width[/code] and [code]height[/code] are positive. */
-abs(): Rect2;
-
-/** Returns the intersection of this [Rect2] and b. */
-clip(b: Rect2): Rect2;
-
-/** Returns [code]true[/code] if this [Rect2] completely encloses another one. */
-encloses(b: Rect2): boolean;
-
 /**
- * Returns a copy of this [Rect2] expanded to include a given point.
- *
- * **Example:**
+ * Returns a [Rect2] equivalent to this rectangle, with its width and height modified to be non-negative values, and with its [member position] being the top-left corner of the rectangle.
  *
  * @example 
  * 
- * # position (-3, 2), size (1, 1)
- * var rect = Rect2(Vector2(-3, 2), Vector2(1, 1))
- * # position (-3, -1), size (3, 4), so we fit both rect and Vector2(0, -1)
- * var rect2 = rect.expand(Vector2(0, -1))
+ * 
+ * var rect = Rect2(25, 25, -100, -50)
+ * var absolute = rect.abs() # absolute is Rect2(-75, -25, 100, 50)
+ * 
+ * 
+ * var rect = new Rect2(25, 25, -100, -50);
+ * var absolute = rect.Abs(); // absolute is Rect2(-75, -25, 100, 50)
+ * 
+ * @summary 
+ * 
+ *
+ * **Note:** It's recommended to use this method when [member size] is negative, as most other methods in Godot assume that the [member position] is the top-left corner, and the [member end] is the bottom-right corner.
+ *
+*/
+abs(): Rect2;
+
+/** Returns [code]true[/code] if this rectangle [i]completely[/i] encloses the [param b] rectangle. */
+encloses(): boolean;
+
+/**
+ * Returns a copy of this rectangle expanded to align the edges with the given [param to] point, if necessary.
+ *
+ * @example 
+ * 
+ * 
+ * var rect = Rect2(0, 0, 5, 2)
+ * rect = rect.expand(Vector2(10, 0)) # rect is Rect2(0, 0, 10, 2)
+ * rect = rect.expand(Vector2(-5, 5)) # rect is Rect2(-5, 0, 10, 5)
+ * 
+ * 
+ * var rect = new Rect2(0, 0, 5, 2);
+ * rect = rect.Expand(new Vector2(10, 0)); // rect is Rect2(0, 0, 10, 2)
+ * rect = rect.Expand(new Vector2(-5, 5)); // rect is Rect2(-5, 0, 10, 5)
+ * 
  * @summary 
  * 
  *
 */
-expand(to: Vector2): Rect2;
+expand(): Rect2;
 
-/** Returns the area of the [Rect2]. */
+/** Returns the rectangle's area. This is equivalent to [code]size.x * size.y[/code]. See also [method has_area]. */
 get_area(): float;
 
-/** Returns a copy of the [Rect2] grown a given amount of units towards all the sides. */
-grow(by: float): Rect2;
-
-/** Returns a copy of the [Rect2] grown a given amount of units towards each direction individually. */
-grow_individual(left: float, top: float, right: float,  bottom: float): Rect2;
-
-/** Returns a copy of the [Rect2] grown a given amount of units towards the [enum Margin] direction. */
-grow_margin(margin: int, by: float): Rect2;
-
-/** Returns [code]true[/code] if the [Rect2] is flat or empty. */
-has_no_area(): boolean;
+/** Returns the center point of the rectangle. This is the same as [code]position + (size / 2.0)[/code]. */
+get_center(): Vector2;
 
 /**
- * Returns `true` if the [Rect2] contains a point. By convention, the right and bottom edges of the [Rect2] are considered exclusive, so points on these edges are **not** included.
+ * Returns a copy of this rectangle extended on all sides by the given [param amount]. A negative [param amount] shrinks the rectangle instead. See also [method grow_individual] and [method grow_side].
  *
- * **Note:** This method is not reliable for [Rect2] with a **negative size**. Use [method abs] to get a positive sized equivalent rectangle to check for contained points.
+ * @example 
+ * 
+ * 
+ * var a = Rect2(4, 4, 8, 8).grow(4) # a is Rect2(0, 0, 16, 16)
+ * var b = Rect2(0, 0, 8, 4).grow(2) # b is Rect2(-2, -2, 12, 8)
+ * 
+ * 
+ * var a = new Rect2(4, 4, 8, 8).Grow(4); // a is Rect2(0, 0, 16, 16)
+ * var b = new Rect2(0, 0, 8, 4).Grow(2); // b is Rect2(-2, -2, 12, 8)
+ * 
+ * @summary 
+ * 
  *
 */
-has_point(point: Vector2): boolean;
+grow(): Rect2;
+
+/** Returns a copy of this rectangle with its [param left], [param top], [param right], and [param bottom] sides extended by the given amounts. Negative values shrink the sides, instead. See also [method grow] and [method grow_side]. */
+grow_individual(): Rect2;
+
+/** Returns a copy of this rectangle with its [param side] extended by the given [param amount] (see [enum Side] constants). A negative [param amount] shrinks the rectangle, instead. See also [method grow] and [method grow_individual]. */
+grow_side(): Rect2;
+
+/** Returns [code]true[/code] if this rectangle has positive width and height. See also [method get_area]. */
+has_area(): boolean;
 
 /**
- * Returns `true` if the [Rect2] overlaps with `b` (i.e. they have at least one point in common).
+ * Returns `true` if the rectangle contains the given [param point]. By convention, points on the right and bottom edges are **not** included.
  *
- * If `include_borders` is `true`, they will also be considered overlapping if their borders touch, even without intersection.
+ * **Note:** This method is not reliable for [Rect2] with a **negative** [member size]. Use [method abs] first to get a valid rectangle.
  *
 */
-intersects(b: Rect2, include_borders?: boolean): boolean;
+has_point(): boolean;
 
-/** Returns [code]true[/code] if this [Rect2] and [code]rect[/code] are approximately equal, by calling [code]is_equal_approx[/code] on each component. */
-is_equal_approx(rect: Rect2): boolean;
+/**
+ * Returns the intersection between this rectangle and [param b]. If the rectangles do not intersect, returns an empty [Rect2].
+ *
+ * @example 
+ * 
+ * 
+ * var rect1 = Rect2(0, 0, 5, 10)
+ * var rect2 = Rect2(2, 0, 8, 4)
+ * var a = rect1.intersection(rect2) # a is Rect2(2, 0, 3, 4)
+ * 
+ * 
+ * var rect1 = new Rect2(0, 0, 5, 10);
+ * var rect2 = new Rect2(2, 0, 8, 4);
+ * var a = rect1.Intersection(rect2); // a is Rect2(2, 0, 3, 4)
+ * 
+ * @summary 
+ * 
+ *
+ * **Note:** If you only need to know whether two rectangles are overlapping, use [method intersects], instead.
+ *
+*/
+intersection(): Rect2;
 
-/** Returns a larger [Rect2] that contains this [Rect2] and [code]b[/code]. */
-merge(b: Rect2): Rect2;
+/** Returns [code]true[/code] if this rectangle overlaps with the [param b] rectangle. The edges of both rectangles are excluded, unless [param include_borders] is [code]true[/code]. */
+intersects(): boolean;
+
+/** Returns [code]true[/code] if this rectangle and [param rect] are approximately equal, by calling [method Vector2.is_equal_approx] on the [member position] and the [member size]. */
+is_equal_approx(): boolean;
+
+/** Returns [code]true[/code] if this rectangle's values are finite, by calling [method Vector2.is_finite] on the [member position] and the [member size]. */
+is_finite(): boolean;
+
+/** Returns a [Rect2] that encloses both this rectangle and [param b] around the edges. See also [method encloses]. */
+merge(): Rect2;
 
   connect<T extends SignalsOf<Rect2>>(signal: T, method: SignalFunction<Rect2[T]>): number;
 
@@ -112,11 +171,8 @@ merge(b: Rect2): Rect2;
 
 declare type Rect2 = Rect2Constructor;
 declare var Rect2: typeof Rect2Constructor & {
-  
-  new(position: Vector2, size: Vector2): Rect2;
-  new(x: float, y: float, width: float, height: float): Rect2;
+    new(): Rect2; 
 
-  (position: Vector2, size: Vector2): Rect2;
-  (x: float, y: float, width: float, height: float): Rect2;
+
 
 }

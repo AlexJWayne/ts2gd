@@ -1,21 +1,21 @@
 
 /**
- * A constant [Transform], which can be used as an input node.
+ * A constant [Transform3D], which can be used as an input node.
  *
 */
-declare class VisualShaderNodeTransformConstant extends VisualShaderNode  {
+declare class VisualShaderNodeTransformConstant extends VisualShaderNodeConstant  {
 
   
 /**
- * A constant [Transform], which can be used as an input node.
+ * A constant [Transform3D], which can be used as an input node.
  *
 */
   new(): VisualShaderNodeTransformConstant; 
   static "new"(): VisualShaderNodeTransformConstant 
 
 
-/** A [Transform] constant which represents the state of this node. */
-constant: Transform;
+/** A [Transform3D] constant which represents the state of this node. */
+constant: Transform3D;
 
 
 

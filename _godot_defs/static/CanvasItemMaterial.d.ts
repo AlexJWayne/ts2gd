@@ -21,7 +21,7 @@ blend_mode: int;
 light_mode: int;
 
 /**
- * The number of columns in the spritesheet assigned as [Texture] for a [Particles2D] or [CPUParticles2D].
+ * The number of columns in the spritesheet assigned as [Texture2D] for a [GPUParticles2D] or [CPUParticles2D].
  *
  * **Note:** This property is only used and visible in the editor if [member particles_animation] is `true`.
  *
@@ -37,7 +37,7 @@ particles_anim_h_frames: int;
 particles_anim_loop: boolean;
 
 /**
- * The number of rows in the spritesheet assigned as [Texture] for a [Particles2D] or [CPUParticles2D].
+ * The number of rows in the spritesheet assigned as [Texture2D] for a [GPUParticles2D] or [CPUParticles2D].
  *
  * **Note:** This property is only used and visible in the editor if [member particles_animation] is `true`.
  *
@@ -45,7 +45,7 @@ particles_anim_loop: boolean;
 particles_anim_v_frames: int;
 
 /**
- * If `true`, enable spritesheet-based animation features when assigned to [Particles2D] and [CPUParticles2D] nodes. The [member ParticlesMaterial.anim_speed] or [member CPUParticles2D.anim_speed] should also be set to a positive value for the animation to play.
+ * If `true`, enable spritesheet-based animation features when assigned to [GPUParticles2D] and [CPUParticles2D] nodes. The [member ParticleProcessMaterial.anim_speed_max] or [member CPUParticles2D.anim_speed_max] should also be set to a positive value for the animation to play.
  *
  * This property (and other `particles_anim_*` properties that depend on it) has no effect on other types of nodes.
  *

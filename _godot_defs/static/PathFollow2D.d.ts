@@ -2,7 +2,7 @@
 /**
  * This node takes its parent [Path2D], and returns the coordinates of a point within it, given a distance from the first vertex.
  *
- * It is useful for making other nodes follow a path, without coding the movement pattern. For that, the nodes must be children of this node. The descendant nodes will then move accordingly when setting an offset in this node.
+ * It is useful for making other nodes follow a path, without coding the movement pattern. For that, the nodes must be children of this node. The descendant nodes will then move accordingly when setting the [member progress] in this node.
  *
 */
 declare class PathFollow2D extends Node2D  {
@@ -11,7 +11,7 @@ declare class PathFollow2D extends Node2D  {
 /**
  * This node takes its parent [Path2D], and returns the coordinates of a point within it, given a distance from the first vertex.
  *
- * It is useful for making other nodes follow a path, without coding the movement pattern. For that, the nodes must be children of this node. The descendant nodes will then move accordingly when setting an offset in this node.
+ * It is useful for making other nodes follow a path, without coding the movement pattern. For that, the nodes must be children of this node. The descendant nodes will then move accordingly when setting the [member progress] in this node.
  *
 */
   new(): PathFollow2D; 
@@ -31,18 +31,17 @@ cubic_interp: boolean;
 /** The node's offset along the curve. */
 h_offset: float;
 
-/** How far to look ahead of the curve to calculate the tangent if the node is rotating. E.g. shorter lookaheads will lead to faster rotations. */
-lookahead: float;
-
 /** If [code]true[/code], any offset outside the path's length will wrap around, instead of stopping at the ends. Use it for cyclic paths. */
 loop: boolean;
 
-/** The distance along the path in pixels. */
-offset: float;
+/** The distance along the path, in pixels. Changing this value sets this node's position to a point within the path. */
+progress: float;
 
+/** The distance along the path as a number in the range 0.0 (for the first vertex) to 1.0 (for the last). This is just another way of expressing the progress within the path, as the offset supplied is multiplied internally by the path's length. */
+progress_ratio: float;
 
-/** The distance along the path as a number in the range 0.0 (for the first vertex) to 1.0 (for the last). This is just another way of expressing the offset within the path, as the offset supplied is multiplied internally by the path's length. */
-unit_offset: float;
+/** If [code]true[/code], this node rotates to follow the path, with the +X direction facing forward on the path. */
+rotates: boolean;
 
 /** The node's offset perpendicular to the curve. */
 v_offset: float;

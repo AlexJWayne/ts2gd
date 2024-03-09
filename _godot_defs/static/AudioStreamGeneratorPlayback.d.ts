@@ -15,23 +15,23 @@ declare class AudioStreamGeneratorPlayback extends AudioStreamPlaybackResampled 
 
 
 
-/** Returns [code]true[/code] if a buffer of the size [code]amount[/code] can be pushed to the audio sample data buffer without overflowing it, [code]false[/code] otherwise. */
-can_push_buffer(amount: int): boolean;
+/** Returns [code]true[/code] if a buffer of the size [param amount] can be pushed to the audio sample data buffer without overflowing it, [code]false[/code] otherwise. */
+can_push_buffer(): boolean;
 
 /** Clears the audio sample data buffer. */
 clear_buffer(): void;
 
-/** Returns the number of audio data frames left to play. If this returned number reaches [code]0[/code], the audio will stop playing until frames are added again. Therefore, make sure your script can always generate and push new audio frames fast enough to avoid audio cracking. */
+/** Returns the number of frames that can be pushed to the audio sample data buffer without overflowing it. If the result is [code]0[/code], the buffer is full. */
 get_frames_available(): int;
 
-/** No documentation provided. */
+/** Returns the number of times the playback skipped due to a buffer underrun in the audio sample data. This value is reset at the start of the playback. */
 get_skips(): int;
 
-/** Pushes several audio data frames to the buffer. This is usually more efficient than [method push_frame] in C# and compiled languages via GDNative, but [method push_buffer] may be [i]less[/i] efficient in GDScript. */
-push_buffer(frames: PoolVector2Array): boolean;
+/** Pushes several audio data frames to the buffer. This is usually more efficient than [method push_frame] in C# and compiled languages via GDExtension, but [method push_buffer] may be [i]less[/i] efficient in GDScript. */
+push_buffer(): boolean;
 
-/** Pushes a single audio data frame to the buffer. This is usually less efficient than [method push_buffer] in C# and compiled languages via GDNative, but [method push_frame] may be [i]more[/i] efficient in GDScript. */
-push_frame(frame: Vector2): boolean;
+/** Pushes a single audio data frame to the buffer. This is usually less efficient than [method push_buffer] in C# and compiled languages via GDExtension, but [method push_frame] may be [i]more[/i] efficient in GDScript. */
+push_frame(): boolean;
 
   connect<T extends SignalsOf<AudioStreamGeneratorPlayback>>(signal: T, method: SignalFunction<AudioStreamGeneratorPlayback[T]>): number;
 

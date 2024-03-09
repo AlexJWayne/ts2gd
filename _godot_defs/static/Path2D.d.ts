@@ -23,7 +23,6 @@ curve: Curve2D;
 
 
 
-
   connect<T extends SignalsOf<Path2D>>(signal: T, method: SignalFunction<Path2D[T]>): number;
 
 

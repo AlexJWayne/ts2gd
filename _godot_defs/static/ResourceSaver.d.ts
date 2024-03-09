@@ -1,17 +1,17 @@
 
 /**
- * Singleton for saving Godot-specific resource types to the filesystem.
+ * A singleton for saving resource types to the filesystem.
  *
- * It uses the many [ResourceFormatSaver] classes registered in the engine (either built-in or from a plugin) to save engine-specific resource data to text-based (e.g. `.tres` or `.tscn`) or binary files (e.g. `.res` or `.scn`).
+ * It uses the many [ResourceFormatSaver] classes registered in the engine (either built-in or from a plugin) to save resource data to text-based (e.g. `.tres` or `.tscn`) or binary files (e.g. `.res` or `.scn`).
  *
 */
 declare class ResourceSaverClass extends Object  {
 
   
 /**
- * Singleton for saving Godot-specific resource types to the filesystem.
+ * A singleton for saving resource types to the filesystem.
  *
- * It uses the many [ResourceFormatSaver] classes registered in the engine (either built-in or from a plugin) to save engine-specific resource data to text-based (e.g. `.tres` or `.tscn`) or binary files (e.g. `.res` or `.scn`).
+ * It uses the many [ResourceFormatSaver] classes registered in the engine (either built-in or from a plugin) to save resource data to text-based (e.g. `.tres` or `.tscn`) or binary files (e.g. `.res` or `.scn`).
  *
 */
   new(): ResourceSaverClass; 
@@ -19,22 +19,41 @@ declare class ResourceSaverClass extends Object  {
 
 
 
+/**
+ * Registers a new [ResourceFormatSaver]. The ResourceSaver will use the ResourceFormatSaver as described in [method save].
+ *
+ * This method is performed implicitly for ResourceFormatSavers written in GDScript (see [ResourceFormatSaver] for more information).
+ *
+*/
+add_resource_format_saver(): void;
+
 /** Returns the list of extensions available for saving a resource of a given type. */
-get_recognized_extensions(type: Resource): PoolStringArray;
+get_recognized_extensions(): PackedStringArray;
+
+/** Unregisters the given [ResourceFormatSaver]. */
+remove_resource_format_saver(): void;
 
 /**
- * Saves a resource to disk to the given path, using a [ResourceFormatSaver] that recognizes the resource object.
+ * Saves a resource to disk to the given path, using a [ResourceFormatSaver] that recognizes the resource object. If [param path] is empty, [ResourceSaver] will try to use [member Resource.resource_path].
  *
- * The `flags` bitmask can be specified to customize the save behavior.
+ * The [param flags] bitmask can be specified to customize the save behavior using [enum SaverFlags] flags.
  *
  * Returns [constant OK] on success.
  *
+ * **Note:** When the project is running, any generated UID associated with the resource will not be saved as the required code is only executed in editor mode.
+ *
 */
-save(path: string, resource: Resource, flags?: int): int;
+save(): int;
 
   connect<T extends SignalsOf<ResourceSaverClass>>(signal: T, method: SignalFunction<ResourceSaverClass[T]>): number;
 
 
+
+/**
+ * No resource saving option.
+ *
+*/
+static FLAG_NONE: any;
 
 /**
  * Save the resource with a path relative to the scene which uses it.
@@ -61,13 +80,13 @@ static FLAG_CHANGE_PATH: any;
 static FLAG_OMIT_EDITOR_PROPERTIES: any;
 
 /**
- * Save as big endian (see [member File.endian_swap]).
+ * Save as big endian (see [member FileAccess.big_endian]).
  *
 */
 static FLAG_SAVE_BIG_ENDIAN: any;
 
 /**
- * Compress the resource on save using [constant File.COMPRESSION_ZSTD]. Only available for binary resource types.
+ * Compress the resource on save using [constant FileAccess.COMPRESSION_ZSTD]. Only available for binary resource types.
  *
 */
 static FLAG_COMPRESS: any;

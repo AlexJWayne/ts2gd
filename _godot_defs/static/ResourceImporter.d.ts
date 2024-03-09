@@ -1,13 +1,13 @@
 
 /**
- * This is the base class for the resource importers implemented in core. To implement your own resource importers using editor plugins, see [EditorImportPlugin].
+ * This is the base class for Godot's resource importers. To implement your own resource importers using editor plugins, see [EditorImportPlugin].
  *
 */
-declare class ResourceImporter extends Reference  {
+declare class ResourceImporter extends RefCounted  {
 
   
 /**
- * This is the base class for the resource importers implemented in core. To implement your own resource importers using editor plugins, see [EditorImportPlugin].
+ * This is the base class for Godot's resource importers. To implement your own resource importers using editor plugins, see [EditorImportPlugin].
  *
 */
   new(): ResourceImporter; 

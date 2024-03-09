@@ -12,34 +12,37 @@ declare class Skin extends Resource  {
 
 
 /** No documentation provided. */
-add_bind(bone: int, pose: Transform): void;
+add_bind(): void;
+
+/** No documentation provided. */
+add_named_bind(): void;
 
 /** No documentation provided. */
 clear_binds(): void;
 
 /** No documentation provided. */
-get_bind_bone(bind_index: int): int;
+get_bind_bone(): int;
 
 /** No documentation provided. */
 get_bind_count(): int;
 
 /** No documentation provided. */
-get_bind_name(bind_index: int): string;
+get_bind_name(): StringName;
 
 /** No documentation provided. */
-get_bind_pose(bind_index: int): Transform;
+get_bind_pose(): Transform3D;
 
 /** No documentation provided. */
-set_bind_bone(bind_index: int, bone: int): void;
+set_bind_bone(): void;
 
 /** No documentation provided. */
-set_bind_count(bind_count: int): void;
+set_bind_count(): void;
 
 /** No documentation provided. */
-set_bind_name(bind_index: int, name: string): void;
+set_bind_name(): void;
 
 /** No documentation provided. */
-set_bind_pose(bind_index: int, pose: Transform): void;
+set_bind_pose(): void;
 
   connect<T extends SignalsOf<Skin>>(signal: T, method: SignalFunction<Skin[T]>): number;
 

@@ -1,17 +1,13 @@
 
 /**
- * Base class for GUI sliders.
- *
- * **Note:** The [signal Range.changed] and [signal Range.value_changed] signals are part of the [Range] class which this class inherits from.
+ * Abstract base class for sliders, used to adjust a value by moving a grabber along a horizontal or vertical axis. Sliders are [Range]-based controls.
  *
 */
 declare class Slider extends Range  {
 
   
 /**
- * Base class for GUI sliders.
- *
- * **Note:** The [signal Range.changed] and [signal Range.value_changed] signals are part of the [Range] class which this class inherits from.
+ * Abstract base class for sliders, used to adjust a value by moving a grabber along a horizontal or vertical axis. Sliders are [Range]-based controls.
  *
 */
   new(): Slider; 
@@ -40,6 +36,17 @@ ticks_on_borders: boolean;
 
 
 
+/**
+ * Emitted when dragging stops. If [param value_changed] is true, [member Range.value] is different from the value when you started the dragging.
+ *
+*/
+$drag_ended: Signal<() => void>
+
+/**
+ * Emitted when dragging is started.
+ *
+*/
+$drag_started: Signal<() => void>
 
 }
 

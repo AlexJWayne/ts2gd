@@ -1,14 +1,12 @@
 
 /**
- * A [Texture] based on an [Image]. For an image to be displayed, an [ImageTexture] has to be created from it using the [method create_from_image] method:
+ * A [Texture2D] based on an [Image]. For an image to be displayed, an [ImageTexture] has to be created from it using the [method create_from_image] method:
  *
  * @example 
  * 
- * var texture = ImageTexture.new()
- * var image = Image.new()
- * image.load("res://icon.png")
- * texture.create_from_image(image)
- * $Sprite.texture = texture
+ * var image = Image.load_from_file("res://icon.svg")
+ * var texture = ImageTexture.create_from_image(image)
+ * $Sprite2D.texture = texture
  * @summary 
  * 
  *
@@ -18,19 +16,19 @@
  *
  * @example 
  * 
- * var texture = load("res://icon.png")
- * $Sprite.texture = texture
+ * var texture = load("res://icon.svg")
+ * $Sprite2D.texture = texture
  * @summary 
  * 
  *
- * This is because images have to be imported as [StreamTexture] first to be loaded with [method @GDScript.load]. If you'd still like to load an image file just like any other [Resource], import it as an [Image] resource instead, and then load it normally using the [method @GDScript.load] method.
+ * This is because images have to be imported as a [CompressedTexture2D] first to be loaded with [method @GDScript.load]. If you'd still like to load an image file just like any other [Resource], import it as an [Image] resource instead, and then load it normally using the [method @GDScript.load] method.
  *
- * But do note that the image data can still be retrieved from an imported texture as well using the [method Texture.get_data] method, which returns a copy of the data:
+ * **Note:** The image can be retrieved from an imported texture using the [method Texture2D.get_image] method, which returns a copy of the image:
  *
  * @example 
  * 
- * var texture = load("res://icon.png")
- * var image : Image = texture.get_data()
+ * var texture = load("res://icon.svg")
+ * var image: Image = texture.get_image()
  * @summary 
  * 
  *
@@ -39,19 +37,17 @@
  * **Note:** The maximum texture size is 16384×16384 pixels due to graphics hardware limitations.
  *
 */
-declare class ImageTexture extends Texture  {
+declare class ImageTexture extends Texture2D  {
 
   
 /**
- * A [Texture] based on an [Image]. For an image to be displayed, an [ImageTexture] has to be created from it using the [method create_from_image] method:
+ * A [Texture2D] based on an [Image]. For an image to be displayed, an [ImageTexture] has to be created from it using the [method create_from_image] method:
  *
  * @example 
  * 
- * var texture = ImageTexture.new()
- * var image = Image.new()
- * image.load("res://icon.png")
- * texture.create_from_image(image)
- * $Sprite.texture = texture
+ * var image = Image.load_from_file("res://icon.svg")
+ * var texture = ImageTexture.create_from_image(image)
+ * $Sprite2D.texture = texture
  * @summary 
  * 
  *
@@ -61,19 +57,19 @@ declare class ImageTexture extends Texture  {
  *
  * @example 
  * 
- * var texture = load("res://icon.png")
- * $Sprite.texture = texture
+ * var texture = load("res://icon.svg")
+ * $Sprite2D.texture = texture
  * @summary 
  * 
  *
- * This is because images have to be imported as [StreamTexture] first to be loaded with [method @GDScript.load]. If you'd still like to load an image file just like any other [Resource], import it as an [Image] resource instead, and then load it normally using the [method @GDScript.load] method.
+ * This is because images have to be imported as a [CompressedTexture2D] first to be loaded with [method @GDScript.load]. If you'd still like to load an image file just like any other [Resource], import it as an [Image] resource instead, and then load it normally using the [method @GDScript.load] method.
  *
- * But do note that the image data can still be retrieved from an imported texture as well using the [method Texture.get_data] method, which returns a copy of the data:
+ * **Note:** The image can be retrieved from an imported texture using the [method Texture2D.get_image] method, which returns a copy of the image:
  *
  * @example 
  * 
- * var texture = load("res://icon.png")
- * var image : Image = texture.get_data()
+ * var texture = load("res://icon.svg")
+ * var image: Image = texture.get_image()
  * @summary 
  * 
  *
@@ -87,68 +83,37 @@ declare class ImageTexture extends Texture  {
 
 
 
-/** The storage quality for [constant STORAGE_COMPRESS_LOSSY]. */
-lossy_quality: float;
-
-/** The storage type (raw, lossy, or compressed). */
-storage: int;
-
-/**
- * Create a new [ImageTexture] with `width` and `height`.
- *
- * `format` is a value from [enum Image.Format], `flags` is any combination of [enum Texture.Flags].
- *
-*/
-create(width: int, height: int, format: int, flags?: int): void;
-
-/** Initializes the texture by allocating and setting the data from an [Image] with [code]flags[/code] from [enum Texture.Flags]. An sRGB to linear color space conversion can take place, according to [enum Image.Format]. */
-create_from_image(image: Image, flags?: int): void;
+/** Creates a new [ImageTexture] and initializes it by allocating and setting the data from an [Image]. */
+create_from_image(): ImageTexture;
 
 /** Returns the format of the texture, one of [enum Image.Format]. */
 get_format(): int;
 
 /**
- * Loads an image from a file path and creates a texture from it.
+ * Replaces the texture's data with a new [Image]. This will re-allocate new memory for the texture.
  *
- * **Note:** This method is deprecated and will be removed in Godot 4.0, use [method Image.load] and [method create_from_image] instead.
+ * If you want to update the image, but don't need to change its parameters (format, size), use [method update] instead for better performance.
  *
 */
-load(path: string): int;
+set_image(): void;
+
+/** Resizes the texture to the specified dimensions. */
+set_size_override(): void;
 
 /**
  * Replaces the texture's data with a new [Image].
  *
- * **Note:** The texture has to be initialized first with the [method create_from_image] method before it can be updated. The new image dimensions, format, and mipmaps configuration should match the existing texture's image configuration, otherwise it has to be re-created with the [method create_from_image] method.
+ * **Note:** The texture has to be created using [method create_from_image] or initialized first with the [method set_image] method before it can be updated. The new image dimensions, format, and mipmaps configuration should match the existing texture's image configuration.
  *
- * Use this method over [method create_from_image] if you need to update the texture frequently, which is faster than allocating additional memory for a new texture each time.
+ * Use this method over [method set_image] if you need to update the texture frequently, which is faster than allocating additional memory for a new texture each time.
  *
 */
-set_data(image: Image): void;
-
-/** Resizes the texture to the specified dimensions. */
-set_size_override(size: Vector2): void;
+update(): void;
 
   connect<T extends SignalsOf<ImageTexture>>(signal: T, method: SignalFunction<ImageTexture[T]>): number;
 
 
 
-/**
- * [Image] data is stored raw and unaltered.
- *
-*/
-static STORAGE_RAW: any;
-
-/**
- * [Image] data is compressed with a lossy algorithm. You can set the storage quality with [member lossy_quality].
- *
-*/
-static STORAGE_COMPRESS_LOSSY: any;
-
-/**
- * [Image] data is compressed with a lossless algorithm.
- *
-*/
-static STORAGE_COMPRESS_LOSSLESS: any;
 
 
 

@@ -1,17 +1,17 @@
 
 /**
- * RemoteTransform2D pushes its own [Transform2D] to another [CanvasItem] derived Node (called the remote node) in the scene.
+ * RemoteTransform2D pushes its own [Transform2D] to another [Node2D] derived node (called the remote node) in the scene.
  *
- * It can be set to update another Node's position, rotation and/or scale. It can use either global or local coordinates.
+ * It can be set to update another node's position, rotation and/or scale. It can use either global or local coordinates.
  *
 */
 declare class RemoteTransform2D extends Node2D  {
 
   
 /**
- * RemoteTransform2D pushes its own [Transform2D] to another [CanvasItem] derived Node (called the remote node) in the scene.
+ * RemoteTransform2D pushes its own [Transform2D] to another [Node2D] derived node (called the remote node) in the scene.
  *
- * It can be set to update another Node's position, rotation and/or scale. It can use either global or local coordinates.
+ * It can be set to update another node's position, rotation and/or scale. It can use either global or local coordinates.
  *
 */
   new(): RemoteTransform2D; 

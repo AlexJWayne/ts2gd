@@ -1,41 +1,41 @@
 
 /**
- * A shortcut for binding input.
+ * Shortcuts are commonly used for interacting with a [Control] element from an [InputEvent] (also known as hotkeys).
  *
- * Shortcuts are commonly used for interacting with a [Control] element from a [InputEvent].
+ * One shortcut can contain multiple [InputEvent]'s, allowing the possibility of triggering one action with multiple different inputs.
  *
 */
-declare class ShortCut extends Resource  {
+declare class Shortcut extends Resource  {
 
   
 /**
- * A shortcut for binding input.
+ * Shortcuts are commonly used for interacting with a [Control] element from an [InputEvent] (also known as hotkeys).
  *
- * Shortcuts are commonly used for interacting with a [Control] element from a [InputEvent].
+ * One shortcut can contain multiple [InputEvent]'s, allowing the possibility of triggering one action with multiple different inputs.
  *
 */
-  new(): ShortCut; 
-  static "new"(): ShortCut 
+  new(): Shortcut; 
+  static "new"(): Shortcut 
 
 
 /**
- * The shortcut's [InputEvent].
+ * The shortcut's [InputEvent] array.
  *
- * Generally the [InputEvent] is a keyboard key, though it can be any [InputEvent].
+ * Generally the [InputEvent] used is an [InputEventKey], though it can be any [InputEvent], including an [InputEventAction].
  *
 */
-shortcut: InputEvent;
+events: any[];
 
-/** Returns the shortcut's [InputEvent] as a [String]. */
+/** Returns the shortcut's first valid [InputEvent] as a [String]. */
 get_as_text(): string;
 
-/** Returns [code]true[/code] if the shortcut's [InputEvent] equals [code]event[/code]. */
-is_shortcut(event: InputEvent): boolean;
+/** Returns whether [member events] contains an [InputEvent] which is valid. */
+has_valid_event(): boolean;
 
-/** If [code]true[/code], this shortcut is valid. */
-is_valid(): boolean;
+/** Returns whether any [InputEvent] in [member events] equals [param event]. */
+matches_event(): boolean;
 
-  connect<T extends SignalsOf<ShortCut>>(signal: T, method: SignalFunction<ShortCut[T]>): number;
+  connect<T extends SignalsOf<Shortcut>>(signal: T, method: SignalFunction<Shortcut[T]>): number;
 
 
 

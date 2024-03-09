@@ -1,13 +1,13 @@
 
 /**
- * Horizontal split container. See [SplitContainer]. This goes from left to right.
+ * A container that accepts only two child controls, then arranges them horizontally and creates a divisor between them. The divisor can be dragged around to change the size relation between the child controls.
  *
 */
 declare class HSplitContainer extends SplitContainer  {
 
   
 /**
- * Horizontal split container. See [SplitContainer]. This goes from left to right.
+ * A container that accepts only two child controls, then arranges them horizontally and creates a divisor between them. The divisor can be dragged around to change the size relation between the child controls.
  *
 */
   new(): HSplitContainer; 

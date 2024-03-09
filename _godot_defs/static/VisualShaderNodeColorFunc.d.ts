@@ -40,6 +40,18 @@ function: int;
 static FUNC_GRAYSCALE: any;
 
 /**
+ * Converts HSV vector to RGB equivalent.
+ *
+*/
+static FUNC_HSV2RGB: any;
+
+/**
+ * Converts RGB vector to HSV equivalent.
+ *
+*/
+static FUNC_RGB2HSV: any;
+
+/**
  * Applies sepia tone effect using the following formula:
  *
  * @example 
@@ -54,6 +66,12 @@ static FUNC_GRAYSCALE: any;
  *
 */
 static FUNC_SEPIA: any;
+
+/**
+ * Represents the size of the [enum Function] enum.
+ *
+*/
+static FUNC_MAX: any;
 
 
 

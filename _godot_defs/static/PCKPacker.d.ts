@@ -4,17 +4,25 @@
  *
  * @example 
  * 
+ * 
  * var packer = PCKPacker.new()
  * packer.pck_start("test.pck")
  * packer.add_file("res://text.txt", "text.txt")
  * packer.flush()
+ * 
+ * 
+ * var packer = new PCKPacker();
+ * packer.PckStart("test.pck");
+ * packer.AddFile("res://text.txt", "text.txt");
+ * packer.Flush();
+ * 
  * @summary 
  * 
  *
  * The above [PCKPacker] creates package `test.pck`, then adds a file named `text.txt` at the root of the package.
  *
 */
-declare class PCKPacker extends Reference  {
+declare class PCKPacker extends RefCounted  {
 
   
 /**
@@ -22,10 +30,18 @@ declare class PCKPacker extends Reference  {
  *
  * @example 
  * 
+ * 
  * var packer = PCKPacker.new()
  * packer.pck_start("test.pck")
  * packer.add_file("res://text.txt", "text.txt")
  * packer.flush()
+ * 
+ * 
+ * var packer = new PCKPacker();
+ * packer.PckStart("test.pck");
+ * packer.AddFile("res://text.txt", "text.txt");
+ * packer.Flush();
+ * 
  * @summary 
  * 
  *
@@ -37,14 +53,14 @@ declare class PCKPacker extends Reference  {
 
 
 
-/** Adds the [code]source_path[/code] file to the current PCK package at the [code]pck_path[/code] internal path (should start with [code]res://[/code]). */
-add_file(pck_path: string, source_path: string): int;
+/** Adds the [param source_path] file to the current PCK package at the [param pck_path] internal path (should start with [code]res://[/code]). */
+add_file(): int;
 
-/** Writes the files specified using all [method add_file] calls since the last flush. If [code]verbose[/code] is [code]true[/code], a list of files added will be printed to the console for easier debugging. */
-flush(verbose?: boolean): int;
+/** Writes the files specified using all [method add_file] calls since the last flush. If [param verbose] is [code]true[/code], a list of files added will be printed to the console for easier debugging. */
+flush(): int;
 
-/** Creates a new PCK file with the name [code]pck_name[/code]. The [code].pck[/code] file extension isn't added automatically, so it should be part of [code]pck_name[/code] (even though it's not required). */
-pck_start(pck_name: string, alignment?: int): int;
+/** Creates a new PCK file with the name [param pck_name]. The [code].pck[/code] file extension isn't added automatically, so it should be part of [param pck_name] (even though it's not required). */
+pck_start(): int;
 
   connect<T extends SignalsOf<PCKPacker>>(signal: T, method: SignalFunction<PCKPacker[T]>): number;
 

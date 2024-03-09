@@ -1,10 +1,14 @@
 
 /**
+ * Reduces all frequencies below the [member AudioEffectFilter.cutoff_hz].
+ *
 */
 declare class AudioEffectLowShelfFilter extends AudioEffectFilter  {
 
   
 /**
+ * Reduces all frequencies below the [member AudioEffectFilter.cutoff_hz].
+ *
 */
   new(): AudioEffectLowShelfFilter; 
   static "new"(): AudioEffectLowShelfFilter 

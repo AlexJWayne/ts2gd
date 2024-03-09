@@ -1,13 +1,13 @@
 
 /**
- * Horizontal box container. See [BoxContainer].
+ * A variant of [BoxContainer] that can only arrange its child controls horizontally. Child controls are rearranged automatically when their minimum size changes.
  *
 */
 declare class HBoxContainer extends BoxContainer  {
 
   
 /**
- * Horizontal box container. See [BoxContainer].
+ * A variant of [BoxContainer] that can only arrange its child controls horizontally. Child controls are rearranged automatically when their minimum size changes.
  *
 */
   new(): HBoxContainer; 

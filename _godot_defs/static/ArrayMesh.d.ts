@@ -6,25 +6,44 @@
  *
  * @example 
  * 
- * var vertices = PoolVector3Array()
+ * 
+ * var vertices = PackedVector3Array()
  * vertices.push_back(Vector3(0, 1, 0))
  * vertices.push_back(Vector3(1, 0, 0))
  * vertices.push_back(Vector3(0, 0, 1))
  * # Initialize the ArrayMesh.
  * var arr_mesh = ArrayMesh.new()
  * var arrays = []
- * arrays.resize(ArrayMesh.ARRAY_MAX)
- * arrays[ArrayMesh.ARRAY_VERTEX] = vertices
+ * arrays.resize(Mesh.ARRAY_MAX)
+ * arrays[Mesh.ARRAY_VERTEX] = vertices
  * # Create the Mesh.
  * arr_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
- * var m = MeshInstance.new()
+ * var m = MeshInstance3D.new()
  * m.mesh = arr_mesh
+ * 
+ * 
+ * var vertices = new Vector3[]
+ * {
+ *     new Vector3(0, 1, 0),
+ *     new Vector3(1, 0, 0),
+ *     new Vector3(0, 0, 1),
+ * };
+ * // Initialize the ArrayMesh.
+ * var arrMesh = new ArrayMesh();
+ * var arrays = new Godot.Collections.Array();
+ * arrays.Resize((int)Mesh.ArrayType.Max);
+ * arrays[(int)Mesh.ArrayType.Vertex] = vertices;
+ * // Create the Mesh.
+ * arrMesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, arrays);
+ * var m = new MeshInstance3D();
+ * m.Mesh = arrMesh;
+ * 
  * @summary 
  * 
  *
- * The [MeshInstance] is ready to be added to the [SceneTree] to be shown.
+ * The [MeshInstance3D] is ready to be added to the [SceneTree] to be shown.
  *
- * See also [ImmediateGeometry], [MeshDataTool] and [SurfaceTool] for procedural geometry generation.
+ * See also [ImmediateMesh], [MeshDataTool] and [SurfaceTool] for procedural geometry generation.
  *
  * **Note:** Godot uses clockwise [url=https://learnopengl.com/Advanced-OpenGL/Face-culling]winding order[/url] for front faces of triangle primitive modes.
  *
@@ -39,25 +58,44 @@ declare class ArrayMesh extends Mesh  {
  *
  * @example 
  * 
- * var vertices = PoolVector3Array()
+ * 
+ * var vertices = PackedVector3Array()
  * vertices.push_back(Vector3(0, 1, 0))
  * vertices.push_back(Vector3(1, 0, 0))
  * vertices.push_back(Vector3(0, 0, 1))
  * # Initialize the ArrayMesh.
  * var arr_mesh = ArrayMesh.new()
  * var arrays = []
- * arrays.resize(ArrayMesh.ARRAY_MAX)
- * arrays[ArrayMesh.ARRAY_VERTEX] = vertices
+ * arrays.resize(Mesh.ARRAY_MAX)
+ * arrays[Mesh.ARRAY_VERTEX] = vertices
  * # Create the Mesh.
  * arr_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
- * var m = MeshInstance.new()
+ * var m = MeshInstance3D.new()
  * m.mesh = arr_mesh
+ * 
+ * 
+ * var vertices = new Vector3[]
+ * {
+ *     new Vector3(0, 1, 0),
+ *     new Vector3(1, 0, 0),
+ *     new Vector3(0, 0, 1),
+ * };
+ * // Initialize the ArrayMesh.
+ * var arrMesh = new ArrayMesh();
+ * var arrays = new Godot.Collections.Array();
+ * arrays.Resize((int)Mesh.ArrayType.Max);
+ * arrays[(int)Mesh.ArrayType.Vertex] = vertices;
+ * // Create the Mesh.
+ * arrMesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, arrays);
+ * var m = new MeshInstance3D();
+ * m.Mesh = arrMesh;
+ * 
  * @summary 
  * 
  *
- * The [MeshInstance] is ready to be added to the [SceneTree] to be shown.
+ * The [MeshInstance3D] is ready to be added to the [SceneTree] to be shown.
  *
- * See also [ImmediateGeometry], [MeshDataTool] and [SurfaceTool] for procedural geometry generation.
+ * See also [ImmediateMesh], [MeshDataTool] and [SurfaceTool] for procedural geometry generation.
  *
  * **Note:** Godot uses clockwise [url=https://learnopengl.com/Advanced-OpenGL/Face-culling]winding order[/url] for front faces of triangle primitive modes.
  *
@@ -72,18 +110,29 @@ blend_shape_mode: int;
 /** Overrides the [AABB] with one defined by user for use with frustum culling. Especially useful to avoid unexpected culling when using a shader to offset vertices. */
 custom_aabb: AABB;
 
+/** An optional mesh which is used for rendering shadows and can be used for the depth prepass. Can be used to increase performance of shadow rendering by using a mesh that only contains vertex position data (without normals, UVs, colors, etc.). */
+shadow_mesh: ArrayMesh;
+
 /** Adds name for a blend shape that will be added with [method add_surface_from_arrays]. Must be called before surface is added. */
-add_blend_shape(name: string): void;
+add_blend_shape(): void;
 
 /**
- * Creates a new surface.
+ * Creates a new surface. [method Mesh.get_surface_count] will become the `surf_idx` for this new surface.
  *
- * Surfaces are created to be rendered using a `primitive`, which may be any of the types defined in [enum Mesh.PrimitiveType]. (As a note, when using indices, it is recommended to only use points, lines, or triangles.) [method Mesh.get_surface_count] will become the `surf_idx` for this new surface.
+ * Surfaces are created to be rendered using a [param primitive], which may be any of the values defined in [enum Mesh.PrimitiveType].
  *
- * The `arrays` argument is an array of arrays. See [enum ArrayType] for the values used in this array. For example, `arrays[0]` is the array of vertices. That first vertex sub-array is always required; the others are optional. Adding an index array puts this function into "index mode" where the vertex and other arrays become the sources of data and the index array defines the vertex order. All sub-arrays must have the same length as the vertex array or be empty, except for [constant ARRAY_INDEX] if it is used.
+ * The [param arrays] argument is an array of arrays. Each of the [constant Mesh.ARRAY_MAX] elements contains an array with some of the mesh data for this surface as described by the corresponding member of [enum Mesh.ArrayType] or `null` if it is not used by the surface. For example, `arrays[0]` is the array of vertices. That first vertex sub-array is always required; the others are optional. Adding an index array puts this surface into "index mode" where the vertex and other arrays become the sources of data and the index array defines the vertex order. All sub-arrays must have the same length as the vertex array (or be an exact multiple of the vertex array's length, when multiple elements of a sub-array correspond to a single vertex) or be empty, except for [constant Mesh.ARRAY_INDEX] if it is used.
+ *
+ * The [param blend_shapes] argument is an array of vertex data for each blend shape. Each element is an array of the same structure as [param arrays], but [constant Mesh.ARRAY_VERTEX], [constant Mesh.ARRAY_NORMAL], and [constant Mesh.ARRAY_TANGENT] are set if and only if they are set in [param arrays] and all other entries are `null`.
+ *
+ * The [param lods] argument is a dictionary with [float] keys and [PackedInt32Array] values. Each entry in the dictionary represents a LOD level of the surface, where the value is the [constant Mesh.ARRAY_INDEX] array to use for the LOD level and the key is roughly proportional to the distance at which the LOD stats being used. I.e., increasing the key of a LOD also increases the distance that the objects has to be from the camera before the LOD is used.
+ *
+ * The [param flags] argument is the bitwise or of, as required: One value of [enum Mesh.ArrayCustomFormat] left shifted by `ARRAY_FORMAT_CUSTOMn_SHIFT` for each custom channel in use, [constant Mesh.ARRAY_FLAG_USE_DYNAMIC_UPDATE], [constant Mesh.ARRAY_FLAG_USE_8_BONE_WEIGHTS], or [constant Mesh.ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY].
+ *
+ * **Note:** When using indices, it is recommended to only use points, lines, or triangles.
  *
 */
-add_surface_from_arrays(primitive: int, arrays: any[], blend_shapes?: any[], compress_flags?: int): void;
+add_surface_from_arrays(): void;
 
 /** Removes all blend shapes from this [ArrayMesh]. */
 clear_blend_shapes(): void;
@@ -95,180 +144,51 @@ clear_surfaces(): void;
 get_blend_shape_count(): int;
 
 /** Returns the name of the blend shape at this index. */
-get_blend_shape_name(index: int): string;
+get_blend_shape_name(): StringName;
 
-/** Will perform a UV unwrap on the [ArrayMesh] to prepare the mesh for lightmapping. */
-lightmap_unwrap(transform: Transform, texel_size: float): int;
+/** Performs a UV unwrap on the [ArrayMesh] to prepare the mesh for lightmapping. */
+lightmap_unwrap(): int;
 
-/** Will regenerate normal maps for the [ArrayMesh]. */
-regen_normalmaps(): void;
+/** Regenerates tangents for each of the [ArrayMesh]'s surfaces. */
+regen_normal_maps(): void;
 
-/** No documentation provided. */
-set_blend_shape_name(index: int, name: string): void;
+/** Sets the name of the blend shape at this index. */
+set_blend_shape_name(): void;
 
 /** Returns the index of the first surface with this name held within this [ArrayMesh]. If none are found, -1 is returned. */
-surface_find_by_name(name: string): int;
+surface_find_by_name(): int;
 
 /** Returns the length in indices of the index array in the requested surface (see [method add_surface_from_arrays]). */
-surface_get_array_index_len(surf_idx: int): int;
+surface_get_array_index_len(): int;
 
 /** Returns the length in vertices of the vertex array in the requested surface (see [method add_surface_from_arrays]). */
-surface_get_array_len(surf_idx: int): int;
+surface_get_array_len(): int;
 
 /** Returns the format mask of the requested surface (see [method add_surface_from_arrays]). */
-surface_get_format(surf_idx: int): int;
+surface_get_format(): int;
 
 /** Gets the name assigned to this surface. */
-surface_get_name(surf_idx: int): string;
+surface_get_name(): string;
 
 /** Returns the primitive type of the requested surface (see [method add_surface_from_arrays]). */
-surface_get_primitive_type(surf_idx: int): int;
-
-/** Removes a surface at position [code]surf_idx[/code], shifting greater surfaces one [code]surf_idx[/code] slot down. */
-surface_remove(surf_idx: int): void;
+surface_get_primitive_type(): int;
 
 /** Sets a name for a given surface. */
-surface_set_name(surf_idx: int, name: string): void;
+surface_set_name(): void;
 
-/**
- * Updates a specified region of mesh arrays on the GPU.
- *
- * **Warning:** Only use if you know what you are doing. You can easily cause crashes by calling this function with improper arguments.
- *
-*/
-surface_update_region(surf_idx: int, offset: int, data: PoolByteArray): void;
+/** No documentation provided. */
+surface_update_attribute_region(): void;
+
+/** No documentation provided. */
+surface_update_skin_region(): void;
+
+/** No documentation provided. */
+surface_update_vertex_region(): void;
 
   connect<T extends SignalsOf<ArrayMesh>>(signal: T, method: SignalFunction<ArrayMesh[T]>): number;
 
 
 
-/**
- * Default value used for index_array_len when no indices are present.
- *
-*/
-static NO_INDEX_ARRAY: any;
-
-/**
- * Amount of weights/bone indices per vertex (always 4).
- *
-*/
-static ARRAY_WEIGHTS_SIZE: any;
-
-/**
- * [PoolVector3Array], [PoolVector2Array], or [Array] of vertex positions.
- *
-*/
-static ARRAY_VERTEX: any;
-
-/**
- * [PoolVector3Array] of vertex normals.
- *
-*/
-static ARRAY_NORMAL: any;
-
-/**
- * [PoolRealArray] of vertex tangents. Each element in groups of 4 floats, first 3 floats determine the tangent, and the last the binormal direction as -1 or 1.
- *
-*/
-static ARRAY_TANGENT: any;
-
-/**
- * [PoolColorArray] of vertex colors.
- *
-*/
-static ARRAY_COLOR: any;
-
-/**
- * [PoolVector2Array] for UV coordinates.
- *
-*/
-static ARRAY_TEX_UV: any;
-
-/**
- * [PoolVector2Array] for second UV coordinates.
- *
-*/
-static ARRAY_TEX_UV2: any;
-
-/**
- * [PoolRealArray] or [PoolIntArray] of bone indices. Each element in groups of 4 floats.
- *
-*/
-static ARRAY_BONES: any;
-
-/**
- * [PoolRealArray] of bone weights. Each element in groups of 4 floats.
- *
-*/
-static ARRAY_WEIGHTS: any;
-
-/**
- * [PoolIntArray] of integers used as indices referencing vertices, colors, normals, tangents, and textures. All of those arrays must have the same number of elements as the vertex array. No index can be beyond the vertex array size. When this index array is present, it puts the function into "index mode," where the index selects the *i*'th vertex, normal, tangent, color, UV, etc. This means if you want to have different normals or colors along an edge, you have to duplicate the vertices.
- *
- * For triangles, the index array is interpreted as triples, referring to the vertices of each triangle. For lines, the index array is in pairs indicating the start and end of each line.
- *
-*/
-static ARRAY_INDEX: any;
-
-/**
- * Represents the size of the [enum ArrayType] enum.
- *
-*/
-static ARRAY_MAX: any;
-
-/**
- * Array format will include vertices (mandatory).
- *
-*/
-static ARRAY_FORMAT_VERTEX: any;
-
-/**
- * Array format will include normals.
- *
-*/
-static ARRAY_FORMAT_NORMAL: any;
-
-/**
- * Array format will include tangents.
- *
-*/
-static ARRAY_FORMAT_TANGENT: any;
-
-/**
- * Array format will include a color array.
- *
-*/
-static ARRAY_FORMAT_COLOR: any;
-
-/**
- * Array format will include UVs.
- *
-*/
-static ARRAY_FORMAT_TEX_UV: any;
-
-/**
- * Array format will include another set of UVs.
- *
-*/
-static ARRAY_FORMAT_TEX_UV2: any;
-
-/**
- * Array format will include bone indices.
- *
-*/
-static ARRAY_FORMAT_BONES: any;
-
-/**
- * Array format will include bone weights.
- *
-*/
-static ARRAY_FORMAT_WEIGHTS: any;
-
-/**
- * Index array will be used.
- *
-*/
-static ARRAY_FORMAT_INDEX: any;
 
 
 

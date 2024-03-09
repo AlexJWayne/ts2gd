@@ -21,8 +21,16 @@ declare class AudioStreamPlayer extends Node  {
 /** If [code]true[/code], audio plays when added to scene tree. */
 autoplay: boolean;
 
-/** Bus on which this audio is playing. */
-bus: string;
+/**
+ * Bus on which this audio is playing.
+ *
+ * **Note:** When setting this property, keep in mind that no validation is performed to see if the given name matches an existing bus. This is because audio bus layouts might be loaded after this property is set. If this given name can't be resolved at runtime, it will fall back to `"Master"`.
+ *
+*/
+bus: StringName;
+
+/** The maximum number of sounds this node can play at the same time. Playing additional sounds after this value is reached will cut off the oldest sounds. */
+max_polyphony: int;
 
 /** If the audio configuration has more than two speakers, this sets the target channels. See [enum MixTarget] constants. */
 mix_target: int;
@@ -36,7 +44,7 @@ playing: boolean;
 /** The [AudioStream] object to be played. */
 stream: AudioStream;
 
-/** If [code]true[/code], the playback is paused. You can resume it by setting [code]stream_paused[/code] to [code]false[/code]. */
+/** If [code]true[/code], the playback is paused. You can resume it by setting [member stream_paused] to [code]false[/code]. */
 stream_paused: boolean;
 
 /** Volume of sound, in dB. */
@@ -48,11 +56,14 @@ get_playback_position(): float;
 /** Returns the [AudioStreamPlayback] object associated with this [AudioStreamPlayer]. */
 get_stream_playback(): AudioStreamPlayback;
 
-/** Plays the audio from the given [code]from_position[/code], in seconds. */
-play(from_position?: float): void;
+/** Returns whether the [AudioStreamPlayer] can return the [AudioStreamPlayback] object or not. */
+has_stream_playback(): boolean;
+
+/** Plays the audio from the given [param from_position], in seconds. */
+play(): void;
 
 /** Sets the position from which audio will be played, in seconds. */
-seek(to_position: float): void;
+seek(): void;
 
 /** Stops the audio. */
 stop(): void;

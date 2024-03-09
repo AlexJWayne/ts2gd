@@ -1,54 +1,44 @@
 
 /**
- * Rich text can contain custom text, fonts, images and some basic formatting. The label manages these as an internal tag stack. It also adapts itself to given width/heights.
+ * A control for displaying text that can contain custom fonts, images, and basic formatting. [RichTextLabel] manages these as an internal tag stack. It also adapts itself to given width/heights.
  *
- * **Note:** Assignments to [member bbcode_text] clear the tag stack and reconstruct it from the property's contents. Any edits made to [member bbcode_text] will erase previous edits made from other manual sources such as [method append_bbcode] and the `push_*` / [method pop] methods.
+ * **Note:** Assignments to [member text] clear the tag stack and reconstruct it from the property's contents. Any edits made to [member text] will erase previous edits made from other manual sources such as [method append_text] and the `push_*` / [method pop] methods.
  *
- * **Note:** RichTextLabel doesn't support entangled BBCode tags. For example, instead of using `**bold**bold italic**italic**`, use `**bold**bold italic******italic**`.
+ * **Note:** RichTextLabel doesn't support entangled BBCode tags. For example, instead of using [code skip-lint]**bold**bold italic**italic**`, use [code skip-lint]**bold**bold italic******italic**`.
  *
- * **Note:** `push_pop` functions won't affect BBCode.
+ * **Note:** `push_pop_*` functions won't affect BBCode.
  *
- * **Note:** Unlike [Label], RichTextLabel doesn't have a **property** to horizontally align text to the center. Instead, enable [member bbcode_enabled] and surround the text in a `[center]` tag as follows: `[center]Example[/center]`. There is currently no built-in way to vertically align text either, but this can be emulated by relying on anchors/containers and the [member fit_content_height] property.
- *
- * **Note:** Unicode characters after `0xffff` (such as most emoji) are **not** supported on Windows. They will display as unknown characters instead. This will be resolved in Godot 4.0.
+ * **Note:** Unlike [Label], [RichTextLabel] doesn't have a **property** to horizontally align text to the center. Instead, enable [member bbcode_enabled] and surround the text in a [code skip-lint][center]` tag as follows: [code skip-lint][center]Example[/center]`. There is currently no built-in way to vertically align text either, but this can be emulated by relying on anchors/containers and the [member fit_content] property.
  *
 */
 declare class RichTextLabel extends Control  {
 
   
 /**
- * Rich text can contain custom text, fonts, images and some basic formatting. The label manages these as an internal tag stack. It also adapts itself to given width/heights.
+ * A control for displaying text that can contain custom fonts, images, and basic formatting. [RichTextLabel] manages these as an internal tag stack. It also adapts itself to given width/heights.
  *
- * **Note:** Assignments to [member bbcode_text] clear the tag stack and reconstruct it from the property's contents. Any edits made to [member bbcode_text] will erase previous edits made from other manual sources such as [method append_bbcode] and the `push_*` / [method pop] methods.
+ * **Note:** Assignments to [member text] clear the tag stack and reconstruct it from the property's contents. Any edits made to [member text] will erase previous edits made from other manual sources such as [method append_text] and the `push_*` / [method pop] methods.
  *
- * **Note:** RichTextLabel doesn't support entangled BBCode tags. For example, instead of using `**bold**bold italic**italic**`, use `**bold**bold italic******italic**`.
+ * **Note:** RichTextLabel doesn't support entangled BBCode tags. For example, instead of using [code skip-lint]**bold**bold italic**italic**`, use [code skip-lint]**bold**bold italic******italic**`.
  *
- * **Note:** `push_pop` functions won't affect BBCode.
+ * **Note:** `push_pop_*` functions won't affect BBCode.
  *
- * **Note:** Unlike [Label], RichTextLabel doesn't have a **property** to horizontally align text to the center. Instead, enable [member bbcode_enabled] and surround the text in a `[center]` tag as follows: `[center]Example[/center]`. There is currently no built-in way to vertically align text either, but this can be emulated by relying on anchors/containers and the [member fit_content_height] property.
- *
- * **Note:** Unicode characters after `0xffff` (such as most emoji) are **not** supported on Windows. They will display as unknown characters instead. This will be resolved in Godot 4.0.
+ * **Note:** Unlike [Label], [RichTextLabel] doesn't have a **property** to horizontally align text to the center. Instead, enable [member bbcode_enabled] and surround the text in a [code skip-lint][center]` tag as follows: [code skip-lint][center]Example[/center]`. There is currently no built-in way to vertically align text either, but this can be emulated by relying on anchors/containers and the [member fit_content] property.
  *
 */
   new(): RichTextLabel; 
   static "new"(): RichTextLabel 
 
 
-/**
- * If `true`, the label uses BBCode formatting.
- *
- * **Note:** Trying to alter the [RichTextLabel]'s text with [method add_text] will reset this to `false`. Use instead [method append_bbcode] to preserve BBCode formatting.
- *
-*/
+/** If set to something other than [constant TextServer.AUTOWRAP_OFF], the text gets wrapped inside the node's bounding rectangle. To see how each mode behaves, see [enum TextServer.AutowrapMode]. */
+autowrap_mode: int;
+
+/** If [code]true[/code], the label uses BBCode formatting. */
 bbcode_enabled: boolean;
 
-/**
- * The label's text in BBCode format. Is not representative of manual modifications to the internal tag stack. Erases changes made by other methods when edited.
- *
- * **Note:** It is unadvised to use the `+=` operator with `bbcode_text` (e.g. `bbcode_text += "some string"`) as it replaces the whole text and can cause slowdowns. Use [method append_bbcode] for adding text instead, unless you absolutely need to close a tag that was opened in an earlier method call.
- *
-*/
-bbcode_text: string;
+
+/** If [code]true[/code], a right-click displays the context menu. */
+context_menu_enabled: boolean;
 
 /**
  * The currently installed custom effects. This is an array of [RichTextEffect]s.
@@ -58,28 +48,31 @@ bbcode_text: string;
 */
 custom_effects: any[];
 
-/**
- * If `true`, the label's height will be automatically updated to fit its content.
- *
- * **Note:** This property is used as a workaround to fix issues with [RichTextLabel] in [Container]s, but it's unreliable in some cases and will be removed in future versions.
- *
-*/
-fit_content_height: boolean;
+/** If [code]true[/code], the selected text will be deselected when focus is lost. */
+deselect_on_focus_loss_enabled: boolean;
 
-/** If [code]true[/code], the label underlines meta tags such as [code][url]{text}[/url][/code]. */
+/** If [code]true[/code], allow drag and drop of selected text. */
+drag_and_drop_selection_enabled: boolean;
+
+/** If [code]true[/code], the label's minimum size will be automatically updated to fit its content, matching the behavior of [Label]. */
+fit_content: boolean;
+
+/** If [code]true[/code], the label underlines hint tags such as [code skip-lint][hint=description]{text}[/hint][/code]. */
+hint_underlined: boolean;
+
+/** Language code used for line-breaking and text shaping algorithms, if left empty current locale is used instead. */
+language: string;
+
+/** If [code]true[/code], the label underlines meta tags such as [code skip-lint][url]{text}[/url][/code]. */
 meta_underlined: boolean;
 
-/** If [code]true[/code], the label uses the custom font color. */
-override_selected_font_color: boolean;
-
 /**
- * The range of characters to display, as a [float] between 0.0 and 1.0. When assigned an out of range value, it's the same as assigning 1.0.
+ * The delay after which the loading progress bar is displayed, in milliseconds. Set to `-1` to disable progress bar entirely.
  *
- * **Note:** Setting this property updates [member visible_characters] based on current [method get_total_character_count].
+ * **Note:** Progress bar is displayed only if [member threaded] is enabled.
  *
 */
-percent_visible: float;
-
+progress_bar_delay: int;
 
 /** If [code]true[/code], the scrollbar is visible. Setting this to [code]false[/code] does not block scrolling completely. See [method scroll_to_line]. */
 scroll_active: boolean;
@@ -90,52 +83,208 @@ scroll_following: boolean;
 /** If [code]true[/code], the label allows text selection. */
 selection_enabled: boolean;
 
+/** If [code]true[/code], shortcut keys for context menu items are enabled, even if the context menu is disabled. */
+shortcut_keys_enabled: boolean;
+
+/** Set BiDi algorithm override for the structured text. */
+structured_text_bidi_override: int;
+
+/** Set additional options for BiDi override. */
+structured_text_bidi_override_options: any[];
+
 /** The number of spaces associated with a single tab length. Does not affect [code]\t[/code] in text tags, only indent tags. */
 tab_size: int;
 
 /**
- * The raw text of the label.
+ * The label's text in BBCode format. Is not representative of manual modifications to the internal tag stack. Erases changes made by other methods when edited.
  *
- * When set, clears the tag stack and adds a raw text tag to the top of it. Does not parse BBCodes. Does not modify [member bbcode_text].
+ * **Note:** If [member bbcode_enabled] is `true`, it is unadvised to use the `+=` operator with [member text] (e.g. `text += "some string"`) as it replaces the whole text and can cause slowdowns. It will also erase all BBCode that was added to stack using `push_*` methods. Use [method append_text] for adding text instead, unless you absolutely need to close a tag that was opened in an earlier method call.
  *
 */
 text: string;
 
+/** Base text writing direction. */
+text_direction: int;
+
+/** If [code]true[/code], text processing is done in a background thread. */
+threaded: boolean;
+
 /**
- * The restricted number of characters to display in the label. If `-1`, all characters will be displayed.
+ * The number of characters to display. If set to `-1`, all characters are displayed. This can be useful when animating the text appearing in a dialog box.
  *
- * **Note:** Setting this property updates [member percent_visible] based on current [method get_total_character_count].
+ * **Note:** Setting this property updates [member visible_ratio] accordingly.
  *
 */
 visible_characters: int;
 
+/** Sets the clipping behavior when [member visible_characters] or [member visible_ratio] is set. See [enum TextServer.VisibleCharactersBehavior] for more info. */
+visible_characters_behavior: int;
+
 /**
- * Adds an image's opening and closing tags to the tag stack, optionally providing a `width` and `height` to resize the image.
+ * The fraction of characters to display, relative to the total number of characters (see [method get_total_character_count]). If set to `1.0`, all characters are displayed. If set to `0.5`, only half of the characters will be displayed. This can be useful when animating the text appearing in a dialog box.
  *
- * If `width` or `height` is set to 0, the image size will be adjusted in order to keep the original aspect ratio.
+ * **Note:** Setting this property updates [member visible_characters] accordingly.
  *
 */
-add_image(image: Texture, width?: int, height?: int): void;
+visible_ratio: float;
+
+/**
+ * Adds an image's opening and closing tags to the tag stack, optionally providing a [param width] and [param height] to resize the image, a [param color] to tint the image and a [param region] to only use parts of the image.
+ *
+ * If [param width] or [param height] is set to 0, the image size will be adjusted in order to keep the original aspect ratio.
+ *
+ * If [param width] and [param height] are not set, but [param region] is, the region's rect will be used.
+ *
+ * [param key] is an optional identifier, that can be used to modify the image via [method update_image].
+ *
+ * If [param pad] is set, and the image is smaller than the size specified by [param width] and [param height], the image padding is added to match the size instead of upscaling.
+ *
+ * If [param size_in_percent] is set, [param width] and [param height] values are percentages of the control width instead of pixels.
+ *
+*/
+add_image(): void;
 
 /** Adds raw non-BBCode-parsed text to the tag stack. */
-add_text(text: string): void;
+add_text(): void;
 
 /**
- * Parses `bbcode` and adds tags to the tag stack as needed. Returns the result of the parsing, [constant OK] if successful.
+ * Parses [param bbcode] and adds tags to the tag stack as needed.
  *
- * **Note:** Using this method, you can't close a tag that was opened in a previous [method append_bbcode] call. This is done to improve performance, especially when updating large RichTextLabels since rebuilding the whole BBCode every time would be slower. If you absolutely need to close a tag in a future method call, append the [member bbcode_text] instead of using [method append_bbcode].
+ * **Note:** Using this method, you can't close a tag that was opened in a previous [method append_text] call. This is done to improve performance, especially when updating large RichTextLabels since rebuilding the whole BBCode every time would be slower. If you absolutely need to close a tag in a future method call, append the [member text] instead of using [method append_text].
  *
 */
-append_bbcode(bbcode: string): int;
+append_text(): void;
 
-/** Clears the tag stack and sets [member bbcode_text] to an empty string. */
+/**
+ * Clears the tag stack.
+ *
+ * **Note:** This method will not modify [member text], but setting [member text] to an empty string also clears the stack.
+ *
+*/
 clear(): void;
 
-/** Returns the height of the content. */
+/** Clears the current selection. */
+deselect(): void;
+
+/**
+ * Returns the line number of the character position provided.
+ *
+ * **Note:** If [member threaded] is enabled, this method returns a value for the loaded part of the document. Use [method is_ready] or [signal finished] to determine whether document is fully loaded.
+ *
+*/
+get_character_line(): int;
+
+/**
+ * Returns the paragraph number of the character position provided.
+ *
+ * **Note:** If [member threaded] is enabled, this method returns a value for the loaded part of the document. Use [method is_ready] or [signal finished] to determine whether document is fully loaded.
+ *
+*/
+get_character_paragraph(): int;
+
+/**
+ * Returns the height of the content.
+ *
+ * **Note:** If [member threaded] is enabled, this method returns a value for the loaded part of the document. Use [method is_ready] or [signal finished] to determine whether document is fully loaded.
+ *
+*/
 get_content_height(): int;
 
-/** Returns the total number of newlines in the tag stack's text tags. Considers wrapped text as one line. */
+/**
+ * Returns the width of the content.
+ *
+ * **Note:** If [member threaded] is enabled, this method returns a value for the loaded part of the document. Use [method is_ready] or [signal finished] to determine whether document is fully loaded.
+ *
+*/
+get_content_width(): int;
+
+/**
+ * Returns the total number of lines in the text. Wrapped text is counted as multiple lines.
+ *
+ * **Note:** If [member threaded] is enabled, this method returns a value for the loaded part of the document. Use [method is_ready] or [signal finished] to determine whether document is fully loaded.
+ *
+*/
 get_line_count(): int;
+
+/**
+ * Returns the vertical offset of the line found at the provided index.
+ *
+ * **Note:** If [member threaded] is enabled, this method returns a value for the loaded part of the document. Use [method is_ready] or [signal finished] to determine whether document is fully loaded.
+ *
+*/
+get_line_offset(): float;
+
+/**
+ * Returns the [PopupMenu] of this [RichTextLabel]. By default, this menu is displayed when right-clicking on the [RichTextLabel].
+ *
+ * You can add custom menu items or remove standard ones. Make sure your IDs don't conflict with the standard ones (see [enum MenuItems]). For example:
+ *
+ * @example 
+ * 
+ * 
+ * func _ready():
+ *     var menu = get_menu()
+ *     # Remove "Select All" item.
+ *     menu.remove_item(MENU_SELECT_ALL)
+ *     # Add custom items.
+ *     menu.add_separator()
+ *     menu.add_item("Duplicate Text", MENU_MAX + 1)
+ *     # Connect callback.
+ *     menu.id_pressed.connect(_on_item_pressed)
+ * func _on_item_pressed(id):
+ *     if id == MENU_MAX + 1:
+ *         add_text("\n" + get_parsed_text())
+ * 
+ * 
+ * public override void _Ready()
+ * {
+ *     var menu = GetMenu();
+ *     // Remove "Select All" item.
+ *     menu.RemoveItem(RichTextLabel.MenuItems.SelectAll);
+ *     // Add custom items.
+ *     menu.AddSeparator();
+ *     menu.AddItem("Duplicate Text", RichTextLabel.MenuItems.Max + 1);
+ *     // Add event handler.
+ *     menu.IdPressed += OnItemPressed;
+ * }
+ * public void OnItemPressed(int id)
+ * {
+ *     if (id == TextEdit.MenuItems.Max + 1)
+ *     {
+ *         AddText("\n" + GetParsedText());
+ *     }
+ * }
+ * 
+ * @summary 
+ * 
+ *
+ * **Warning:** This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their [member Window.visible] property.
+ *
+*/
+get_menu(): PopupMenu;
+
+/** Returns the total number of paragraphs (newlines or [code]p[/code] tags in the tag stack's text tags). Considers wrapped text as one paragraph. */
+get_paragraph_count(): int;
+
+/**
+ * Returns the vertical offset of the paragraph found at the provided index.
+ *
+ * **Note:** If [member threaded] is enabled, this method returns a value for the loaded part of the document. Use [method is_ready] or [signal finished] to determine whether document is fully loaded.
+ *
+*/
+get_paragraph_offset(): float;
+
+/** Returns the text without BBCode mark-up. */
+get_parsed_text(): string;
+
+/** Returns the current selection text. Does not include BBCodes. */
+get_selected_text(): string;
+
+/** Returns the current selection first character index if a selection is active, [code]-1[/code] otherwise. Does not include BBCodes. */
+get_selection_from(): int;
+
+/** Returns the current selection last character index if a selection is active, [code]-1[/code] otherwise. Does not include BBCodes. */
+get_selection_to(): int;
 
 /** Returns the total number of characters from text tags. Does not include BBCodes. */
 get_total_character_count(): int;
@@ -146,119 +295,187 @@ get_total_character_count(): int;
  * **Warning:** This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their [member CanvasItem.visible] property.
  *
 */
-get_v_scroll(): VScrollBar;
+get_v_scroll_bar(): VScrollBar;
 
-/** Returns the number of visible lines. */
+/**
+ * Returns the number of visible lines.
+ *
+ * **Note:** If [member threaded] is enabled, this method returns a value for the loaded part of the document. Use [method is_ready] or [signal finished] to determine whether document is fully loaded.
+ *
+*/
 get_visible_line_count(): int;
 
-/** Installs a custom effect. [code]effect[/code] should be a valid [RichTextEffect]. */
-install_effect(effect: any): void;
+/**
+ * Returns the number of visible paragraphs. A paragraph is considered visible if at least one of its lines is visible.
+ *
+ * **Note:** If [member threaded] is enabled, this method returns a value for the loaded part of the document. Use [method is_ready] or [signal finished] to determine whether document is fully loaded.
+ *
+*/
+get_visible_paragraph_count(): int;
+
+/** Installs a custom effect. [param effect] should be a valid [RichTextEffect]. */
+install_effect(): void;
+
+/** Returns whether the menu is visible. Use this instead of [code]get_menu().visible[/code] to improve performance (so the creation of the menu is avoided). */
+is_menu_visible(): boolean;
+
+/** If [member threaded] is enabled, returns [code]true[/code] if the background thread has finished text processing, otherwise always return [code]true[/code]. */
+is_ready(): boolean;
+
+/** Executes a given action as defined in the [enum MenuItems] enum. */
+menu_option(): void;
 
 /** Adds a newline tag to the tag stack. */
 newline(): void;
 
-/** The assignment version of [method append_bbcode]. Clears the tag stack and inserts the new content. Returns [constant OK] if parses [code]bbcode[/code] successfully. */
-parse_bbcode(bbcode: string): int;
+/** The assignment version of [method append_text]. Clears the tag stack and inserts the new content. */
+parse_bbcode(): void;
 
-/** Parses BBCode parameter [code]expressions[/code] into a dictionary. */
-parse_expressions_for_values(expressions: PoolStringArray): Dictionary<any, any>;
+/** Parses BBCode parameter [param expressions] into a dictionary. */
+parse_expressions_for_values(): Dictionary<any, any>;
 
 /** Terminates the current tag. Use after [code]push_*[/code] methods to close BBCodes manually. Does not need to follow [code]add_*[/code] methods. */
 pop(): void;
 
-/** Adds an [code][align][/code] tag based on the given [code]align[/code] value. See [enum Align] for possible values. */
-push_align(align: int): void;
+/** Terminates all tags opened by [code]push_*[/code] methods. */
+pop_all(): void;
 
-/** Adds a [code][font][/code] tag with a bold font to the tag stack. This is the same as adding a [code][b][/code] tag if not currently in a [code][i][/code] tag. */
+/** Terminates tags opened after the last [method push_context] call (including context marker), or all tags if there's no context marker on the stack. */
+pop_context(): void;
+
+/** Adds a [code skip-lint][bgcolor][/code] tag to the tag stack. */
+push_bgcolor(): void;
+
+/** Adds a [code skip-lint][font][/code] tag with a bold font to the tag stack. This is the same as adding a [code skip-lint][b][/code] tag if not currently in a [code skip-lint][i][/code] tag. */
 push_bold(): void;
 
-/** Adds a [code][font][/code] tag with a bold italics font to the tag stack. */
+/** Adds a [code skip-lint][font][/code] tag with a bold italics font to the tag stack. */
 push_bold_italics(): void;
 
-/** Adds a [code][cell][/code] tag to the tag stack. Must be inside a [code][table][/code] tag. See [method push_table] for details. */
+/** Adds a [code skip-lint][cell][/code] tag to the tag stack. Must be inside a [code skip-lint][table][/code] tag. See [method push_table] for details. */
 push_cell(): void;
 
-/** Adds a [code][color][/code] tag to the tag stack. */
-push_color(color: Color): void;
+/** Adds a [code skip-lint][color][/code] tag to the tag stack. */
+push_color(): void;
 
-/** Adds a [code][font][/code] tag to the tag stack. Overrides default fonts for its duration. */
-push_font(font: Font): void;
+/** Adds a context marker to the tag stack. See [method pop_context]. */
+push_context(): void;
 
-/** Adds an [code][indent][/code] tag to the tag stack. Multiplies [code]level[/code] by current [member tab_size] to determine new margin length. */
-push_indent(level: int): void;
+/** Adds a custom effect tag to the tag stack. The effect does not need to be in [member custom_effects]. The environment is directly passed to the effect. */
+push_customfx(): void;
 
-/** Adds a [code][font][/code] tag with a italics font to the tag stack. This is the same as adding a [code][i][/code] tag if not currently in a [code][b][/code] tag. */
+/** Adds a [code skip-lint][dropcap][/code] tag to the tag stack. Drop cap (dropped capital) is a decorative element at the beginning of a paragraph that is larger than the rest of the text. */
+push_dropcap(): void;
+
+/** Adds a [code skip-lint][fgcolor][/code] tag to the tag stack. */
+push_fgcolor(): void;
+
+/**
+ * Adds a [code skip-lint][font]` tag to the tag stack. Overrides default fonts for its duration.
+ *
+ * Passing `0` to [param font_size] will use the existing default font size.
+ *
+*/
+push_font(): void;
+
+/** Adds a [code skip-lint][font_size][/code] tag to the tag stack. Overrides default font size for its duration. */
+push_font_size(): void;
+
+/** Adds a [code skip-lint][hint][/code] tag to the tag stack. Same as BBCode [code skip-lint][hint=something]{text}[/hint][/code]. */
+push_hint(): void;
+
+/** Adds an [code skip-lint][indent][/code] tag to the tag stack. Multiplies [param level] by current [member tab_size] to determine new margin length. */
+push_indent(): void;
+
+/** Adds a [code skip-lint][font][/code] tag with an italics font to the tag stack. This is the same as adding an [code skip-lint][i][/code] tag if not currently in a [code skip-lint][b][/code] tag. */
 push_italics(): void;
 
-/** Adds a [code][list][/code] tag to the tag stack. Similar to the BBCodes [code][ol][/code] or [code][ul][/code], but supports more list types. Not fully implemented! */
-push_list(type: int): void;
+/** Adds language code used for text shaping algorithm and Open-Type font features. */
+push_language(): void;
 
-/** Adds a [code][meta][/code] tag to the tag stack. Similar to the BBCode [code][url=something]{text}[/url][/code], but supports non-[String] metadata types. */
-push_meta(data: any): void;
+/** Adds [code skip-lint][ol][/code] or [code skip-lint][ul][/code] tag to the tag stack. Multiplies [param level] by current [member tab_size] to determine new margin length. */
+push_list(): void;
 
-/** Adds a [code][font][/code] tag with a monospace font to the tag stack. */
+/** Adds a meta tag to the tag stack. Similar to the BBCode [code skip-lint][url=something]{text}[/url][/code], but supports non-[String] metadata types. */
+push_meta(): void;
+
+/** Adds a [code skip-lint][font][/code] tag with a monospace font to the tag stack. */
 push_mono(): void;
 
-/** Adds a [code][font][/code] tag with a normal font to the tag stack. */
+/** Adds a [code skip-lint][font][/code] tag with a normal font to the tag stack. */
 push_normal(): void;
 
-/** Adds a [code][s][/code] tag to the tag stack. */
+/** Adds a [code skip-lint][outline_color][/code] tag to the tag stack. Adds text outline for its duration. */
+push_outline_color(): void;
+
+/** Adds a [code skip-lint][outline_size][/code] tag to the tag stack. Overrides default text outline size for its duration. */
+push_outline_size(): void;
+
+/** Adds a [code skip-lint][p][/code] tag to the tag stack. */
+push_paragraph(): void;
+
+/** Adds a [code skip-lint][s][/code] tag to the tag stack. */
 push_strikethrough(): void;
 
-/** Adds a [code][table=columns][/code] tag to the tag stack. */
-push_table(columns: int): void;
+/** Adds a [code skip-lint][table=columns,inline_align][/code] tag to the tag stack. */
+push_table(): void;
 
-/** Adds a [code][u][/code] tag to the tag stack. */
+/** Adds a [code skip-lint][u][/code] tag to the tag stack. */
 push_underline(): void;
 
 /**
- * Removes a line of content from the label. Returns `true` if the line exists.
+ * Removes a paragraph of content from the label. Returns `true` if the paragraph exists.
  *
- * The `line` argument is the index of the line to remove, it can take values in the interval `[0, get_line_count() - 1]`.
+ * The [param paragraph] argument is the index of the paragraph to remove, it can take values in the interval `[0, get_paragraph_count() - 1]`.
  *
 */
-remove_line(line: int): boolean;
+remove_paragraph(): boolean;
 
-/** Scrolls the window's top line to match [code]line[/code]. */
-scroll_to_line(line: int): void;
+/** Scrolls the window's top line to match [param line]. */
+scroll_to_line(): void;
+
+/** Scrolls the window's top line to match first line of the [param paragraph]. */
+scroll_to_paragraph(): void;
+
+/** Scrolls to the beginning of the current selection. */
+scroll_to_selection(): void;
 
 /**
- * Edits the selected column's expansion options. If `expand` is `true`, the column expands in proportion to its expansion ratio versus the other columns' ratios.
+ * Select all the text.
+ *
+ * If [member selection_enabled] is `false`, no selection will occur.
+ *
+*/
+select_all(): void;
+
+/** Sets color of a table cell border. */
+set_cell_border_color(): void;
+
+/** Sets inner padding of a table cell. */
+set_cell_padding(): void;
+
+/** Sets color of a table cell. Separate colors for alternating rows can be specified. */
+set_cell_row_background_color(): void;
+
+/** Sets minimum and maximum size overrides for a table cell. */
+set_cell_size_override(): void;
+
+/**
+ * Edits the selected column's expansion options. If [param expand] is `true`, the column expands in proportion to its expansion ratio versus the other columns' ratios.
  *
  * For example, 2 columns with ratios 3 and 4 plus 70 pixels in available width would expand 30 and 40 pixels, respectively.
  *
- * If `expand` is `false`, the column will not contribute to the total ratio.
+ * If [param expand] is `false`, the column will not contribute to the total ratio.
  *
 */
-set_table_column_expand(column: int, expand: boolean, ratio: int): void;
+set_table_column_expand(): void;
+
+/** Updates the existing images with the key [param key]. Only properties specified by [param mask] bits are updated. See [method add_image]. */
+update_image(): void;
 
   connect<T extends SignalsOf<RichTextLabel>>(signal: T, method: SignalFunction<RichTextLabel[T]>): number;
 
 
-
-/**
- * Makes text left aligned.
- *
-*/
-static ALIGN_LEFT: any;
-
-/**
- * Makes text centered.
- *
-*/
-static ALIGN_CENTER: any;
-
-/**
- * Makes text right aligned.
- *
-*/
-static ALIGN_RIGHT: any;
-
-/**
- * Makes text fill width.
- *
-*/
-static ALIGN_FILL: any;
 
 /**
  * Each list item has a number marker.
@@ -273,86 +490,107 @@ static LIST_NUMBERS: any;
 static LIST_LETTERS: any;
 
 /**
+ * Each list item has a roman number marker.
+ *
+*/
+static LIST_ROMAN: any;
+
+/**
  * Each list item has a filled circle marker.
  *
 */
 static LIST_DOTS: any;
 
-/** No documentation provided. */
-static ITEM_FRAME: any;
+/**
+ * Copies the selected text.
+ *
+*/
+static MENU_COPY: any;
 
-/** No documentation provided. */
-static ITEM_TEXT: any;
+/**
+ * Selects the whole [RichTextLabel] text.
+ *
+*/
+static MENU_SELECT_ALL: any;
 
-/** No documentation provided. */
-static ITEM_IMAGE: any;
+/**
+ * Represents the size of the [enum MenuItems] enum.
+ *
+*/
+static MENU_MAX: any;
 
-/** No documentation provided. */
-static ITEM_NEWLINE: any;
+/**
+ * If this bit is set, [method update_image] changes image texture.
+ *
+*/
+static UPDATE_TEXTURE: any;
 
-/** No documentation provided. */
-static ITEM_FONT: any;
+/**
+ * If this bit is set, [method update_image] changes image size.
+ *
+*/
+static UPDATE_SIZE: any;
 
-/** No documentation provided. */
-static ITEM_COLOR: any;
+/**
+ * If this bit is set, [method update_image] changes image color.
+ *
+*/
+static UPDATE_COLOR: any;
 
-/** No documentation provided. */
-static ITEM_UNDERLINE: any;
+/**
+ * If this bit is set, [method update_image] changes image inline alignment.
+ *
+*/
+static UPDATE_ALIGNMENT: any;
 
-/** No documentation provided. */
-static ITEM_STRIKETHROUGH: any;
+/**
+ * If this bit is set, [method update_image] changes image texture region.
+ *
+*/
+static UPDATE_REGION: any;
 
-/** No documentation provided. */
-static ITEM_ALIGN: any;
+/**
+ * If this bit is set, [method update_image] changes image padding.
+ *
+*/
+static UPDATE_PAD: any;
 
-/** No documentation provided. */
-static ITEM_INDENT: any;
+/**
+ * If this bit is set, [method update_image] changes image tooltip.
+ *
+*/
+static UPDATE_TOOLTIP: any;
 
-/** No documentation provided. */
-static ITEM_LIST: any;
-
-/** No documentation provided. */
-static ITEM_TABLE: any;
-
-/** No documentation provided. */
-static ITEM_FADE: any;
-
-/** No documentation provided. */
-static ITEM_SHAKE: any;
-
-/** No documentation provided. */
-static ITEM_WAVE: any;
-
-/** No documentation provided. */
-static ITEM_TORNADO: any;
-
-/** No documentation provided. */
-static ITEM_RAINBOW: any;
-
-/** No documentation provided. */
-static ITEM_CUSTOMFX: any;
-
-/** No documentation provided. */
-static ITEM_META: any;
+/**
+ * If this bit is set, [method update_image] changes image width from/to percents.
+ *
+*/
+static UPDATE_WIDTH_IN_PERCENT: any;
 
 
 /**
- * Triggered when the user clicks on content between meta tags. If the meta is defined in text, e.g. `[url={"data"="hi"}]hi[/url]`, then the parameter for this signal will be a [String] type. If a particular type or an object is desired, the [method push_meta] method must be used to manually insert the data into the tag stack.
+ * Triggered when the document is fully loaded.
  *
 */
-$meta_clicked: Signal<(meta: any) => void>
+$finished: Signal<() => void>
+
+/**
+ * Triggered when the user clicks on content between meta tags. If the meta is defined in text, e.g. [code skip-lint][url={"data"="hi"}]hi[/url]`, then the parameter for this signal will be a [String] type. If a particular type or an object is desired, the [method push_meta] method must be used to manually insert the data into the tag stack.
+ *
+*/
+$meta_clicked: Signal<() => void>
 
 /**
  * Triggers when the mouse exits a meta tag.
  *
 */
-$meta_hover_ended: Signal<(meta: any) => void>
+$meta_hover_ended: Signal<() => void>
 
 /**
  * Triggers when the mouse enters a meta tag.
  *
 */
-$meta_hover_started: Signal<(meta: any) => void>
+$meta_hover_started: Signal<() => void>
 
 }
 

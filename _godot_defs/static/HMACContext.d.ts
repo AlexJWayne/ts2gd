@@ -2,168 +2,98 @@
 /**
  * The HMACContext class is useful for advanced HMAC use cases, such as streaming the message as it supports creating the message over time rather than providing it all at once.
  *
- * codeblock]
- *
- * xtends Node
- *
- * ar ctx = HMACContext.new()
- *
- * unc _ready():
- *
- *    var key = "supersecret".to_utf8()
- *
- *    var err = ctx.start(HashingContext.HASH_SHA256, key)
- *
- *    assert(err == OK)
- *
- *    var msg1 = "this is ".to_utf8()
- *
- *    var msg2 = "vewy vewy secret".to_utf8()
- *
- *    err = ctx.update(msg1)
- *
- *    assert(err == OK)
- *
- *    err = ctx.update(msg2)
- *
- *    assert(err == OK)
- *
- *    var hmac = ctx.finish()
- *
- *    print(hmac.hex_encode())
- *
- * /codeblock]
- *
- * And in C# we can use the following.
- *
- * codeblock]
- *
- * sing Godot;
- *
- * sing System;
- *
- * sing System.Diagnostics;
- *
- * ublic class CryptoNode : Node
- *
- *    private HMACContext ctx = new HMACContext();
- *
- *    public override void _Ready()
- *
- *    {
- *
- *        PoolByteArray key = String("supersecret").to_utf8();
- *
- *        Error err = ctx.Start(HashingContext.HASH_SHA256, key);
- *
- *        GD.Assert(err == OK);
- *
- *        PoolByteArray msg1 = String("this is ").to_utf8();
- *
- *        PoolByteArray msg2 = String("vewy vew secret").to_utf8();
- *
- *        err = ctx.Update(msg1);
- *
- *        GD.Assert(err == OK);
- *
- *        err = ctx.Update(msg2);
- *
- *        GD.Assert(err == OK);
- *
- *        PoolByteArray hmac = ctx.Finish();
- *
- *        GD.Print(hmac.HexEncode());
- *
- *    }
- *
- * /codeblock]
- *
- * b]Note:** Not available in HTML5 exports.
+ * @example 
+ * 
+ * 
+ * extends Node
+ * var ctx = HMACContext.new()
+ * func _ready():
+ *     var key = "supersecret".to_utf8_buffer()
+ *     var err = ctx.start(HashingContext.HASH_SHA256, key)
+ *     assert(err == OK)
+ *     var msg1 = "this is ".to_utf8_buffer()
+ *     var msg2 = "super duper secret".to_utf8_buffer()
+ *     err = ctx.update(msg1)
+ *     assert(err == OK)
+ *     err = ctx.update(msg2)
+ *     assert(err == OK)
+ *     var hmac = ctx.finish()
+ *     print(hmac.hex_encode())
+ * 
+ * 
+ * using Godot;
+ * using System.Diagnostics;
+ * public partial class MyNode : Node
+ * {
+ *     private HmacContext _ctx = new HmacContext();
+ *     public override void _Ready()
+ *     {
+ *         byte[] key = "supersecret".ToUtf8Buffer();
+ *         Error err = _ctx.Start(HashingContext.HashType.Sha256, key);
+ *         Debug.Assert(err == Error.Ok);
+ *         byte[] msg1 = "this is ".ToUtf8Buffer();
+ *         byte[] msg2 = "super duper secret".ToUtf8Buffer();
+ *         err = _ctx.Update(msg1);
+ *         Debug.Assert(err == Error.Ok);
+ *         err = _ctx.Update(msg2);
+ *         Debug.Assert(err == Error.Ok);
+ *         byte[] hmac = _ctx.Finish();
+ *         GD.Print(hmac.HexEncode());
+ *     }
+ * }
+ * 
+ * @summary 
+ * 
  *
 */
-declare class HMACContext extends Reference  {
+declare class HMACContext extends RefCounted  {
 
   
 /**
  * The HMACContext class is useful for advanced HMAC use cases, such as streaming the message as it supports creating the message over time rather than providing it all at once.
  *
- * codeblock]
- *
- * xtends Node
- *
- * ar ctx = HMACContext.new()
- *
- * unc _ready():
- *
- *    var key = "supersecret".to_utf8()
- *
- *    var err = ctx.start(HashingContext.HASH_SHA256, key)
- *
- *    assert(err == OK)
- *
- *    var msg1 = "this is ".to_utf8()
- *
- *    var msg2 = "vewy vewy secret".to_utf8()
- *
- *    err = ctx.update(msg1)
- *
- *    assert(err == OK)
- *
- *    err = ctx.update(msg2)
- *
- *    assert(err == OK)
- *
- *    var hmac = ctx.finish()
- *
- *    print(hmac.hex_encode())
- *
- * /codeblock]
- *
- * And in C# we can use the following.
- *
- * codeblock]
- *
- * sing Godot;
- *
- * sing System;
- *
- * sing System.Diagnostics;
- *
- * ublic class CryptoNode : Node
- *
- *    private HMACContext ctx = new HMACContext();
- *
- *    public override void _Ready()
- *
- *    {
- *
- *        PoolByteArray key = String("supersecret").to_utf8();
- *
- *        Error err = ctx.Start(HashingContext.HASH_SHA256, key);
- *
- *        GD.Assert(err == OK);
- *
- *        PoolByteArray msg1 = String("this is ").to_utf8();
- *
- *        PoolByteArray msg2 = String("vewy vew secret").to_utf8();
- *
- *        err = ctx.Update(msg1);
- *
- *        GD.Assert(err == OK);
- *
- *        err = ctx.Update(msg2);
- *
- *        GD.Assert(err == OK);
- *
- *        PoolByteArray hmac = ctx.Finish();
- *
- *        GD.Print(hmac.HexEncode());
- *
- *    }
- *
- * /codeblock]
- *
- * b]Note:** Not available in HTML5 exports.
+ * @example 
+ * 
+ * 
+ * extends Node
+ * var ctx = HMACContext.new()
+ * func _ready():
+ *     var key = "supersecret".to_utf8_buffer()
+ *     var err = ctx.start(HashingContext.HASH_SHA256, key)
+ *     assert(err == OK)
+ *     var msg1 = "this is ".to_utf8_buffer()
+ *     var msg2 = "super duper secret".to_utf8_buffer()
+ *     err = ctx.update(msg1)
+ *     assert(err == OK)
+ *     err = ctx.update(msg2)
+ *     assert(err == OK)
+ *     var hmac = ctx.finish()
+ *     print(hmac.hex_encode())
+ * 
+ * 
+ * using Godot;
+ * using System.Diagnostics;
+ * public partial class MyNode : Node
+ * {
+ *     private HmacContext _ctx = new HmacContext();
+ *     public override void _Ready()
+ *     {
+ *         byte[] key = "supersecret".ToUtf8Buffer();
+ *         Error err = _ctx.Start(HashingContext.HashType.Sha256, key);
+ *         Debug.Assert(err == Error.Ok);
+ *         byte[] msg1 = "this is ".ToUtf8Buffer();
+ *         byte[] msg2 = "super duper secret".ToUtf8Buffer();
+ *         err = _ctx.Update(msg1);
+ *         Debug.Assert(err == Error.Ok);
+ *         err = _ctx.Update(msg2);
+ *         Debug.Assert(err == Error.Ok);
+ *         byte[] hmac = _ctx.Finish();
+ *         GD.Print(hmac.HexEncode());
+ *     }
+ * }
+ * 
+ * @summary 
+ * 
  *
 */
   new(): HMACContext; 
@@ -171,14 +101,14 @@ declare class HMACContext extends Reference  {
 
 
 
-/** Returns the resulting HMAC. If the HMAC failed, an empty [PoolByteArray] is returned. */
-finish(): PoolByteArray;
+/** Returns the resulting HMAC. If the HMAC failed, an empty [PackedByteArray] is returned. */
+finish(): PackedByteArray;
 
 /** Initializes the HMACContext. This method cannot be called again on the same HMACContext until [method finish] has been called. */
-start(hash_type: int, key: PoolByteArray): int;
+start(): int;
 
-/** Updates the message to be HMACed. This can be called multiple times before [method finish] is called to append [code]data[/code] to the message, but cannot be called until [method start] has been called. */
-update(data: PoolByteArray): int;
+/** Updates the message to be HMACed. This can be called multiple times before [method finish] is called to append [param data] to the message, but cannot be called until [method start] has been called. */
+update(): int;
 
   connect<T extends SignalsOf<HMACContext>>(signal: T, method: SignalFunction<HMACContext[T]>): number;
 

@@ -1,28 +1,34 @@
 
 /**
- * The base class for [PanoramaSky] and [ProceduralSky].
+ * The [Sky] class uses a [Material] to render a 3D environment's background and the light it emits by updating the reflection/radiance cubemaps.
  *
 */
 declare class Sky extends Resource  {
 
   
 /**
- * The base class for [PanoramaSky] and [ProceduralSky].
+ * The [Sky] class uses a [Material] to render a 3D environment's background and the light it emits by updating the reflection/radiance cubemaps.
  *
 */
   new(): Sky; 
   static "new"(): Sky 
 
 
+/** Sets the method for generating the radiance map from the sky. The radiance map is a cubemap with increasingly blurry versions of the sky corresponding to different levels of roughness. Radiance maps can be expensive to calculate. See [enum ProcessMode] for options. */
+process_mode: int;
+
 /**
  * The [Sky]'s radiance map size. The higher the radiance map size, the more detailed the lighting from the [Sky] will be.
  *
  * See [enum RadianceSize] constants for values.
  *
- * **Note:** You will only benefit from high radiance sizes if you have perfectly sharp reflective surfaces in your project and are not using [ReflectionProbe]s or [GIProbe]s. For most projects, keeping [member radiance_size] to the default value is the best compromise between visuals and performance. Be careful when using high radiance size values as these can cause crashes on low-end GPUs.
+ * **Note:** Some hardware will have trouble with higher radiance sizes, especially [constant RADIANCE_SIZE_512] and above. Only use such high values on high-end hardware.
  *
 */
 radiance_size: int;
+
+/** [Material] used to draw the background. Can be [PanoramaSkyMaterial], [ProceduralSkyMaterial], [PhysicalSkyMaterial], or even a [ShaderMaterial] if you want to use your own custom shader. */
+sky_material: Material;
 
 
 
@@ -63,15 +69,11 @@ static RADIANCE_SIZE_512: any;
 /**
  * Radiance texture size is 1024×1024 pixels.
  *
- * **Note:** [constant RADIANCE_SIZE_1024] is not exposed in the inspector as it is known to cause GPU hangs on certain systems.
- *
 */
 static RADIANCE_SIZE_1024: any;
 
 /**
  * Radiance texture size is 2048×2048 pixels.
- *
- * **Note:** [constant RADIANCE_SIZE_2048] is not exposed in the inspector as it is known to cause GPU hangs on certain systems.
  *
 */
 static RADIANCE_SIZE_2048: any;
@@ -81,6 +83,32 @@ static RADIANCE_SIZE_2048: any;
  *
 */
 static RADIANCE_SIZE_MAX: any;
+
+/**
+ * Automatically selects the appropriate process mode based on your sky shader. If your shader uses `TIME` or `POSITION`, this will use [constant PROCESS_MODE_REALTIME]. If your shader uses any of the `LIGHT_*` variables or any custom uniforms, this uses [constant PROCESS_MODE_INCREMENTAL]. Otherwise, this defaults to [constant PROCESS_MODE_QUALITY].
+ *
+*/
+static PROCESS_MODE_AUTOMATIC: any;
+
+/**
+ * Uses high quality importance sampling to process the radiance map. In general, this results in much higher quality than [constant PROCESS_MODE_REALTIME] but takes much longer to generate. This should not be used if you plan on changing the sky at runtime. If you are finding that the reflection is not blurry enough and is showing sparkles or fireflies, try increasing [member ProjectSettings.rendering/reflections/sky_reflections/ggx_samples].
+ *
+*/
+static PROCESS_MODE_QUALITY: any;
+
+/**
+ * Uses the same high quality importance sampling to process the radiance map as [constant PROCESS_MODE_QUALITY], but updates over several frames. The number of frames is determined by [member ProjectSettings.rendering/reflections/sky_reflections/roughness_layers]. Use this when you need highest quality radiance maps, but have a sky that updates slowly.
+ *
+*/
+static PROCESS_MODE_INCREMENTAL: any;
+
+/**
+ * Uses the fast filtering algorithm to process the radiance map. In general this results in lower quality, but substantially faster run times. If you need better quality, but still need to update the sky every frame, consider turning on [member ProjectSettings.rendering/reflections/sky_reflections/fast_filter_high_quality].
+ *
+ * **Note:** The fast filtering algorithm is limited to 256×256 cubemaps, so [member radiance_size] must be set to [constant RADIANCE_SIZE_256]. Otherwise, a warning is printed and the overridden radiance size is ignored.
+ *
+*/
+static PROCESS_MODE_REALTIME: any;
 
 
 

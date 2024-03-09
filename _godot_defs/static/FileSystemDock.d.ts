@@ -1,27 +1,32 @@
 
 /**
+ * This class is available only in [EditorPlugin]s and can't be instantiated. You can access it using [method EditorInterface.get_file_system_dock].
+ *
+ * While [FileSystemDock] doesn't expose any methods for file manipulation, it can listen for various file-related signals.
+ *
 */
 declare class FileSystemDock extends VBoxContainer  {
 
   
 /**
+ * This class is available only in [EditorPlugin]s and can't be instantiated. You can access it using [method EditorInterface.get_file_system_dock].
+ *
+ * While [FileSystemDock] doesn't expose any methods for file manipulation, it can listen for various file-related signals.
+ *
 */
   new(): FileSystemDock; 
   static "new"(): FileSystemDock 
 
 
 
-/** No documentation provided. */
-can_drop_data_fw(point: Vector2, data: any, from: Control): boolean;
+/** Registers a new [EditorResourceTooltipPlugin]. */
+add_resource_tooltip_plugin(): void;
 
-/** No documentation provided. */
-drop_data_fw(point: Vector2, data: any, from: Control): void;
+/** Sets the given [param path] as currently selected, ensuring that the selected file/directory is visible. */
+navigate_to_path(): void;
 
-/** No documentation provided. */
-get_drag_data_fw(point: Vector2, from: Control): any;
-
-/** No documentation provided. */
-navigate_to_path(path: string): void;
+/** Removes an [EditorResourceTooltipPlugin]. Fails if the plugin wasn't previously added. */
+remove_resource_tooltip_plugin(): void;
 
   connect<T extends SignalsOf<FileSystemDock>>(signal: T, method: SignalFunction<FileSystemDock[T]>): number;
 
@@ -30,32 +35,52 @@ navigate_to_path(path: string): void;
 
 
 /**
+ * Emitted when the user switches file display mode or split mode.
+ *
 */
 $display_mode_changed: Signal<() => void>
 
 /**
+ * Emitted when the given [param file] was removed.
+ *
 */
-$file_removed: Signal<(file: string) => void>
+$file_removed: Signal<() => void>
 
 /**
+ * Emitted when a file is moved from [param old_file] path to [param new_file] path.
+ *
 */
-$files_moved: Signal<(old_file: string, new_file: string) => void>
+$files_moved: Signal<() => void>
 
 /**
+ * Emitted when a folder is moved from [param old_folder] path to [param new_folder] path.
+ *
 */
-$folder_moved: Signal<(old_folder: string, new_file: string) => void>
+$folder_moved: Signal<() => void>
 
 /**
+ * Emitted when the given [param folder] was removed.
+ *
 */
-$folder_removed: Signal<(folder: string) => void>
+$folder_removed: Signal<() => void>
 
 /**
+ * Emitted when a new scene is created that inherits the scene at [param file] path.
+ *
 */
-$inherit: Signal<(file: string) => void>
+$inherit: Signal<() => void>
 
 /**
+ * Emitted when the given scenes are being instantiated in the editor.
+ *
 */
-$instance: Signal<(files: PoolStringArray) => void>
+$instantiate: Signal<() => void>
+
+/**
+ * Emitted when an external [param resource] had its file removed.
+ *
+*/
+$resource_removed: Signal<() => void>
 
 }
 

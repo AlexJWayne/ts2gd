@@ -1,7 +1,7 @@
 
 /**
 */
-declare class JavaClass extends Reference  {
+declare class JavaClass extends RefCounted  {
 
   
 /**

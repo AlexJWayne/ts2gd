@@ -1,17 +1,13 @@
 
 /**
- * Horizontal slider. See [Slider]. This one goes from left (min) to right (max).
- *
- * **Note:** The [signal Range.changed] and [signal Range.value_changed] signals are part of the [Range] class which this class inherits from.
+ * A horizontal slider, used to adjust a value by moving a grabber along a horizontal axis. It is a [Range]-based control and goes from left (min) to right (max).
  *
 */
 declare class HSlider extends Slider  {
 
   
 /**
- * Horizontal slider. See [Slider]. This one goes from left (min) to right (max).
- *
- * **Note:** The [signal Range.changed] and [signal Range.value_changed] signals are part of the [Range] class which this class inherits from.
+ * A horizontal slider, used to adjust a value by moving a grabber along a horizontal axis. It is a [Range]-based control and goes from left (min) to right (max).
  *
 */
   new(): HSlider; 

@@ -18,40 +18,40 @@ declare class AudioEffectDelay extends AudioEffect  {
 dry: float;
 
 /** If [code]true[/code], feedback is enabled. */
-"feedback/active": boolean;
+feedback_active: boolean;
 
 /** Feedback delay time in milliseconds. */
-"feedback/delay_ms": float;
+feedback_delay_ms: float;
 
-/** Sound level for [code]tap1[/code]. */
-"feedback/level_db": float;
+/** Sound level for feedback. */
+feedback_level_db: float;
 
 /** Low-pass filter for feedback, in Hz. Frequencies below this value are filtered out of the source signal. */
-"feedback/lowpass": float;
+feedback_lowpass: float;
 
-/** If [code]true[/code], [code]tap1[/code] will be enabled. */
-"tap1/active": boolean;
+/** If [code]true[/code], the first tap will be enabled. */
+tap1_active: boolean;
 
-/** [code]tap1[/code] delay time in milliseconds. */
-"tap1/delay_ms": float;
+/** First tap delay time in milliseconds. */
+tap1_delay_ms: float;
 
-/** Sound level for [code]tap1[/code]. */
-"tap1/level_db": float;
+/** Sound level for the first tap. */
+tap1_level_db: float;
 
-/** Pan position for [code]tap1[/code]. Value can range from -1 (fully left) to 1 (fully right). */
-"tap1/pan": float;
+/** Pan position for the first tap. Value can range from -1 (fully left) to 1 (fully right). */
+tap1_pan: float;
 
-/** If [code]true[/code], [code]tap2[/code] will be enabled. */
-"tap2/active": boolean;
+/** If [code]true[/code], the second tap will be enabled. */
+tap2_active: boolean;
 
-/** [b]Tap2[/b] delay time in milliseconds. */
-"tap2/delay_ms": float;
+/** Second tap delay time in milliseconds. */
+tap2_delay_ms: float;
 
-/** Sound level for [code]tap2[/code]. */
-"tap2/level_db": float;
+/** Sound level for the second tap. */
+tap2_level_db: float;
 
-/** Pan position for [code]tap2[/code]. Value can range from -1 (fully left) to 1 (fully right). */
-"tap2/pan": float;
+/** Pan position for the second tap. Value can range from -1 (fully left) to 1 (fully right). */
+tap2_pan: float;
 
 
 

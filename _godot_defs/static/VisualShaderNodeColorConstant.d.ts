@@ -5,7 +5,7 @@
  * Translated to `vec3 rgb` and `float alpha` in the shader language.
  *
 */
-declare class VisualShaderNodeColorConstant extends VisualShaderNode  {
+declare class VisualShaderNodeColorConstant extends VisualShaderNodeConstant  {
 
   
 /**

@@ -3,7 +3,7 @@
  * Mesh type used internally for collision calculations.
  *
 */
-declare class TriangleMesh extends Reference  {
+declare class TriangleMesh extends RefCounted  {
 
   
 /**

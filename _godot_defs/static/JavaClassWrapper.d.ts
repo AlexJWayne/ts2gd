@@ -12,7 +12,7 @@ declare class JavaClassWrapperClass extends Object  {
 
 
 /** No documentation provided. */
-wrap(name: string): JavaClass;
+wrap(): JavaClass;
 
   connect<T extends SignalsOf<JavaClassWrapperClass>>(signal: T, method: SignalFunction<JavaClassWrapperClass[T]>): number;
 

@@ -3,7 +3,7 @@
  * A constant [Vector3], which can be used as an input node.
  *
 */
-declare class VisualShaderNodeVec3Constant extends VisualShaderNode  {
+declare class VisualShaderNodeVec3Constant extends VisualShaderNodeConstant  {
 
   
 /**

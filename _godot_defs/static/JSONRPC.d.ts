@@ -18,62 +18,62 @@ declare class JSONRPC extends Object  {
 /**
  * Returns a dictionary in the form of a JSON-RPC notification. Notifications are one-shot messages which do not expect a response.
  *
- * - `method`: Name of the method being called.
+ * - [param method]: Name of the method being called.
  *
- * - `params`: An array or dictionary of parameters being passed to the method.
+ * - [param params]: An array or dictionary of parameters being passed to the method.
  *
 */
-make_notification(method: string, params: any): Dictionary<any, any>;
+make_notification(): Dictionary<any, any>;
 
 /**
  * Returns a dictionary in the form of a JSON-RPC request. Requests are sent to a server with the expectation of a response. The ID field is used for the server to specify which exact request it is responding to.
  *
- * - `method`: Name of the method being called.
+ * - [param method]: Name of the method being called.
  *
- * - `params`: An array or dictionary of parameters being passed to the method.
+ * - [param params]: An array or dictionary of parameters being passed to the method.
  *
- * - `id`: Uniquely identifies this request. The server is expected to send a response with the same ID.
+ * - [param id]: Uniquely identifies this request. The server is expected to send a response with the same ID.
  *
 */
-make_request(method: string, params: any, id: any): Dictionary<any, any>;
+make_request(): Dictionary<any, any>;
 
 /**
  * When a server has received and processed a request, it is expected to send a response. If you did not want a response then you need to have sent a Notification instead.
  *
- * - `result`: The return value of the function which was called.
+ * - [param result]: The return value of the function which was called.
  *
- * - `id`: The ID of the request this response is targeted to.
+ * - [param id]: The ID of the request this response is targeted to.
  *
 */
-make_response(result: any, id: any): Dictionary<any, any>;
+make_response(): Dictionary<any, any>;
 
 /**
  * Creates a response which indicates a previous reply has failed in some way.
  *
- * - `code`: The error code corresponding to what kind of error this is. See the [enum ErrorCode] constants.
+ * - [param code]: The error code corresponding to what kind of error this is. See the [enum ErrorCode] constants.
  *
- * - `message`: A custom message about this error.
+ * - [param message]: A custom message about this error.
  *
- * - `id`: The request this error is a response to.
+ * - [param id]: The request this error is a response to.
  *
 */
-make_response_error(code: int, message: string, id?: any): Dictionary<any, any>;
+make_response_error(): Dictionary<any, any>;
 
 /**
  * Given a Dictionary which takes the form of a JSON-RPC request: unpack the request and run it. Methods are resolved by looking at the field called "method" and looking for an equivalently named function in the JSONRPC object. If one is found that method is called.
  *
  * To add new supported methods extend the JSONRPC class and call [method process_action] on your subclass.
  *
- * `action`: The action to be run, as a Dictionary in the form of a JSON-RPC request or notification.
+ * [param action]: The action to be run, as a Dictionary in the form of a JSON-RPC request or notification.
  *
 */
-process_action(action: any, recurse?: boolean): any;
+process_action(): any;
 
 /** No documentation provided. */
-process_string(action: string): string;
+process_string(): string;
 
 /** No documentation provided. */
-set_scope(scope: string, target: Object): void;
+set_scope(): void;
 
   connect<T extends SignalsOf<JSONRPC>>(signal: T, method: SignalFunction<JSONRPC[T]>): number;
 

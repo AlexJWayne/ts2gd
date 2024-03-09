@@ -1,13 +1,13 @@
 
 /**
- * IP contains support functions for the Internet Protocol (IP). TCP/IP support is in different classes (see [StreamPeerTCP] and [TCP_Server]). IP provides DNS hostname resolution support, both blocking and threaded.
+ * IP contains support functions for the Internet Protocol (IP). TCP/IP support is in different classes (see [StreamPeerTCP] and [TCPServer]). IP provides DNS hostname resolution support, both blocking and threaded.
  *
 */
 declare class IPClass extends Object  {
 
   
 /**
- * IP contains support functions for the Internet Protocol (IP). TCP/IP support is in different classes (see [StreamPeerTCP] and [TCP_Server]). IP provides DNS hostname resolution support, both blocking and threaded.
+ * IP contains support functions for the Internet Protocol (IP). TCP/IP support is in different classes (see [StreamPeerTCP] and [TCPServer]). IP provides DNS hostname resolution support, both blocking and threaded.
  *
 */
   new(): IPClass; 
@@ -15,14 +15,14 @@ declare class IPClass extends Object  {
 
 
 
-/** Removes all of a [code]hostname[/code]'s cached references. If no [code]hostname[/code] is given, all cached IP addresses are removed. */
-clear_cache(hostname?: string): void;
+/** Removes all of a [param hostname]'s cached references. If no [param hostname] is given, all cached IP addresses are removed. */
+clear_cache(): void;
 
-/** Removes a given item [code]id[/code] from the queue. This should be used to free a queue after it has completed to enable more queries to happen. */
-erase_resolve_item(id: int): void;
+/** Removes a given item [param id] from the queue. This should be used to free a queue after it has completed to enable more queries to happen. */
+erase_resolve_item(): void;
 
 /** Returns all the user's current IPv4 and IPv6 addresses as an array. */
-get_local_addresses(): any[];
+get_local_addresses(): PackedStringArray;
 
 /**
  * Returns all network adapters as an array.
@@ -41,25 +41,25 @@ get_local_addresses(): any[];
  * 
  *
 */
-get_local_interfaces(): any[];
+get_local_interfaces(): Dictionary[];
 
-/** Returns a queued hostname's IP address, given its queue [code]id[/code]. Returns an empty string on error or if resolution hasn't happened yet (see [method get_resolve_item_status]). */
-get_resolve_item_address(id: int): string;
+/** Returns a queued hostname's IP address, given its queue [param id]. Returns an empty string on error or if resolution hasn't happened yet (see [method get_resolve_item_status]). */
+get_resolve_item_address(): string;
 
-/** Return resolved addresses, or an empty array if an error happened or resolution didn't happen yet (see [method get_resolve_item_status]). */
-get_resolve_item_addresses(id: int): any[];
+/** Returns resolved addresses, or an empty array if an error happened or resolution didn't happen yet (see [method get_resolve_item_status]). */
+get_resolve_item_addresses(): any[];
 
-/** Returns a queued hostname's status as a [enum ResolverStatus] constant, given its queue [code]id[/code]. */
-get_resolve_item_status(id: int): int;
+/** Returns a queued hostname's status as a [enum ResolverStatus] constant, given its queue [param id]. */
+get_resolve_item_status(): int;
 
-/** Returns a given hostname's IPv4 or IPv6 address when resolved (blocking-type method). The address type returned depends on the [enum Type] constant given as [code]ip_type[/code]. */
-resolve_hostname(host: string, ip_type?: int): string;
+/** Returns a given hostname's IPv4 or IPv6 address when resolved (blocking-type method). The address type returned depends on the [enum Type] constant given as [param ip_type]. */
+resolve_hostname(): string;
 
-/** Resolves a given hostname in a blocking way. Addresses are returned as an [Array] of IPv4 or IPv6 depending on [code]ip_type[/code]. */
-resolve_hostname_addresses(host: string, ip_type?: int): any[];
+/** Resolves a given hostname in a blocking way. Addresses are returned as an [Array] of IPv4 or IPv6 addresses depending on [param ip_type]. */
+resolve_hostname_addresses(): PackedStringArray;
 
-/** Creates a queue item to resolve a hostname to an IPv4 or IPv6 address depending on the [enum Type] constant given as [code]ip_type[/code]. Returns the queue ID if successful, or [constant RESOLVER_INVALID_ID] on error. */
-resolve_hostname_queue_item(host: string, ip_type?: int): int;
+/** Creates a queue item to resolve a hostname to an IPv4 or IPv6 address depending on the [enum Type] constant given as [param ip_type]. Returns the queue ID if successful, or [constant RESOLVER_INVALID_ID] on error. */
+resolve_hostname_queue_item(): int;
 
   connect<T extends SignalsOf<IPClass>>(signal: T, method: SignalFunction<IPClass[T]>): number;
 

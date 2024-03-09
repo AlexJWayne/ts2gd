@@ -1,37 +1,49 @@
 
 /**
- * Hyper-text transfer protocol client (sometimes called "User Agent"). Used to make HTTP requests to download web content, upload files and other data or to communicate with various services, among other use cases. **See the [HTTPRequest] node for a higher-level alternative.**
+ * Hyper-text transfer protocol client (sometimes called "User Agent"). Used to make HTTP requests to download web content, upload files and other data or to communicate with various services, among other use cases.
+ *
+ * See the [HTTPRequest] node for a higher-level alternative.
  *
  * **Note:** This client only needs to connect to a host once (see [method connect_to_host]) to send multiple requests. Because of this, methods that take URLs usually take just the part after the host instead of the full URL, as the client is already connected to a host. See [method request] for a full example and to get started.
  *
- * A [HTTPClient] should be reused between multiple requests or to connect to different hosts instead of creating one client per request. Supports SSL and SSL server certificate verification. HTTP status codes in the 2xx range indicate success, 3xx redirection (i.e. "try again, but over here"), 4xx something was wrong with the request, and 5xx something went wrong on the server's side.
+ * A [HTTPClient] should be reused between multiple requests or to connect to different hosts instead of creating one client per request. Supports Transport Layer Security (TLS), including server certificate verification. HTTP status codes in the 2xx range indicate success, 3xx redirection (i.e. "try again, but over here"), 4xx something was wrong with the request, and 5xx something went wrong on the server's side.
  *
- * For more information on HTTP, see https://developer.mozilla.org/en-US/docs/Web/HTTP (or read RFC 2616 to get it straight from the source: https://tools.ietf.org/html/rfc2616).
+ * For more information on HTTP, see [url=https://developer.mozilla.org/en-US/docs/Web/HTTP]MDN's documentation on HTTP[/url] (or read [url=https://tools.ietf.org/html/rfc2616]RFC 2616[/url] to get it straight from the source).
  *
- * **Note:** When performing HTTP requests from a project exported to HTML5, keep in mind the remote server may not allow requests from foreign origins due to [url=https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS]CORS[/url]. If you host the server in question, you should modify its backend to allow requests from foreign origins by adding the `Access-Control-Allow-Origin: *` HTTP header.
+ * **Note:** When exporting to Android, make sure to enable the `INTERNET` permission in the Android export preset before exporting the project or using one-click deploy. Otherwise, network communication of any kind will be blocked by Android.
  *
- * **Note:** SSL/TLS support is currently limited to TLS 1.0, TLS 1.1, and TLS 1.2. Attempting to connect to a TLS 1.3-only server will return an error.
+ * **Note:** It's recommended to use transport encryption (TLS) and to avoid sending sensitive information (such as login credentials) in HTTP GET URL parameters. Consider using HTTP POST requests or HTTP headers for such information instead.
  *
- * **Warning:** SSL/TLS certificate revocation and certificate pinning are currently not supported. Revoked certificates are accepted as long as they are otherwise valid. If this is a concern, you may want to use automatically managed certificates with a short validity period.
+ * **Note:** When performing HTTP requests from a project exported to Web, keep in mind the remote server may not allow requests from foreign origins due to [url=https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS]CORS[/url]. If you host the server in question, you should modify its backend to allow requests from foreign origins by adding the `Access-Control-Allow-Origin: *` HTTP header.
+ *
+ * **Note:** TLS support is currently limited to TLS 1.0, TLS 1.1, and TLS 1.2. Attempting to connect to a TLS 1.3-only server will return an error.
+ *
+ * **Warning:** TLS certificate revocation and certificate pinning are currently not supported. Revoked certificates are accepted as long as they are otherwise valid. If this is a concern, you may want to use automatically managed certificates with a short validity period.
  *
 */
-declare class HTTPClient extends Reference  {
+declare class HTTPClient extends RefCounted  {
 
   
 /**
- * Hyper-text transfer protocol client (sometimes called "User Agent"). Used to make HTTP requests to download web content, upload files and other data or to communicate with various services, among other use cases. **See the [HTTPRequest] node for a higher-level alternative.**
+ * Hyper-text transfer protocol client (sometimes called "User Agent"). Used to make HTTP requests to download web content, upload files and other data or to communicate with various services, among other use cases.
+ *
+ * See the [HTTPRequest] node for a higher-level alternative.
  *
  * **Note:** This client only needs to connect to a host once (see [method connect_to_host]) to send multiple requests. Because of this, methods that take URLs usually take just the part after the host instead of the full URL, as the client is already connected to a host. See [method request] for a full example and to get started.
  *
- * A [HTTPClient] should be reused between multiple requests or to connect to different hosts instead of creating one client per request. Supports SSL and SSL server certificate verification. HTTP status codes in the 2xx range indicate success, 3xx redirection (i.e. "try again, but over here"), 4xx something was wrong with the request, and 5xx something went wrong on the server's side.
+ * A [HTTPClient] should be reused between multiple requests or to connect to different hosts instead of creating one client per request. Supports Transport Layer Security (TLS), including server certificate verification. HTTP status codes in the 2xx range indicate success, 3xx redirection (i.e. "try again, but over here"), 4xx something was wrong with the request, and 5xx something went wrong on the server's side.
  *
- * For more information on HTTP, see https://developer.mozilla.org/en-US/docs/Web/HTTP (or read RFC 2616 to get it straight from the source: https://tools.ietf.org/html/rfc2616).
+ * For more information on HTTP, see [url=https://developer.mozilla.org/en-US/docs/Web/HTTP]MDN's documentation on HTTP[/url] (or read [url=https://tools.ietf.org/html/rfc2616]RFC 2616[/url] to get it straight from the source).
  *
- * **Note:** When performing HTTP requests from a project exported to HTML5, keep in mind the remote server may not allow requests from foreign origins due to [url=https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS]CORS[/url]. If you host the server in question, you should modify its backend to allow requests from foreign origins by adding the `Access-Control-Allow-Origin: *` HTTP header.
+ * **Note:** When exporting to Android, make sure to enable the `INTERNET` permission in the Android export preset before exporting the project or using one-click deploy. Otherwise, network communication of any kind will be blocked by Android.
  *
- * **Note:** SSL/TLS support is currently limited to TLS 1.0, TLS 1.1, and TLS 1.2. Attempting to connect to a TLS 1.3-only server will return an error.
+ * **Note:** It's recommended to use transport encryption (TLS) and to avoid sending sensitive information (such as login credentials) in HTTP GET URL parameters. Consider using HTTP POST requests or HTTP headers for such information instead.
  *
- * **Warning:** SSL/TLS certificate revocation and certificate pinning are currently not supported. Revoked certificates are accepted as long as they are otherwise valid. If this is a concern, you may want to use automatically managed certificates with a short validity period.
+ * **Note:** When performing HTTP requests from a project exported to Web, keep in mind the remote server may not allow requests from foreign origins due to [url=https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS]CORS[/url]. If you host the server in question, you should modify its backend to allow requests from foreign origins by adding the `Access-Control-Allow-Origin: *` HTTP header.
+ *
+ * **Note:** TLS support is currently limited to TLS 1.0, TLS 1.1, and TLS 1.2. Attempting to connect to a TLS 1.3-only server will return an error.
+ *
+ * **Warning:** TLS certificate revocation and certificate pinning are currently not supported. Revoked certificates are accepted as long as they are otherwise valid. If this is a concern, you may want to use automatically managed certificates with a short validity period.
  *
 */
   new(): HTTPClient; 
@@ -53,19 +65,17 @@ close(): void;
 /**
  * Connects to a host. This needs to be done before any requests are sent.
  *
- * The host should not have http:// prepended but will strip the protocol identifier if provided.
- *
- * If no `port` is specified (or `-1` is used), it is automatically set to 80 for HTTP and 443 for HTTPS (if `use_ssl` is enabled).
- *
- * `verify_host` will check the SSL identity of the host if set to `true`.
+ * If no [param port] is specified (or `-1` is used), it is automatically set to 80 for HTTP and 443 for HTTPS. You can pass the optional [param tls_options] parameter to customize the trusted certification authorities, or the common name verification when using HTTPS. See [method TLSOptions.client] and [method TLSOptions.client_unsafe].
  *
 */
-connect_to_host(host: string, port?: int, use_ssl?: boolean, verify_host?: boolean): int;
+connect_to_host(): int;
 
 /**
  * Returns the response's body length.
  *
  * **Note:** Some Web servers may not send a body length. In this case, the value returned will be `-1`. If using chunked transfer encoding, the body length will also be `-1`.
+ *
+ * **Note:** This function always returns `-1` on the Web platform due to browsers limitations.
  *
 */
 get_response_body_length(): int;
@@ -74,7 +84,7 @@ get_response_body_length(): int;
 get_response_code(): int;
 
 /** Returns the response headers. */
-get_response_headers(): PoolStringArray;
+get_response_headers(): PackedStringArray;
 
 /**
  * Returns all response headers as a Dictionary of structure `{ "key": "value1; value2" }` where the case-sensitivity of the keys and values is kept like the server delivers it. A value is a simple String, this string can have more than one value where "; " is used as separator.
@@ -110,9 +120,16 @@ poll(): int;
  *
  * @example 
  * 
+ * 
  * var fields = {"username": "user", "password": "pass"}
  * var query_string = http_client.query_string_from_dict(fields)
  * # Returns "username=user&password=pass"
+ * 
+ * 
+ * var fields = new Godot.Collections.Dictionary { { "username", "user" }, { "password", "pass" } };
+ * string queryString = httpClient.QueryStringFromDict(fields);
+ * // Returns "username=user&password=pass"
+ * 
  * @summary 
  * 
  *
@@ -120,22 +137,34 @@ poll(): int;
  *
  * @example 
  * 
+ * 
  * var fields = {"single": 123, "not_valued": null, "multiple": [22, 33, 44]}
  * var query_string = http_client.query_string_from_dict(fields)
  * # Returns "single=123&not_valued&multiple=22&multiple=33&multiple=44"
+ * 
+ * 
+ * var fields = new Godot.Collections.Dictionary
+ * {
+ *     { "single", 123 },
+ *     { "notValued", default },
+ *     { "multiple", new Godot.Collections.Array { 22, 33, 44 } },
+ * };
+ * string queryString = httpClient.QueryStringFromDict(fields);
+ * // Returns "single=123&not_valued&multiple=22&multiple=33&multiple=44"
+ * 
  * @summary 
  * 
  *
 */
-query_string_from_dict(fields: Dictionary<any, any>): string;
+query_string_from_dict(): string;
 
 /** Reads one chunk from the response. */
-read_response_body_chunk(): PoolByteArray;
+read_response_body_chunk(): PackedByteArray;
 
 /**
  * Sends a request to the connected host.
  *
- * The URL parameter is usually just the part after the host, so for `http://somehost.com/index.php`, it is `/index.php`. When sending requests to an HTTP proxy server, it should be an absolute URL. For [constant HTTPClient.METHOD_OPTIONS] requests, `*` is also allowed. For [constant HTTPClient.METHOD_CONNECT] requests, it should be the authority component (`host:port`).
+ * The URL parameter is usually just the part after the host, so for `https://somehost.com/index.php`, it is `/index.php`. When sending requests to an HTTP proxy server, it should be an absolute URL. For [constant HTTPClient.METHOD_OPTIONS] requests, `*` is also allowed. For [constant HTTPClient.METHOD_CONNECT] requests, it should be the authority component (`host:port`).
  *
  * Headers are HTTP request headers. For available HTTP methods, see [enum Method].
  *
@@ -143,29 +172,53 @@ read_response_body_chunk(): PoolByteArray;
  *
  * @example 
  * 
+ * 
  * var fields = {"username" : "user", "password" : "pass"}
  * var query_string = http_client.query_string_from_dict(fields)
  * var headers = ["Content-Type: application/x-www-form-urlencoded", "Content-Length: " + str(query_string.length())]
  * var result = http_client.request(http_client.METHOD_POST, "/index.php", headers, query_string)
+ * 
+ * 
+ * var fields = new Godot.Collections.Dictionary { { "username", "user" }, { "password", "pass" } };
+ * string queryString = new HTTPClient().QueryStringFromDict(fields);
+ * string[] headers = { "Content-Type: application/x-www-form-urlencoded", $"Content-Length: {queryString.Length}" };
+ * var result = new HTTPClient().Request(HTTPClient.Method.Post, "index.php", headers, queryString);
+ * 
  * @summary 
  * 
  *
- * **Note:** The `request_data` parameter is ignored if `method` is [constant HTTPClient.METHOD_GET]. This is because GET methods can't contain request data. As a workaround, you can pass request data as a query string in the URL. See [method String.http_escape] for an example.
+ * **Note:** The [param body] parameter is ignored if [param method] is [constant HTTPClient.METHOD_GET]. This is because GET methods can't contain request data. As a workaround, you can pass request data as a query string in the URL. See [method String.uri_encode] for an example.
  *
 */
-request(method: int, url: string, headers: PoolStringArray, body?: string): int;
+request(): int;
 
 /**
  * Sends a raw request to the connected host.
  *
- * The URL parameter is usually just the part after the host, so for `http://somehost.com/index.php`, it is `/index.php`. When sending requests to an HTTP proxy server, it should be an absolute URL. For [constant HTTPClient.METHOD_OPTIONS] requests, `*` is also allowed. For [constant HTTPClient.METHOD_CONNECT] requests, it should be the authority component (`host:port`).
+ * The URL parameter is usually just the part after the host, so for `https://somehost.com/index.php`, it is `/index.php`. When sending requests to an HTTP proxy server, it should be an absolute URL. For [constant HTTPClient.METHOD_OPTIONS] requests, `*` is also allowed. For [constant HTTPClient.METHOD_CONNECT] requests, it should be the authority component (`host:port`).
  *
  * Headers are HTTP request headers. For available HTTP methods, see [enum Method].
  *
  * Sends the body data raw, as a byte array and does not encode it in any way.
  *
 */
-request_raw(method: int, url: string, headers: PoolStringArray, body: PoolByteArray): int;
+request_raw(): int;
+
+/**
+ * Sets the proxy server for HTTP requests.
+ *
+ * The proxy server is unset if [param host] is empty or [param port] is -1.
+ *
+*/
+set_http_proxy(): void;
+
+/**
+ * Sets the proxy server for HTTPS requests.
+ *
+ * The proxy server is unset if [param host] is empty or [param port] is -1.
+ *
+*/
+set_https_proxy(): void;
 
   connect<T extends SignalsOf<HTTPClient>>(signal: T, method: SignalFunction<HTTPClient[T]>): number;
 
@@ -286,10 +339,10 @@ static STATUS_BODY: any;
 static STATUS_CONNECTION_ERROR: any;
 
 /**
- * Status: Error in SSL handshake.
+ * Status: Error in TLS handshake.
  *
 */
-static STATUS_SSL_HANDSHAKE_ERROR: any;
+static STATUS_TLS_HANDSHAKE_ERROR: any;
 
 /**
  * HTTP status code `100 Continue`. Interim response that indicates everything so far is OK and that the client should continue with the request (or ignore this status if already finished).
@@ -400,13 +453,13 @@ static RESPONSE_SEE_OTHER: any;
 static RESPONSE_NOT_MODIFIED: any;
 
 /**
- * HTTP status code `305 Use Proxy`. **Deprecated. Do not use.**
+ * **Deprecated.** HTTP status code `305 Use Proxy`.
  *
 */
 static RESPONSE_USE_PROXY: any;
 
 /**
- * HTTP status code `306 Switch Proxy`. **Deprecated. Do not use.**
+ * **Deprecated.** HTTP status code `306 Switch Proxy`.
  *
 */
 static RESPONSE_SWITCH_PROXY: any;

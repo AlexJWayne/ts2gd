@@ -89,47 +89,47 @@ dry: float;
 /** The voice's filter rate. */
 "voice/4/rate_hz": float;
 
-/** The amount of voices in the effect. */
+/** The number of voices in the effect. */
 voice_count: int;
 
 /** The effect's processed signal. */
 wet: float;
 
 /** No documentation provided. */
-get_voice_cutoff_hz(voice_idx: int): float;
+get_voice_cutoff_hz(): float;
 
 /** No documentation provided. */
-get_voice_delay_ms(voice_idx: int): float;
+get_voice_delay_ms(): float;
 
 /** No documentation provided. */
-get_voice_depth_ms(voice_idx: int): float;
+get_voice_depth_ms(): float;
 
 /** No documentation provided. */
-get_voice_level_db(voice_idx: int): float;
+get_voice_level_db(): float;
 
 /** No documentation provided. */
-get_voice_pan(voice_idx: int): float;
+get_voice_pan(): float;
 
 /** No documentation provided. */
-get_voice_rate_hz(voice_idx: int): float;
+get_voice_rate_hz(): float;
 
 /** No documentation provided. */
-set_voice_cutoff_hz(voice_idx: int, cutoff_hz: float): void;
+set_voice_cutoff_hz(): void;
 
 /** No documentation provided. */
-set_voice_delay_ms(voice_idx: int, delay_ms: float): void;
+set_voice_delay_ms(): void;
 
 /** No documentation provided. */
-set_voice_depth_ms(voice_idx: int, depth_ms: float): void;
+set_voice_depth_ms(): void;
 
 /** No documentation provided. */
-set_voice_level_db(voice_idx: int, level_db: float): void;
+set_voice_level_db(): void;
 
 /** No documentation provided. */
-set_voice_pan(voice_idx: int, pan: float): void;
+set_voice_pan(): void;
 
 /** No documentation provided. */
-set_voice_rate_hz(voice_idx: int, rate_hz: float): void;
+set_voice_rate_hz(): void;
 
   connect<T extends SignalsOf<AudioEffectChorus>>(signal: T, method: SignalFunction<AudioEffectChorus[T]>): number;
 

@@ -26,7 +26,7 @@ cull_mode: int;
  * **Note:** The returned value is a copy of the underlying array, rather than a reference.
  *
 */
-polygon: PoolVector2Array;
+polygon: PackedVector2Array;
 
 
 

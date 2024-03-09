@@ -47,6 +47,12 @@ static OP_3x3_AxB: any;
 */
 static OP_3x3_BxA: any;
 
+/**
+ * Represents the size of the [enum Operator] enum.
+ *
+*/
+static OP_MAX: any;
+
 
 
 }

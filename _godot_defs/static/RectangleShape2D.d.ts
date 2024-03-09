@@ -1,21 +1,25 @@
 
 /**
- * Rectangle shape for 2D collisions. This shape is useful for modeling box-like 2D objects.
+ * A 2D rectangle shape, intended for use in physics. Usually used to provide a shape for a [CollisionShape2D].
+ *
+ * **Performance:** [RectangleShape2D] is fast to check collisions against. It is faster than [CapsuleShape2D], but slower than [CircleShape2D].
  *
 */
 declare class RectangleShape2D extends Shape2D  {
 
   
 /**
- * Rectangle shape for 2D collisions. This shape is useful for modeling box-like 2D objects.
+ * A 2D rectangle shape, intended for use in physics. Usually used to provide a shape for a [CollisionShape2D].
+ *
+ * **Performance:** [RectangleShape2D] is fast to check collisions against. It is faster than [CapsuleShape2D], but slower than [CircleShape2D].
  *
 */
   new(): RectangleShape2D; 
   static "new"(): RectangleShape2D 
 
 
-/** The rectangle's half extents. The width and height of this shape is twice the half extents. */
-extents: Vector2;
+/** The rectangle's width and height. */
+size: Vector2;
 
 
 

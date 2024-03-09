@@ -15,7 +15,8 @@ declare class AudioEffect extends Resource  {
 
 
 
-
+/** No documentation provided. */
+protected _instantiate(): AudioEffectInstance;
 
   connect<T extends SignalsOf<AudioEffect>>(signal: T, method: SignalFunction<AudioEffect[T]>): number;
 

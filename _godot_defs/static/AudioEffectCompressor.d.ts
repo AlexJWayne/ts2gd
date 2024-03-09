@@ -50,7 +50,7 @@ ratio: float;
 release_ms: float;
 
 /** Reduce the sound level using another audio bus for threshold detection. */
-sidechain: string;
+sidechain: StringName;
 
 /** The level above which compression is applied to the audio. Value can range from -60 to 0. */
 threshold: float;

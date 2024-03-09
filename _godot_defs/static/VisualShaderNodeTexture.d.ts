@@ -18,7 +18,7 @@ declare class VisualShaderNodeTexture extends VisualShaderNode  {
 source: int;
 
 /** The source texture, if needed for the selected [member source]. */
-texture: Texture;
+texture: Texture2D;
 
 /** Specifies the type of the texture if [member source] is set to [constant SOURCE_TEXTURE]. See [enum TextureType] for options. */
 texture_type: int;
@@ -42,7 +42,7 @@ static SOURCE_TEXTURE: any;
 static SOURCE_SCREEN: any;
 
 /**
- * Use the texture from this shader's texture built-in (e.g. a texture of a [Sprite]).
+ * Use the texture from this shader's texture built-in (e.g. a texture of a [Sprite2D]).
  *
 */
 static SOURCE_2D_TEXTURE: any;
@@ -54,7 +54,7 @@ static SOURCE_2D_TEXTURE: any;
 static SOURCE_2D_NORMAL: any;
 
 /**
- * Use the depth texture available for this shader.
+ * Use the depth texture captured during the depth prepass. Only available when the depth prepass is used (i.e. in spatial shaders and in the forward_plus or gl_compatibility renderers).
  *
 */
 static SOURCE_DEPTH: any;
@@ -64,6 +64,24 @@ static SOURCE_DEPTH: any;
  *
 */
 static SOURCE_PORT: any;
+
+/**
+ * Use the normal buffer captured during the depth prepass. Only available when the normal-roughness buffer is available (i.e. in spatial shaders and in the forward_plus renderer).
+ *
+*/
+static SOURCE_3D_NORMAL: any;
+
+/**
+ * Use the roughness buffer captured during the depth prepass. Only available when the normal-roughness buffer is available (i.e. in spatial shaders and in the forward_plus renderer).
+ *
+*/
+static SOURCE_ROUGHNESS: any;
+
+/**
+ * Represents the size of the [enum Source] enum.
+ *
+*/
+static SOURCE_MAX: any;
 
 /**
  * No hints are added to the uniform declaration.
@@ -81,7 +99,13 @@ static TYPE_COLOR: any;
  * Adds `hint_normal` as hint to the uniform declaration, which internally converts the texture for proper usage as normal map.
  *
 */
-static TYPE_NORMALMAP: any;
+static TYPE_NORMAL_MAP: any;
+
+/**
+ * Represents the size of the [enum TextureType] enum.
+ *
+*/
+static TYPE_MAX: any;
 
 
 

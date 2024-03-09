@@ -30,31 +30,22 @@ edited_resource: Resource;
 /** If [code]true[/code], the main button with the resource preview works in the toggle mode. Use [method set_toggle_pressed] to manually set the state. */
 toggle_mode: boolean;
 
-/** No documentation provided. */
-can_drop_data_fw(position: Vector2, data: any, from: Control): boolean;
-
-/** No documentation provided. */
-drop_data_fw(position: Vector2, data: any, from: Control): void;
-
-/** Returns a list of all allowed types and subtypes corresponding to the [member base_type]. If the [member base_type] is empty, an empty list is returned. */
-get_allowed_types(): PoolStringArray;
-
-/** No documentation provided. */
-get_drag_data_fw(position: Vector2, from: Control): any;
-
-/** This virtual method can be implemented to handle context menu items not handled by default. See [method set_create_options]. */
-handle_menu_selected(id: int): void;
+/** This virtual method can be implemented to handle context menu items not handled by default. See [method _set_create_options]. */
+protected _handle_menu_selected(): boolean;
 
 /**
- * This virtual method is called when updating the context menu of [EditorResourcePicker]. Implement this method to override the "New ..." items with your own options. `menu_node` is a reference to the [PopupMenu] node.
+ * This virtual method is called when updating the context menu of [EditorResourcePicker]. Implement this method to override the "New ..." items with your own options. [param menu_node] is a reference to the [PopupMenu] node.
  *
- * **Note:** Implement [method handle_menu_selected] to handle these custom items.
+ * **Note:** Implement [method _handle_menu_selected] to handle these custom items.
  *
 */
-set_create_options(menu_node: Object): void;
+protected _set_create_options(): void;
+
+/** Returns a list of all allowed types and subtypes corresponding to the [member base_type]. If the [member base_type] is empty, an empty list is returned. */
+get_allowed_types(): PackedStringArray;
 
 /** Sets the toggle mode state for the main button. Works only if [member toggle_mode] is set to [code]true[/code]. */
-set_toggle_pressed(pressed: boolean): void;
+set_toggle_pressed(): void;
 
   connect<T extends SignalsOf<EditorResourcePicker>>(signal: T, method: SignalFunction<EditorResourcePicker[T]>): number;
 
@@ -66,13 +57,13 @@ set_toggle_pressed(pressed: boolean): void;
  * Emitted when the value of the edited resource was changed.
  *
 */
-$resource_changed: Signal<(resource: Resource) => void>
+$resource_changed: Signal<() => void>
 
 /**
- * Emitted when the resource value was set and user clicked to edit it. When `edit` is `true`, the signal was caused by the context menu "Edit" option.
+ * Emitted when the resource value was set and user clicked to edit it. When [param inspect] is `true`, the signal was caused by the context menu "Edit" or "Inspect" option.
  *
 */
-$resource_selected: Signal<(resource: Resource, edit: boolean) => void>
+$resource_selected: Signal<() => void>
 
 }
 

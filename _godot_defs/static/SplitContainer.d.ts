@@ -1,13 +1,13 @@
 
 /**
- * Container for splitting two [Control]s vertically or horizontally, with a grabber that allows adjusting the split offset or ratio.
+ * A container that accepts only two child controls, then arranges them horizontally or vertically and creates a divisor between them. The divisor can be dragged around to change the size relation between the child controls.
  *
 */
 declare class SplitContainer extends Container  {
 
   
 /**
- * Container for splitting two [Control]s vertically or horizontally, with a grabber that allows adjusting the split offset or ratio.
+ * A container that accepts only two child controls, then arranges them horizontally or vertically and creates a divisor between them. The divisor can be dragged around to change the size relation between the child controls.
  *
 */
   new(): SplitContainer; 
@@ -22,6 +22,14 @@ dragger_visibility: int;
 
 /** The initial offset of the splitting between the two [Control]s, with [code]0[/code] being at the end of the first [Control]. */
 split_offset: int;
+
+/**
+ * If `true`, the [SplitContainer] will arrange its children vertically, rather than horizontally.
+ *
+ * Can't be changed when using [HSplitContainer] and [VSplitContainer].
+ *
+*/
+vertical: boolean;
 
 /** Clamps the [member split_offset] value to not go outside the currently possible minimal and maximum values. */
 clamp_split_offset(): void;
@@ -53,7 +61,7 @@ static DRAGGER_HIDDEN_COLLAPSED: any;
  * Emitted when the dragger is dragged by user.
  *
 */
-$dragged: Signal<(offset: int) => void>
+$dragged: Signal<() => void>
 
 }
 

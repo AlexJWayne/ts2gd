@@ -1,6 +1,6 @@
 
 /**
- * Class representing a planar [PrimitiveMesh]. This flat mesh does not have a thickness. By default, this mesh is aligned on the X and Z axes; this default rotation isn't suited for use with billboarded materials. For billboarded materials, use [QuadMesh] instead.
+ * Class representing a planar [PrimitiveMesh]. This flat mesh does not have a thickness. By default, this mesh is aligned on the X and Z axes; this default rotation isn't suited for use with billboarded materials. For billboarded materials, change [member orientation] to [constant FACE_Z].
  *
  * **Note:** When using a large textured [PlaneMesh] (e.g. as a floor), you may stumble upon UV jittering issues depending on the camera angle. To solve this, increase [member subdivide_depth] and [member subdivide_width] until you no longer notice UV jittering.
  *
@@ -9,7 +9,7 @@ declare class PlaneMesh extends PrimitiveMesh  {
 
   
 /**
- * Class representing a planar [PrimitiveMesh]. This flat mesh does not have a thickness. By default, this mesh is aligned on the X and Z axes; this default rotation isn't suited for use with billboarded materials. For billboarded materials, use [QuadMesh] instead.
+ * Class representing a planar [PrimitiveMesh]. This flat mesh does not have a thickness. By default, this mesh is aligned on the X and Z axes; this default rotation isn't suited for use with billboarded materials. For billboarded materials, change [member orientation] to [constant FACE_Z].
  *
  * **Note:** When using a large textured [PlaneMesh] (e.g. as a floor), you may stumble upon UV jittering issues depending on the camera angle. To solve this, increase [member subdivide_depth] and [member subdivide_width] until you no longer notice UV jittering.
  *
@@ -18,8 +18,11 @@ declare class PlaneMesh extends PrimitiveMesh  {
   static "new"(): PlaneMesh 
 
 
-/** Offset from the origin of the generated plane. Useful for particles. */
+/** Offset of the generated plane. Useful for particles. */
 center_offset: Vector3;
+
+/** Direction that the [PlaneMesh] is facing. See [enum Orientation] for options. */
+orientation: int;
 
 /** Size of the generated plane. */
 size: Vector2;
@@ -36,6 +39,23 @@ subdivide_width: int;
 
 
 
+/**
+ * [PlaneMesh] will face the positive X-axis.
+ *
+*/
+static FACE_X: any;
+
+/**
+ * [PlaneMesh] will face the positive Y-axis. This matches the behavior of the [PlaneMesh] in Godot 3.x.
+ *
+*/
+static FACE_Y: any;
+
+/**
+ * [PlaneMesh] will face the positive Z-axis. This matches the behavior of the QuadMesh in Godot 3.x.
+ *
+*/
+static FACE_Z: any;
 
 
 

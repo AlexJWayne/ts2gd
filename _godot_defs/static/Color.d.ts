@@ -1,12 +1,10 @@
 
 /**
- * A color represented by red, green, blue, and alpha (RGBA) components. The alpha component is often used for transparency. Values are in floating-point and usually range from 0 to 1. Some properties (such as CanvasItem.modulate) may accept values greater than 1 (overbright or HDR colors).
+ * A color represented in RGBA format by a red ([member r]), green ([member g]), blue ([member b]), and alpha ([member a]) component. Each component is a 16-bit floating-point value, usually ranging from `0.0` to `1.0`. Some properties (such as [member CanvasItem.modulate]) may support values greater than `1.0`, for overbright or HDR (High Dynamic Range) colors.
  *
- * You can also create a color from standardized color names by using [method @GDScript.ColorN] or directly using the color constants defined here. The standardized color set is based on the [url=https://en.wikipedia.org/wiki/X11_color_names]X11 color names[/url].
+ * Colors can be created in various ways: By the various [Color] constructors, by static methods such as [method from_hsv], and by using a name from the set of standardized colors based on [url=https://en.wikipedia.org/wiki/X11_color_names]X11 color names[/url] with the addition of [constant TRANSPARENT]. GDScript also provides [method @GDScript.Color8], which uses integers from `0` to `255` and doesn't support overbright colors.
  *
- * If you want to supply values in a range of 0 to 255, you should use [method @GDScript.Color8].
- *
- * **Note:** In a boolean context, a Color will evaluate to `false` if it's equal to `Color(0, 0, 0, 1)` (opaque black). Otherwise, a Color will always evaluate to `true`.
+ * **Note:** In a boolean context, a Color will evaluate to `false` if it is equal to `Color(0, 0, 0, 1)` (opaque black). Otherwise, a Color will always evaluate to `true`.
  *
  * [url=https://raw.githubusercontent.com/godotengine/godot-docs/master/img/color_constants.png]Color constants cheatsheet[/url]
  *
@@ -15,35 +13,33 @@ declare class ColorConstructor {
 
   
 /**
- * A color represented by red, green, blue, and alpha (RGBA) components. The alpha component is often used for transparency. Values are in floating-point and usually range from 0 to 1. Some properties (such as CanvasItem.modulate) may accept values greater than 1 (overbright or HDR colors).
+ * A color represented in RGBA format by a red ([member r]), green ([member g]), blue ([member b]), and alpha ([member a]) component. Each component is a 16-bit floating-point value, usually ranging from `0.0` to `1.0`. Some properties (such as [member CanvasItem.modulate]) may support values greater than `1.0`, for overbright or HDR (High Dynamic Range) colors.
  *
- * You can also create a color from standardized color names by using [method @GDScript.ColorN] or directly using the color constants defined here. The standardized color set is based on the [url=https://en.wikipedia.org/wiki/X11_color_names]X11 color names[/url].
+ * Colors can be created in various ways: By the various [Color] constructors, by static methods such as [method from_hsv], and by using a name from the set of standardized colors based on [url=https://en.wikipedia.org/wiki/X11_color_names]X11 color names[/url] with the addition of [constant TRANSPARENT]. GDScript also provides [method @GDScript.Color8], which uses integers from `0` to `255` and doesn't support overbright colors.
  *
- * If you want to supply values in a range of 0 to 255, you should use [method @GDScript.Color8].
- *
- * **Note:** In a boolean context, a Color will evaluate to `false` if it's equal to `Color(0, 0, 0, 1)` (opaque black). Otherwise, a Color will always evaluate to `true`.
+ * **Note:** In a boolean context, a Color will evaluate to `false` if it is equal to `Color(0, 0, 0, 1)` (opaque black). Otherwise, a Color will always evaluate to `true`.
  *
  * [url=https://raw.githubusercontent.com/godotengine/godot-docs/master/img/color_constants.png]Color constants cheatsheet[/url]
  *
 */
 
 
-/** The color's alpha (transparency) component, typically on the range of 0 to 1. */
+/** The color's alpha component, typically on the range of 0 to 1. A value of 0 means that the color is fully transparent. A value of 1 means that the color is fully opaque. */
 a: float;
 
-/** Wrapper for [member a] that uses the range 0 to 255 instead of 0 to 1. */
+/** Wrapper for [member a] that uses the range 0 to 255, instead of 0 to 1. */
 a8: int;
 
 /** The color's blue component, typically on the range of 0 to 1. */
 b: float;
 
-/** Wrapper for [member b] that uses the range 0 to 255 instead of 0 to 1. */
+/** Wrapper for [member b] that uses the range 0 to 255, instead of 0 to 1. */
 b8: int;
 
 /** The color's green component, typically on the range of 0 to 1. */
 g: float;
 
-/** Wrapper for [member g] that uses the range 0 to 255 instead of 0 to 1. */
+/** Wrapper for [member g] that uses the range 0 to 255, instead of 0 to 1. */
 g8: int;
 
 /** The HSV hue of this color, on the range 0 to 1. */
@@ -52,7 +48,7 @@ h: float;
 /** The color's red component, typically on the range of 0 to 1. */
 r: float;
 
-/** Wrapper for [member r] that uses the range 0 to 255 instead of 0 to 1. */
+/** Wrapper for [member r] that uses the range 0 to 255, instead of 0 to 1. */
 r8: int;
 
 /** The HSV saturation of this color, on the range 0 to 1. */
@@ -61,131 +57,265 @@ s: float;
 /** The HSV value (brightness) of this color, on the range 0 to 1. */
 v: float;
 
-
-
-
-
-
-
-
-
 /**
- * Returns a new color resulting from blending this color over another. If the color is opaque, the result is also opaque. The second color may have a range of alpha values.
+ * Returns a new color resulting from overlaying this color over the given color. In a painting program, you can imagine it as the [param over] color painted over this color (including alpha).
  *
  * @example 
+ * 
  * 
  * var bg = Color(0.0, 1.0, 0.0, 0.5) # Green with alpha of 50%
  * var fg = Color(1.0, 0.0, 0.0, 0.5) # Red with alpha of 50%
  * var blended_color = bg.blend(fg) # Brown with alpha of 75%
+ * 
+ * 
+ * var bg = new Color(0.0f, 1.0f, 0.0f, 0.5f); // Green with alpha of 50%
+ * var fg = new Color(1.0f, 0.0f, 0.0f, 0.5f); // Red with alpha of 50%
+ * Color blendedColor = bg.Blend(fg); // Brown with alpha of 75%
+ * 
  * @summary 
  * 
  *
 */
-blend(over: Color): Color;
+blend(): Color;
+
+/** Returns a new color with all components clamped between the components of [param min] and [param max], by running [method @GlobalScope.clamp] on each component. */
+clamp(): Color;
 
 /**
- * Returns the most contrasting color.
+ * Returns a new color resulting from making this color darker by the specified [param amount] (ratio from 0.0 to 1.0). See also [method lightened].
  *
  * @example 
  * 
- * var c = Color(0.3, 0.4, 0.9)
- * var contrasted_color = c.contrasted() # Equivalent to RGBA(204, 229, 102, 255)
- * @summary 
- * 
- *
-*/
-contrasted(): Color;
-
-/**
- * Returns a new color resulting from making this color darker by the specified percentage (ratio from 0 to 1).
- *
- * @example 
  * 
  * var green = Color(0.0, 1.0, 0.0)
  * var darkgreen = green.darkened(0.2) # 20% darker than regular green
+ * 
+ * 
+ * var green = new Color(0.0f, 1.0f, 0.0f);
+ * Color darkgreen = green.Darkened(0.2f); // 20% darker than regular green
+ * 
  * @summary 
  * 
  *
 */
-darkened(amount: float): Color;
+darkened(): Color;
 
 /**
- * Constructs a color from an HSV profile. `h`, `s`, and `v` are values between 0 and 1.
+ * Constructs a color from an [url=https://en.wikipedia.org/wiki/HSL_and_HSV]HSV profile[/url]. The hue ([param h]), saturation ([param s]), and value ([param v]) are typically between 0.0 and 1.0.
  *
  * @example 
  * 
- * var c = Color.from_hsv(0.58, 0.5, 0.79, 0.8) # Equivalent to HSV(210, 50, 79, 0.8) or Color8(100, 151, 201, 0.8)
+ * 
+ * var color = Color.from_hsv(0.58, 0.5, 0.79, 0.8)
+ * 
+ * 
+ * var color = Color.FromHsv(0.58f, 0.5f, 0.79f, 0.8f);
+ * 
  * @summary 
  * 
  *
 */
-from_hsv(h: float, s: float, v: float, a?: float): Color;
+from_hsv(): Color;
 
 /**
- * Returns the color's grayscale representation.
- *
- * The gray value is calculated as `(r + g + b) / 3`.
+ * Constructs a color from an [url=https://bottosson.github.io/posts/colorpicker/]OK HSL profile[/url]. The hue ([param h]), saturation ([param s]), and lightness ([param l]) are typically between 0.0 and 1.0.
  *
  * @example 
  * 
- * var c = Color(0.2, 0.45, 0.82)
- * var gray = c.gray() # A value of 0.466667
+ * 
+ * var color = Color.from_ok_hsl(0.58, 0.5, 0.79, 0.8)
+ * 
+ * 
+ * var color = Color.FromOkHsl(0.58f, 0.5f, 0.79f, 0.8f);
+ * 
  * @summary 
  * 
  *
 */
-gray(): float;
+from_ok_hsl(): Color;
+
+/** Decodes a [Color] from a RGBE9995 format integer. See [constant Image.FORMAT_RGBE9995]. */
+from_rgbe9995(): Color;
+
+/** Creates a [Color] from the given string, which can be either an HTML color code or a named color (case-insensitive). Returns [param default] if the color cannot be inferred from the string. */
+from_string(): Color;
 
 /**
- * Returns the inverted color `(1 - r, 1 - g, 1 - b, a)`.
+ * Returns the light intensity of the color, as a value between 0.0 and 1.0 (inclusive). This is useful when determining light or dark color. Colors with a luminance smaller than 0.5 can be generally considered dark.
+ *
+ * **Note:** [method get_luminance] relies on the color being in the linear color space to return an accurate relative luminance value. If the color is in the sRGB color space, use [method srgb_to_linear] to convert it to the linear color space first.
+ *
+*/
+get_luminance(): float;
+
+/**
+ * Returns the [Color] associated with the provided [param hex] integer in 32-bit RGBA format (8 bits per channel).
+ *
+ * In GDScript and C#, the [int] is best visualized with hexadecimal notation (`"0x"` prefix, making it `"0xRRGGBBAA"`).
  *
  * @example 
  * 
+ * 
+ * var red = Color.hex(0xff0000ff)
+ * var dark_cyan = Color.hex(0x008b8bff)
+ * var my_color = Color.hex(0xbbefd2a4)
+ * 
+ * 
+ * var red = new Color(0xff0000ff);
+ * var dark_cyan = new Color(0x008b8bff);
+ * var my_color = new Color(0xbbefd2a4);
+ * 
+ * @summary 
+ * 
+ *
+*/
+hex(): Color;
+
+/**
+ * Returns the [Color] associated with the provided [param hex] integer in 64-bit RGBA format (16 bits per channel).
+ *
+ * In GDScript and C#, the [int] is best visualized with hexadecimal notation (`"0x"` prefix, making it `"0xRRRRGGGGBBBBAAAA"`).
+ *
+*/
+hex64(): Color;
+
+/**
+ * Returns a new color from [param rgba], an HTML hexadecimal color string. [param rgba] is not case-sensitive, and may be prefixed by a hash sign (`#`).
+ *
+ * [param rgba] must be a valid three-digit or six-digit hexadecimal color string, and may contain an alpha channel value. If [param rgba] does not contain an alpha channel value, an alpha channel value of 1.0 is applied. If [param rgba] is invalid, returns an empty color.
+ *
+ * @example 
+ * 
+ * 
+ * var blue = Color.html("#0000ff") # blue is Color(0.0, 0.0, 1.0, 1.0)
+ * var green = Color.html("#0F0")   # green is Color(0.0, 1.0, 0.0, 1.0)
+ * var col = Color.html("663399cc") # col is Color(0.4, 0.2, 0.6, 0.8)
+ * 
+ * 
+ * var blue = Color.FromHtml("#0000ff"); // blue is Color(0.0, 0.0, 1.0, 1.0)
+ * var green = Color.FromHtml("#0F0");   // green is Color(0.0, 1.0, 0.0, 1.0)
+ * var col = Color.FromHtml("663399cc"); // col is Color(0.4, 0.2, 0.6, 0.8)
+ * 
+ * @summary 
+ * 
+ *
+*/
+html(): Color;
+
+/**
+ * Returns `true` if [param color] is a valid HTML hexadecimal color string. The string must be a hexadecimal value (case-insensitive) of either 3, 4, 6 or 8 digits, and may be prefixed by a hash sign (`#`). This method is identical to [method String.is_valid_html_color].
+ *
+ * @example 
+ * 
+ * 
+ * Color.html_is_valid("#55aaFF")   # Returns true
+ * Color.html_is_valid("#55AAFF20") # Returns true
+ * Color.html_is_valid("55AAFF")    # Returns true
+ * Color.html_is_valid("#F2C")      # Returns true
+ * Color.html_is_valid("#AABBC")    # Returns false
+ * Color.html_is_valid("#55aaFF5")  # Returns false
+ * 
+ * 
+ * Color.HtmlIsValid("#55AAFF");   // Returns true
+ * Color.HtmlIsValid("#55AAFF20"); // Returns true
+ * Color.HtmlIsValid("55AAFF");    // Returns true
+ * Color.HtmlIsValid("#F2C");      // Returns true
+ * Color.HtmlIsValid("#AABBC");    // Returns false
+ * Color.HtmlIsValid("#55aaFF5");  // Returns false
+ * 
+ * @summary 
+ * 
+ *
+*/
+html_is_valid(): boolean;
+
+/**
+ * Returns the color with its [member r], [member g], and [member b] components inverted (`(1 - r, 1 - g, 1 - b, a)`).
+ *
+ * @example 
+ * 
+ * 
+ * var black = Color.WHITE.inverted()
  * var color = Color(0.3, 0.4, 0.9)
- * var inverted_color = color.inverted() # Equivalent to Color(0.7, 0.6, 0.1)
+ * var inverted_color = color.inverted() # Equivalent to `Color(0.7, 0.6, 0.1)`
+ * 
+ * 
+ * var black = Colors.White.Inverted();
+ * var color = new Color(0.3f, 0.4f, 0.9f);
+ * Color invertedColor = color.Inverted(); // Equivalent to `new Color(0.7f, 0.6f, 0.1f)`
+ * 
  * @summary 
  * 
  *
 */
 inverted(): Color;
 
-/** Returns [code]true[/code] if this color and [code]color[/code] are approximately equal, by running [method @GDScript.is_equal_approx] on each component. */
-is_equal_approx(color: Color): boolean;
+/** Returns [code]true[/code] if this color and [param to] are approximately equal, by running [method @GlobalScope.is_equal_approx] on each component. */
+is_equal_approx(): boolean;
 
 /**
- * Returns a new color resulting from making this color lighter by the specified percentage (ratio from 0 to 1).
+ * Returns the linear interpolation between this color's components and [param to]'s components. The interpolation factor [param weight] should be between 0.0 and 1.0 (inclusive). See also [method @GlobalScope.lerp].
  *
  * @example 
+ * 
+ * 
+ * var red = Color(1.0, 0.0, 0.0)
+ * var aqua = Color(0.0, 1.0, 0.8)
+ * red.lerp(aqua, 0.2) # Returns Color(0.8, 0.2, 0.16)
+ * red.lerp(aqua, 0.5) # Returns Color(0.5, 0.5, 0.4)
+ * red.lerp(aqua, 1.0) # Returns Color(0.0, 1.0, 0.8)
+ * 
+ * 
+ * var red = new Color(1.0f, 0.0f, 0.0f);
+ * var aqua = new Color(0.0f, 1.0f, 0.8f);
+ * red.Lerp(aqua, 0.2f); // Returns Color(0.8f, 0.2f, 0.16f)
+ * red.Lerp(aqua, 0.5f); // Returns Color(0.5f, 0.5f, 0.4f)
+ * red.Lerp(aqua, 1.0f); // Returns Color(0.0f, 1.0f, 0.8f)
+ * 
+ * @summary 
+ * 
+ *
+*/
+lerp(): Color;
+
+/**
+ * Returns a new color resulting from making this color lighter by the specified [param amount], which should be a ratio from 0.0 to 1.0. See also [method darkened].
+ *
+ * @example 
+ * 
  * 
  * var green = Color(0.0, 1.0, 0.0)
- * var lightgreen = green.lightened(0.2) # 20% lighter than regular green
+ * var light_green = green.lightened(0.2) # 20% lighter than regular green
+ * 
+ * 
+ * var green = new Color(0.0f, 1.0f, 0.0f);
+ * Color lightGreen = green.Lightened(0.2f); // 20% lighter than regular green
+ * 
  * @summary 
  * 
  *
 */
-lightened(amount: float): Color;
+lightened(): Color;
+
+/** Returns the color converted to the [url=https://en.wikipedia.org/wiki/SRGB]sRGB[/url] color space. This method assumes the original color is in the linear color space. See also [method srgb_to_linear] which performs the opposite operation. */
+linear_to_srgb(): Color;
+
+/** Returns the color converted to the linear color space. This method assumes the original color already is in the sRGB color space. See also [method linear_to_srgb] which performs the opposite operation. */
+srgb_to_linear(): Color;
 
 /**
- * Returns the linear interpolation with another color. The interpolation factor `weight` is between 0 and 1.
+ * Returns the color converted to a 32-bit integer in ABGR format (each component is 8 bits). ABGR is the reversed version of the default RGBA format.
  *
  * @example 
  * 
- * var c1 = Color(1.0, 0.0, 0.0)
- * var c2 = Color(0.0, 1.0, 0.0)
- * var li_c = c1.linear_interpolate(c2, 0.5) # Equivalent to Color(0.5, 0.5, 0.0)
- * @summary 
- * 
- *
-*/
-linear_interpolate(to: Color, weight: float): Color;
-
-/**
- * Returns the color converted to a 32-bit integer in ABGR format (each byte represents a color channel). ABGR is the reversed version of the default format.
- *
- * @example 
  * 
  * var color = Color(1, 0.5, 0.2)
  * print(color.to_abgr32()) # Prints 4281565439
+ * 
+ * 
+ * var color = new Color(1.0f, 0.5f, 0.2f);
+ * GD.Print(color.ToAbgr32()); // Prints 4281565439
+ * 
  * @summary 
  * 
  *
@@ -193,12 +323,18 @@ linear_interpolate(to: Color, weight: float): Color;
 to_abgr32(): int;
 
 /**
- * Returns the color converted to a 64-bit integer in ABGR format (each word represents a color channel). ABGR is the reversed version of the default format.
+ * Returns the color converted to a 64-bit integer in ABGR format (each component is 16 bits). ABGR is the reversed version of the default RGBA format.
  *
  * @example 
  * 
+ * 
  * var color = Color(1, 0.5, 0.2)
  * print(color.to_abgr64()) # Prints -225178692812801
+ * 
+ * 
+ * var color = new Color(1.0f, 0.5f, 0.2f);
+ * GD.Print(color.ToAbgr64()); // Prints -225178692812801
+ * 
  * @summary 
  * 
  *
@@ -206,12 +342,18 @@ to_abgr32(): int;
 to_abgr64(): int;
 
 /**
- * Returns the color converted to a 32-bit integer in ARGB format (each byte represents a color channel). ARGB is more compatible with DirectX.
+ * Returns the color converted to a 32-bit integer in ARGB format (each component is 8 bits). ARGB is more compatible with DirectX.
  *
  * @example 
  * 
+ * 
  * var color = Color(1, 0.5, 0.2)
  * print(color.to_argb32()) # Prints 4294934323
+ * 
+ * 
+ * var color = new Color(1.0f, 0.5f, 0.2f);
+ * GD.Print(color.ToArgb32()); // Prints 4294934323
+ * 
  * @summary 
  * 
  *
@@ -219,12 +361,18 @@ to_abgr64(): int;
 to_argb32(): int;
 
 /**
- * Returns the color converted to a 64-bit integer in ARGB format (each word represents a color channel). ARGB is more compatible with DirectX.
+ * Returns the color converted to a 64-bit integer in ARGB format (each component is 16 bits). ARGB is more compatible with DirectX.
  *
  * @example 
  * 
+ * 
  * var color = Color(1, 0.5, 0.2)
  * print(color.to_argb64()) # Prints -2147470541
+ * 
+ * 
+ * var color = new Color(1.0f, 0.5f, 0.2f);
+ * GD.Print(color.ToArgb64()); // Prints -2147470541
+ * 
  * @summary 
  * 
  *
@@ -232,28 +380,41 @@ to_argb32(): int;
 to_argb64(): int;
 
 /**
- * Returns the color's HTML hexadecimal color string in ARGB format (ex: `ff34f822`).
+ * Returns the color converted to an HTML hexadecimal color [String] in RGBA format, without the hash (`#`) prefix.
  *
- * Setting `with_alpha` to `false` excludes alpha from the hexadecimal string.
+ * Setting [param with_alpha] to `false`, excludes alpha from the hexadecimal string, using RGB format instead of RGBA format.
  *
  * @example 
  * 
- * var c = Color(1, 1, 1, 0.5)
- * var s1 = c.to_html() # Returns "7fffffff"
- * var s2 = c.to_html(false) # Returns "ffffff"
+ * 
+ * var white = Color(1, 1, 1, 0.5)
+ * var with_alpha = white.to_html() # Returns "ffffff7f"
+ * var without_alpha = white.to_html(false) # Returns "ffffff"
+ * 
+ * 
+ * var white = new Color(1, 1, 1, 0.5f);
+ * string withAlpha = white.ToHtml(); // Returns "ffffff7f"
+ * string withoutAlpha = white.ToHtml(false); // Returns "ffffff"
+ * 
  * @summary 
  * 
  *
 */
-to_html(with_alpha?: boolean): string;
+to_html(): string;
 
 /**
- * Returns the color converted to a 32-bit integer in RGBA format (each byte represents a color channel). RGBA is Godot's default format.
+ * Returns the color converted to a 32-bit integer in RGBA format (each component is 8 bits). RGBA is Godot's default format.
  *
  * @example 
  * 
+ * 
  * var color = Color(1, 0.5, 0.2)
  * print(color.to_rgba32()) # Prints 4286526463
+ * 
+ * 
+ * var color = new Color(1, 0.5f, 0.2f);
+ * GD.Print(color.ToRgba32()); // Prints 4286526463
+ * 
  * @summary 
  * 
  *
@@ -261,12 +422,18 @@ to_html(with_alpha?: boolean): string;
 to_rgba32(): int;
 
 /**
- * Returns the color converted to a 64-bit integer in RGBA format (each word represents a color channel). RGBA is Godot's default format.
+ * Returns the color converted to a 64-bit integer in RGBA format (each component is 16 bits). RGBA is Godot's default format.
  *
  * @example 
  * 
+ * 
  * var color = Color(1, 0.5, 0.2)
  * print(color.to_rgba64()) # Prints -140736629309441
+ * 
+ * 
+ * var color = new Color(1, 0.5f, 0.2f);
+ * GD.Print(color.ToRgba64()); // Prints -140736629309441
+ * 
  * @summary 
  * 
  *
@@ -281,877 +448,877 @@ to_rgba64(): int;
  * Alice blue color.
  *
 */
-static aliceblue: Color;
+static ALICE_BLUE: Color;
 
 /**
  * Antique white color.
  *
 */
-static antiquewhite: Color;
+static ANTIQUE_WHITE: Color;
 
 /**
  * Aqua color.
  *
 */
-static aqua: Color;
+static AQUA: Color;
 
 /**
  * Aquamarine color.
  *
 */
-static aquamarine: Color;
+static AQUAMARINE: Color;
 
 /**
  * Azure color.
  *
 */
-static azure: Color;
+static AZURE: Color;
 
 /**
  * Beige color.
  *
 */
-static beige: Color;
+static BEIGE: Color;
 
 /**
  * Bisque color.
  *
 */
-static bisque: Color;
+static BISQUE: Color;
 
 /**
- * Black color.
+ * Black color. In GDScript, this is the default value of any color.
  *
 */
-static black: Color;
+static BLACK: Color;
 
 /**
- * Blanche almond color.
+ * Blanched almond color.
  *
 */
-static blanchedalmond: Color;
+static BLANCHED_ALMOND: Color;
 
 /**
  * Blue color.
  *
 */
-static blue: Color;
+static BLUE: Color;
 
 /**
  * Blue violet color.
  *
 */
-static blueviolet: Color;
+static BLUE_VIOLET: Color;
 
 /**
  * Brown color.
  *
 */
-static brown: Color;
+static BROWN: Color;
 
 /**
- * Burly wood color.
+ * Burlywood color.
  *
 */
-static burlywood: Color;
+static BURLYWOOD: Color;
 
 /**
  * Cadet blue color.
  *
 */
-static cadetblue: Color;
+static CADET_BLUE: Color;
 
 /**
  * Chartreuse color.
  *
 */
-static chartreuse: Color;
+static CHARTREUSE: Color;
 
 /**
  * Chocolate color.
  *
 */
-static chocolate: Color;
+static CHOCOLATE: Color;
 
 /**
  * Coral color.
  *
 */
-static coral: Color;
+static CORAL: Color;
 
 /**
- * Cornflower color.
+ * Cornflower blue color.
  *
 */
-static cornflower: Color;
+static CORNFLOWER_BLUE: Color;
 
 /**
- * Corn silk color.
+ * Cornsilk color.
  *
 */
-static cornsilk: Color;
+static CORNSILK: Color;
 
 /**
  * Crimson color.
  *
 */
-static crimson: Color;
+static CRIMSON: Color;
 
 /**
  * Cyan color.
  *
 */
-static cyan: Color;
+static CYAN: Color;
 
 /**
  * Dark blue color.
  *
 */
-static darkblue: Color;
+static DARK_BLUE: Color;
 
 /**
  * Dark cyan color.
  *
 */
-static darkcyan: Color;
+static DARK_CYAN: Color;
 
 /**
  * Dark goldenrod color.
  *
 */
-static darkgoldenrod: Color;
+static DARK_GOLDENROD: Color;
 
 /**
  * Dark gray color.
  *
 */
-static darkgray: Color;
+static DARK_GRAY: Color;
 
 /**
  * Dark green color.
  *
 */
-static darkgreen: Color;
+static DARK_GREEN: Color;
 
 /**
  * Dark khaki color.
  *
 */
-static darkkhaki: Color;
+static DARK_KHAKI: Color;
 
 /**
  * Dark magenta color.
  *
 */
-static darkmagenta: Color;
+static DARK_MAGENTA: Color;
 
 /**
  * Dark olive green color.
  *
 */
-static darkolivegreen: Color;
+static DARK_OLIVE_GREEN: Color;
 
 /**
  * Dark orange color.
  *
 */
-static darkorange: Color;
+static DARK_ORANGE: Color;
 
 /**
  * Dark orchid color.
  *
 */
-static darkorchid: Color;
+static DARK_ORCHID: Color;
 
 /**
  * Dark red color.
  *
 */
-static darkred: Color;
+static DARK_RED: Color;
 
 /**
  * Dark salmon color.
  *
 */
-static darksalmon: Color;
+static DARK_SALMON: Color;
 
 /**
  * Dark sea green color.
  *
 */
-static darkseagreen: Color;
+static DARK_SEA_GREEN: Color;
 
 /**
  * Dark slate blue color.
  *
 */
-static darkslateblue: Color;
+static DARK_SLATE_BLUE: Color;
 
 /**
  * Dark slate gray color.
  *
 */
-static darkslategray: Color;
+static DARK_SLATE_GRAY: Color;
 
 /**
  * Dark turquoise color.
  *
 */
-static darkturquoise: Color;
+static DARK_TURQUOISE: Color;
 
 /**
  * Dark violet color.
  *
 */
-static darkviolet: Color;
+static DARK_VIOLET: Color;
 
 /**
  * Deep pink color.
  *
 */
-static deeppink: Color;
+static DEEP_PINK: Color;
 
 /**
  * Deep sky blue color.
  *
 */
-static deepskyblue: Color;
+static DEEP_SKY_BLUE: Color;
 
 /**
  * Dim gray color.
  *
 */
-static dimgray: Color;
+static DIM_GRAY: Color;
 
 /**
  * Dodger blue color.
  *
 */
-static dodgerblue: Color;
+static DODGER_BLUE: Color;
 
 /**
  * Firebrick color.
  *
 */
-static firebrick: Color;
+static FIREBRICK: Color;
 
 /**
  * Floral white color.
  *
 */
-static floralwhite: Color;
+static FLORAL_WHITE: Color;
 
 /**
  * Forest green color.
  *
 */
-static forestgreen: Color;
+static FOREST_GREEN: Color;
 
 /**
  * Fuchsia color.
  *
 */
-static fuchsia: Color;
+static FUCHSIA: Color;
 
 /**
  * Gainsboro color.
  *
 */
-static gainsboro: Color;
+static GAINSBORO: Color;
 
 /**
  * Ghost white color.
  *
 */
-static ghostwhite: Color;
+static GHOST_WHITE: Color;
 
 /**
  * Gold color.
  *
 */
-static gold: Color;
+static GOLD: Color;
 
 /**
  * Goldenrod color.
  *
 */
-static goldenrod: Color;
+static GOLDENROD: Color;
 
 /**
  * Gray color.
  *
 */
-static gray: Color;
+static GRAY: Color;
 
 /**
  * Green color.
  *
 */
-static green: Color;
+static GREEN: Color;
 
 /**
  * Green yellow color.
  *
 */
-static greenyellow: Color;
+static GREEN_YELLOW: Color;
 
 /**
  * Honeydew color.
  *
 */
-static honeydew: Color;
+static HONEYDEW: Color;
 
 /**
  * Hot pink color.
  *
 */
-static hotpink: Color;
+static HOT_PINK: Color;
 
 /**
  * Indian red color.
  *
 */
-static indianred: Color;
+static INDIAN_RED: Color;
 
 /**
  * Indigo color.
  *
 */
-static indigo: Color;
+static INDIGO: Color;
 
 /**
  * Ivory color.
  *
 */
-static ivory: Color;
+static IVORY: Color;
 
 /**
  * Khaki color.
  *
 */
-static khaki: Color;
+static KHAKI: Color;
 
 /**
  * Lavender color.
  *
 */
-static lavender: Color;
+static LAVENDER: Color;
 
 /**
  * Lavender blush color.
  *
 */
-static lavenderblush: Color;
+static LAVENDER_BLUSH: Color;
 
 /**
  * Lawn green color.
  *
 */
-static lawngreen: Color;
+static LAWN_GREEN: Color;
 
 /**
  * Lemon chiffon color.
  *
 */
-static lemonchiffon: Color;
+static LEMON_CHIFFON: Color;
 
 /**
  * Light blue color.
  *
 */
-static lightblue: Color;
+static LIGHT_BLUE: Color;
 
 /**
  * Light coral color.
  *
 */
-static lightcoral: Color;
+static LIGHT_CORAL: Color;
 
 /**
  * Light cyan color.
  *
 */
-static lightcyan: Color;
+static LIGHT_CYAN: Color;
 
 /**
  * Light goldenrod color.
  *
 */
-static lightgoldenrod: Color;
+static LIGHT_GOLDENROD: Color;
 
 /**
  * Light gray color.
  *
 */
-static lightgray: Color;
+static LIGHT_GRAY: Color;
 
 /**
  * Light green color.
  *
 */
-static lightgreen: Color;
+static LIGHT_GREEN: Color;
 
 /**
  * Light pink color.
  *
 */
-static lightpink: Color;
+static LIGHT_PINK: Color;
 
 /**
  * Light salmon color.
  *
 */
-static lightsalmon: Color;
+static LIGHT_SALMON: Color;
 
 /**
  * Light sea green color.
  *
 */
-static lightseagreen: Color;
+static LIGHT_SEA_GREEN: Color;
 
 /**
  * Light sky blue color.
  *
 */
-static lightskyblue: Color;
+static LIGHT_SKY_BLUE: Color;
 
 /**
  * Light slate gray color.
  *
 */
-static lightslategray: Color;
+static LIGHT_SLATE_GRAY: Color;
 
 /**
  * Light steel blue color.
  *
 */
-static lightsteelblue: Color;
+static LIGHT_STEEL_BLUE: Color;
 
 /**
  * Light yellow color.
  *
 */
-static lightyellow: Color;
+static LIGHT_YELLOW: Color;
 
 /**
  * Lime color.
  *
 */
-static lime: Color;
+static LIME: Color;
 
 /**
  * Lime green color.
  *
 */
-static limegreen: Color;
+static LIME_GREEN: Color;
 
 /**
  * Linen color.
  *
 */
-static linen: Color;
+static LINEN: Color;
 
 /**
  * Magenta color.
  *
 */
-static magenta: Color;
+static MAGENTA: Color;
 
 /**
  * Maroon color.
  *
 */
-static maroon: Color;
+static MAROON: Color;
 
 /**
  * Medium aquamarine color.
  *
 */
-static mediumaquamarine: Color;
+static MEDIUM_AQUAMARINE: Color;
 
 /**
  * Medium blue color.
  *
 */
-static mediumblue: Color;
+static MEDIUM_BLUE: Color;
 
 /**
  * Medium orchid color.
  *
 */
-static mediumorchid: Color;
+static MEDIUM_ORCHID: Color;
 
 /**
  * Medium purple color.
  *
 */
-static mediumpurple: Color;
+static MEDIUM_PURPLE: Color;
 
 /**
  * Medium sea green color.
  *
 */
-static mediumseagreen: Color;
+static MEDIUM_SEA_GREEN: Color;
 
 /**
  * Medium slate blue color.
  *
 */
-static mediumslateblue: Color;
+static MEDIUM_SLATE_BLUE: Color;
 
 /**
  * Medium spring green color.
  *
 */
-static mediumspringgreen: Color;
+static MEDIUM_SPRING_GREEN: Color;
 
 /**
  * Medium turquoise color.
  *
 */
-static mediumturquoise: Color;
+static MEDIUM_TURQUOISE: Color;
 
 /**
  * Medium violet red color.
  *
 */
-static mediumvioletred: Color;
+static MEDIUM_VIOLET_RED: Color;
 
 /**
  * Midnight blue color.
  *
 */
-static midnightblue: Color;
+static MIDNIGHT_BLUE: Color;
 
 /**
  * Mint cream color.
  *
 */
-static mintcream: Color;
+static MINT_CREAM: Color;
 
 /**
  * Misty rose color.
  *
 */
-static mistyrose: Color;
+static MISTY_ROSE: Color;
 
 /**
  * Moccasin color.
  *
 */
-static moccasin: Color;
+static MOCCASIN: Color;
 
 /**
  * Navajo white color.
  *
 */
-static navajowhite: Color;
+static NAVAJO_WHITE: Color;
 
 /**
  * Navy blue color.
  *
 */
-static navyblue: Color;
+static NAVY_BLUE: Color;
 
 /**
  * Old lace color.
  *
 */
-static oldlace: Color;
+static OLD_LACE: Color;
 
 /**
  * Olive color.
  *
 */
-static olive: Color;
+static OLIVE: Color;
 
 /**
  * Olive drab color.
  *
 */
-static olivedrab: Color;
+static OLIVE_DRAB: Color;
 
 /**
  * Orange color.
  *
 */
-static orange: Color;
+static ORANGE: Color;
 
 /**
  * Orange red color.
  *
 */
-static orangered: Color;
+static ORANGE_RED: Color;
 
 /**
  * Orchid color.
  *
 */
-static orchid: Color;
+static ORCHID: Color;
 
 /**
  * Pale goldenrod color.
  *
 */
-static palegoldenrod: Color;
+static PALE_GOLDENROD: Color;
 
 /**
  * Pale green color.
  *
 */
-static palegreen: Color;
+static PALE_GREEN: Color;
 
 /**
  * Pale turquoise color.
  *
 */
-static paleturquoise: Color;
+static PALE_TURQUOISE: Color;
 
 /**
  * Pale violet red color.
  *
 */
-static palevioletred: Color;
+static PALE_VIOLET_RED: Color;
 
 /**
  * Papaya whip color.
  *
 */
-static papayawhip: Color;
+static PAPAYA_WHIP: Color;
 
 /**
  * Peach puff color.
  *
 */
-static peachpuff: Color;
+static PEACH_PUFF: Color;
 
 /**
  * Peru color.
  *
 */
-static peru: Color;
+static PERU: Color;
 
 /**
  * Pink color.
  *
 */
-static pink: Color;
+static PINK: Color;
 
 /**
  * Plum color.
  *
 */
-static plum: Color;
+static PLUM: Color;
 
 /**
  * Powder blue color.
  *
 */
-static powderblue: Color;
+static POWDER_BLUE: Color;
 
 /**
  * Purple color.
  *
 */
-static purple: Color;
+static PURPLE: Color;
 
 /**
  * Rebecca purple color.
  *
 */
-static rebeccapurple: Color;
+static REBECCA_PURPLE: Color;
 
 /**
  * Red color.
  *
 */
-static red: Color;
+static RED: Color;
 
 /**
  * Rosy brown color.
  *
 */
-static rosybrown: Color;
+static ROSY_BROWN: Color;
 
 /**
  * Royal blue color.
  *
 */
-static royalblue: Color;
+static ROYAL_BLUE: Color;
 
 /**
  * Saddle brown color.
  *
 */
-static saddlebrown: Color;
+static SADDLE_BROWN: Color;
 
 /**
  * Salmon color.
  *
 */
-static salmon: Color;
+static SALMON: Color;
 
 /**
  * Sandy brown color.
  *
 */
-static sandybrown: Color;
+static SANDY_BROWN: Color;
 
 /**
  * Sea green color.
  *
 */
-static seagreen: Color;
+static SEA_GREEN: Color;
 
 /**
  * Seashell color.
  *
 */
-static seashell: Color;
+static SEASHELL: Color;
 
 /**
  * Sienna color.
  *
 */
-static sienna: Color;
+static SIENNA: Color;
 
 /**
  * Silver color.
  *
 */
-static silver: Color;
+static SILVER: Color;
 
 /**
  * Sky blue color.
  *
 */
-static skyblue: Color;
+static SKY_BLUE: Color;
 
 /**
  * Slate blue color.
  *
 */
-static slateblue: Color;
+static SLATE_BLUE: Color;
 
 /**
  * Slate gray color.
  *
 */
-static slategray: Color;
+static SLATE_GRAY: Color;
 
 /**
  * Snow color.
  *
 */
-static snow: Color;
+static SNOW: Color;
 
 /**
  * Spring green color.
  *
 */
-static springgreen: Color;
+static SPRING_GREEN: Color;
 
 /**
  * Steel blue color.
  *
 */
-static steelblue: Color;
+static STEEL_BLUE: Color;
 
 /**
  * Tan color.
  *
 */
-static tan: Color;
+static TAN: Color;
 
 /**
  * Teal color.
  *
 */
-static teal: Color;
+static TEAL: Color;
 
 /**
  * Thistle color.
  *
 */
-static thistle: Color;
+static THISTLE: Color;
 
 /**
  * Tomato color.
  *
 */
-static tomato: Color;
+static TOMATO: Color;
 
 /**
- * Transparent color (white with no alpha).
+ * Transparent color (white with zero alpha).
  *
 */
-static transparent: Color;
+static TRANSPARENT: Color;
 
 /**
  * Turquoise color.
  *
 */
-static turquoise: Color;
+static TURQUOISE: Color;
 
 /**
  * Violet color.
  *
 */
-static violet: Color;
+static VIOLET: Color;
 
 /**
  * Web gray color.
  *
 */
-static webgray: Color;
+static WEB_GRAY: Color;
 
 /**
  * Web green color.
  *
 */
-static webgreen: Color;
+static WEB_GREEN: Color;
 
 /**
  * Web maroon color.
  *
 */
-static webmaroon: Color;
+static WEB_MAROON: Color;
 
 /**
  * Web purple color.
  *
 */
-static webpurple: Color;
+static WEB_PURPLE: Color;
 
 /**
  * Wheat color.
  *
 */
-static wheat: Color;
+static WHEAT: Color;
 
 /**
  * White color.
  *
 */
-static white: Color;
+static WHITE: Color;
 
 /**
  * White smoke color.
  *
 */
-static whitesmoke: Color;
+static WHITE_SMOKE: Color;
 
 /**
  * Yellow color.
  *
 */
-static yellow: Color;
+static YELLOW: Color;
 
 /**
  * Yellow green color.
  *
 */
-static yellowgreen: Color;
+static YELLOW_GREEN: Color;
 
 
 
@@ -1159,15 +1326,8 @@ static yellowgreen: Color;
 
 declare type Color = ColorConstructor;
 declare var Color: typeof ColorConstructor & {
-  
-  new(from: string): Color;
-  new(from: int): Color;
-  new(r: float, g: float, b: float): Color;
-  new(r: float, g: float, b: float, a: float): Color;
+    new(): Color; 
 
-  (from: string): Color;
-  (from: int): Color;
-  (r: float, g: float, b: float): Color;
-  (r: float, g: float, b: float, a: float): Color;
+
 
 }

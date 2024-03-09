@@ -1,26 +1,29 @@
 
 /**
- * Group of [Button]. All direct and indirect children buttons become radios. Only one allows being pressed.
+ * A group of [BaseButton]-derived buttons. The buttons in a [ButtonGroup] are treated like radio buttons: No more than one button can be pressed at a time. Some types of buttons (such as [CheckBox]) may have a special appearance in this state.
  *
- * [member BaseButton.toggle_mode] should be `true`.
+ * Every member of a [ButtonGroup] should have [member BaseButton.toggle_mode] set to `true`.
  *
 */
 declare class ButtonGroup extends Resource  {
 
   
 /**
- * Group of [Button]. All direct and indirect children buttons become radios. Only one allows being pressed.
+ * A group of [BaseButton]-derived buttons. The buttons in a [ButtonGroup] are treated like radio buttons: No more than one button can be pressed at a time. Some types of buttons (such as [CheckBox]) may have a special appearance in this state.
  *
- * [member BaseButton.toggle_mode] should be `true`.
+ * Every member of a [ButtonGroup] should have [member BaseButton.toggle_mode] set to `true`.
  *
 */
   new(): ButtonGroup; 
   static "new"(): ButtonGroup 
 
 
+/** If [code]true[/code], it is possible to unpress all buttons in this [ButtonGroup]. */
+allow_unpress: boolean;
 
-/** Returns an [Array] of [Button]s who have this as their [ButtonGroup] (see [member BaseButton.group]). */
-get_buttons(): any[];
+
+/** Returns an [Array] of [Button]s who have this as their [ButtonGroup] (see [member BaseButton.button_group]). */
+get_buttons(): BaseButton[];
 
 /** Returns the current pressed button. */
 get_pressed_button(): BaseButton;
@@ -35,7 +38,7 @@ get_pressed_button(): BaseButton;
  * Emitted when one of the buttons of the group is pressed.
  *
 */
-$pressed: Signal<(button: Object) => void>
+$pressed: Signal<() => void>
 
 }
 

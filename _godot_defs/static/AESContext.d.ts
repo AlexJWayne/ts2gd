@@ -1,8 +1,9 @@
 
 /**
- * This class provides access to AES encryption/decryption of raw data. Both AES-ECB and AES-CBC mode are supported.
+ * This class holds the context information required for encryption and decryption operations with AES (Advanced Encryption Standard). Both AES-ECB and AES-CBC modes are supported.
  *
  * @example 
+ * 
  * 
  * extends Node
  * var aes = AESContext.new()
@@ -10,37 +11,73 @@
  *     var key = "My secret key!!!" # Key must be either 16 or 32 bytes.
  *     var data = "My secret text!!" # Data size must be multiple of 16 bytes, apply padding if needed.
  *     # Encrypt ECB
- *     aes.start(AESContext.MODE_ECB_ENCRYPT, key.to_utf8())
- *     var encrypted = aes.update(data.to_utf8())
+ *     aes.start(AESContext.MODE_ECB_ENCRYPT, key.to_utf8_buffer())
+ *     var encrypted = aes.update(data.to_utf8_buffer())
  *     aes.finish()
  *     # Decrypt ECB
- *     aes.start(AESContext.MODE_ECB_DECRYPT, key.to_utf8())
+ *     aes.start(AESContext.MODE_ECB_DECRYPT, key.to_utf8_buffer())
  *     var decrypted = aes.update(encrypted)
  *     aes.finish()
  *     # Check ECB
- *     assert(decrypted == data.to_utf8())
+ *     assert(decrypted == data.to_utf8_buffer())
  *     var iv = "My secret iv!!!!" # IV must be of exactly 16 bytes.
  *     # Encrypt CBC
- *     aes.start(AESContext.MODE_CBC_ENCRYPT, key.to_utf8(), iv.to_utf8())
- *     encrypted = aes.update(data.to_utf8())
+ *     aes.start(AESContext.MODE_CBC_ENCRYPT, key.to_utf8_buffer(), iv.to_utf8_buffer())
+ *     encrypted = aes.update(data.to_utf8_buffer())
  *     aes.finish()
  *     # Decrypt CBC
- *     aes.start(AESContext.MODE_CBC_DECRYPT, key.to_utf8(), iv.to_utf8())
+ *     aes.start(AESContext.MODE_CBC_DECRYPT, key.to_utf8_buffer(), iv.to_utf8_buffer())
  *     decrypted = aes.update(encrypted)
  *     aes.finish()
  *     # Check CBC
- *     assert(decrypted == data.to_utf8())
+ *     assert(decrypted == data.to_utf8_buffer())
+ * 
+ * 
+ * using Godot;
+ * using System.Diagnostics;
+ * public partial class MyNode : Node
+ * {
+ *     private AesContext _aes = new AesContext();
+ *     public override void _Ready()
+ *     {
+ *         string key = "My secret key!!!"; // Key must be either 16 or 32 bytes.
+ *         string data = "My secret text!!"; // Data size must be multiple of 16 bytes, apply padding if needed.
+ *         // Encrypt ECB
+ *         _aes.Start(AesContext.Mode.EcbEncrypt, key.ToUtf8Buffer());
+ *         byte[] encrypted = _aes.Update(data.ToUtf8Buffer());
+ *         _aes.Finish();
+ *         // Decrypt ECB
+ *         _aes.Start(AesContext.Mode.EcbDecrypt, key.ToUtf8Buffer());
+ *         byte[] decrypted = _aes.Update(encrypted);
+ *         _aes.Finish();
+ *         // Check ECB
+ *         Debug.Assert(decrypted == data.ToUtf8Buffer());
+ *         string iv = "My secret iv!!!!"; // IV must be of exactly 16 bytes.
+ *         // Encrypt CBC
+ *         _aes.Start(AesContext.Mode.EcbEncrypt, key.ToUtf8Buffer(), iv.ToUtf8Buffer());
+ *         encrypted = _aes.Update(data.ToUtf8Buffer());
+ *         _aes.Finish();
+ *         // Decrypt CBC
+ *         _aes.Start(AesContext.Mode.EcbDecrypt, key.ToUtf8Buffer(), iv.ToUtf8Buffer());
+ *         decrypted = _aes.Update(encrypted);
+ *         _aes.Finish();
+ *         // Check CBC
+ *         Debug.Assert(decrypted == data.ToUtf8Buffer());
+ *     }
+ * }
+ * 
  * @summary 
  * 
  *
 */
-declare class AESContext extends Reference  {
+declare class AESContext extends RefCounted  {
 
   
 /**
- * This class provides access to AES encryption/decryption of raw data. Both AES-ECB and AES-CBC mode are supported.
+ * This class holds the context information required for encryption and decryption operations with AES (Advanced Encryption Standard). Both AES-ECB and AES-CBC modes are supported.
  *
  * @example 
+ * 
  * 
  * extends Node
  * var aes = AESContext.new()
@@ -48,26 +85,61 @@ declare class AESContext extends Reference  {
  *     var key = "My secret key!!!" # Key must be either 16 or 32 bytes.
  *     var data = "My secret text!!" # Data size must be multiple of 16 bytes, apply padding if needed.
  *     # Encrypt ECB
- *     aes.start(AESContext.MODE_ECB_ENCRYPT, key.to_utf8())
- *     var encrypted = aes.update(data.to_utf8())
+ *     aes.start(AESContext.MODE_ECB_ENCRYPT, key.to_utf8_buffer())
+ *     var encrypted = aes.update(data.to_utf8_buffer())
  *     aes.finish()
  *     # Decrypt ECB
- *     aes.start(AESContext.MODE_ECB_DECRYPT, key.to_utf8())
+ *     aes.start(AESContext.MODE_ECB_DECRYPT, key.to_utf8_buffer())
  *     var decrypted = aes.update(encrypted)
  *     aes.finish()
  *     # Check ECB
- *     assert(decrypted == data.to_utf8())
+ *     assert(decrypted == data.to_utf8_buffer())
  *     var iv = "My secret iv!!!!" # IV must be of exactly 16 bytes.
  *     # Encrypt CBC
- *     aes.start(AESContext.MODE_CBC_ENCRYPT, key.to_utf8(), iv.to_utf8())
- *     encrypted = aes.update(data.to_utf8())
+ *     aes.start(AESContext.MODE_CBC_ENCRYPT, key.to_utf8_buffer(), iv.to_utf8_buffer())
+ *     encrypted = aes.update(data.to_utf8_buffer())
  *     aes.finish()
  *     # Decrypt CBC
- *     aes.start(AESContext.MODE_CBC_DECRYPT, key.to_utf8(), iv.to_utf8())
+ *     aes.start(AESContext.MODE_CBC_DECRYPT, key.to_utf8_buffer(), iv.to_utf8_buffer())
  *     decrypted = aes.update(encrypted)
  *     aes.finish()
  *     # Check CBC
- *     assert(decrypted == data.to_utf8())
+ *     assert(decrypted == data.to_utf8_buffer())
+ * 
+ * 
+ * using Godot;
+ * using System.Diagnostics;
+ * public partial class MyNode : Node
+ * {
+ *     private AesContext _aes = new AesContext();
+ *     public override void _Ready()
+ *     {
+ *         string key = "My secret key!!!"; // Key must be either 16 or 32 bytes.
+ *         string data = "My secret text!!"; // Data size must be multiple of 16 bytes, apply padding if needed.
+ *         // Encrypt ECB
+ *         _aes.Start(AesContext.Mode.EcbEncrypt, key.ToUtf8Buffer());
+ *         byte[] encrypted = _aes.Update(data.ToUtf8Buffer());
+ *         _aes.Finish();
+ *         // Decrypt ECB
+ *         _aes.Start(AesContext.Mode.EcbDecrypt, key.ToUtf8Buffer());
+ *         byte[] decrypted = _aes.Update(encrypted);
+ *         _aes.Finish();
+ *         // Check ECB
+ *         Debug.Assert(decrypted == data.ToUtf8Buffer());
+ *         string iv = "My secret iv!!!!"; // IV must be of exactly 16 bytes.
+ *         // Encrypt CBC
+ *         _aes.Start(AesContext.Mode.EcbEncrypt, key.ToUtf8Buffer(), iv.ToUtf8Buffer());
+ *         encrypted = _aes.Update(data.ToUtf8Buffer());
+ *         _aes.Finish();
+ *         // Decrypt CBC
+ *         _aes.Start(AesContext.Mode.EcbDecrypt, key.ToUtf8Buffer(), iv.ToUtf8Buffer());
+ *         decrypted = _aes.Update(encrypted);
+ *         _aes.Finish();
+ *         // Check CBC
+ *         Debug.Assert(decrypted == data.ToUtf8Buffer());
+ *     }
+ * }
+ * 
  * @summary 
  * 
  *
@@ -86,18 +158,18 @@ finish(): void;
  * **Note:** This function only makes sense when the context is started with [constant MODE_CBC_ENCRYPT] or [constant MODE_CBC_DECRYPT].
  *
 */
-get_iv_state(): PoolByteArray;
+get_iv_state(): PackedByteArray;
 
-/** Start the AES context in the given [code]mode[/code]. A [code]key[/code] of either 16 or 32 bytes must always be provided, while an [code]iv[/code] (initialization vector) of exactly 16 bytes, is only needed when [code]mode[/code] is either [constant MODE_CBC_ENCRYPT] or [constant MODE_CBC_DECRYPT]. */
-start(mode: int, key: PoolByteArray, iv?: PoolByteArray): int;
+/** Start the AES context in the given [param mode]. A [param key] of either 16 or 32 bytes must always be provided, while an [param iv] (initialization vector) of exactly 16 bytes, is only needed when [param mode] is either [constant MODE_CBC_ENCRYPT] or [constant MODE_CBC_DECRYPT]. */
+start(): int;
 
 /**
- * Run the desired operation for this AES context. Will return a [PoolByteArray] containing the result of encrypting (or decrypting) the given `src`. See [method start] for mode of operation.
+ * Run the desired operation for this AES context. Will return a [PackedByteArray] containing the result of encrypting (or decrypting) the given [param src]. See [method start] for mode of operation.
  *
- * **Note:** The size of `src` must be a multiple of 16. Apply some padding if needed.
+ * **Note:** The size of [param src] must be a multiple of 16. Apply some padding if needed.
  *
 */
-update(src: PoolByteArray): PoolByteArray;
+update(): PackedByteArray;
 
   connect<T extends SignalsOf<AESContext>>(signal: T, method: SignalFunction<AESContext[T]>): number;
 
